@@ -1,0 +1,133 @@
+/* Google Fonts - Roboto Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif; /* Professional font */
+    margin: 0;
+    padding: 0;
+    background-color: #333; /* Dark background */
+    color: #f0f0f0; /* Light text for contrast */
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.main-header {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="pentagonGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23FF8C00" stop-opacity="0.7"></stop><stop offset="100%" stop-color="%23000000" stop-opacity="0.7"></stop></linearGradient><clipPath id="pentagonClip"><polygon points="50,0 100,38 82,100 18,100 0,38"></polygon></clipPath></defs><rect width="100%" height="100%" fill="url(%23pentagonGradient)" clip-path="url(%23pentagonClip)"/></svg>');
+  background-size: cover; /* የጀርባ ምስሉን መጠን ያስተካክላል */
+  background-repeat: no-repeat; /* ምስሉ እንዳይደገም ይከላከላል */
+  background-position: center; /* ምስሉን መሃል ላይ ያስቀምጣል */
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* የተቀሩት የእርስዎ ቅጦች እዚህ ይቀጥላሉ */
+}
+
+.main-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.main-header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Color Palette */
+.orange-text {
+    color: #FF8C00; /* Darker Orange */
+}
+.white-text {
+    color: #FFF; /* White */
+}
+.black-text {
+    color: #000; /* Black, used for background if needed, but here just for text */
+}
+
+/* Fuel Station Cards */
+.station-card {
+    background-color: #fff7ea; /* White card background */
+    color: #333; /* Dark text on white background */
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+    transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+.station-card:hover {
+    transform: translateY(-5px); /* Lift up on hover */
+}
+
+.station-name {
+    color: #FF8C00; /* Orange for station names */
+    margin-top: 0;
+    font-size: 1.8em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.status-info p {
+    margin: 8px 0;
+    font-size: 1.1em;
+}
+
+/* Status Colors for Queue and Availability */
+.status-short {
+    color: #28a745; /* Green for short/no queue */
+    font-weight: bold;
+}
+
+.status-medium {
+    color: #ffc107; /* Orange/Yellow for medium queue */
+    font-weight: bold;
+}
+
+.status-long {
+    color: #dc3545; /* Red for long queue */
+    font-weight: bold;
+}
+
+.status-none {
+    color: #007bff; /* Blue for no queue */
+    font-weight: bold;
+}
+
+.available {
+    color: #28a745; /* Green for available */
+    font-weight: bold;
+}
+
+.unavailable {
+    color: #dc3545; /* Red for unavailable */
+    font-weight: bold;
+}
+
+.last-updated {
+    font-size: 0.9em;
+    color: #666;
+    text-align: right;
+    margin-top: 15px;
+}
+
+/* Footer Styles */
+.main-footer {
+    background-color: #000; /* Black footer */
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 30px;
+    font-size: 0.9em;
+}
+
+.main-footer p {
+    margin: 5px 0;
+}

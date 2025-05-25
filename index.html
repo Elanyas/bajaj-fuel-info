@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <svg width="0" height="0" viewBox="0 0 100 100" style="position: absolute; overflow: hidden;">
+  <defs>
+    <linearGradient id="pentagonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF8C00" stop-opacity="0.7"></stop> /* ድብዝዝ ያለ ብርቱካናማ */
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.7"></stop> /* ድብዝዝ ያለ ጥቁር */
+    </linearGradient>
+
+    <clipPath id="pentagonClip">
+      <polygon points="50,0 100,38 82,100 18,100 0,38"></polygon> /* የፔንታጎን ነጥቦች */
+    </clipPath>
+  </defs>
+</svg>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የነዳጅ ማደያ መረጃ - በሀረር</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <h1><span class="orange-text">የነዳጅ</span> <span class="white-text">ማደያ</span> <span class="black-text">መረጃ</span></h1>
+        <p>ለሀረር ከተማ ባጃጅ ነጂዎች ወቅታዊ የነዳጅ ማደያ መረጃ</p>
+    </header>
+
+    <main class="container">
+        <section class="fuel-station-list">
+
+            <div class="station-card">
+                <h2 class="station-name">ኖክ (NOC) </h2>
+                <div class="status-info">
+                    <p><strong>የነዳጅ ዋጋ:</strong> ቤንዚን - 49.90 ብር | ናፍጣ - 49.00 ብር</p>
+                    <p class="queue-status"><strong>ወረፋ:</strong> <span class="status-medium">መካከለኛ (10-15 ባጃጅ)</span></p>
+                    <p class="fuel-availability"><strong>ነዳጅ:</strong> <span class="available">አለ (ቤንዚን & ናፍጣ)</span></p>
+                </div>
+                <p class="last-updated">የመጨረሻ ዝማኔ: 2025-05-25, 01:00 AM</p>
+            </div>
+
+            <div class="station-card">
+                <h2 class="station-name">ደከር (DAEKER)</h2>
+                <div class="status-info">
+                    <p><strong>የነዳጅ ዋጋ:</strong> ቤንዚን - 49.90 ብር | ናፍጣ - 49.00 ብር</p>
+                    <p class="queue-status"><strong>ወረፋ:</strong> <span class="status-long">ረጅም (25+ ባጃጅ)</span></p>
+                    <p class="fuel-availability"><strong>ነዳጅ:</strong> <span class="available">አለ (ቤንዚን ብቻ)</span></p>
+                </div>
+                <p class="last-updated">የመጨረሻ ዝማኔ: 2025-05-25, 00:45 AM</p>
+            </div>
+
+            <div class="station-card">
+                <h2 class="station-name">ሞቢል (Mobil)</h2>
+                <div class="status-info">
+                    <p><strong>የነዳጅ ዋጋ:</strong> ቤንዚን - 49.90 ብር | ናፍጣ - 49.00 ብር</p>
+                    <p class="queue-status"><strong>ወረፋ:</strong> <span class="status-short">አጭር (ከ5 ባጃጅ በታች)</span></p>
+                    <p class="fuel-availability"><strong>ነዳጅ:</strong> <span class="available">አለ (ቤንዚን & ናፍጣ)</span></p>
+                </div>
+                <p class="last-updated">የመጨረሻ ዝማኔ: 2025-05-25, 01:05 AM</p>
+            </div>
+
+            <div class="station-card">
+                <h2 class="station-name">ሜንሽን (Menshn)</h2>
+                <div class="status-info">
+                    <p><strong>የነዳጅ ዋጋ:</strong> ቤንዚን - 49.90 ብር | ናፍጣ - 49.00 ብር</p>
+                    <p class="queue-status"><strong>ወረፋ:</strong> <span class="status-none">ምንም ወረፋ የለም</span></p>
+                    <p class="fuel-availability"><strong>ነዳጅ:</strong> <span class="unavailable">አልቋል!</span></p>
+                </div>
+                <p class="last-updated">የመጨረሻ ዝማኔ: 2025-05-25, 00:30 AM</p>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 ባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+</body>
+</html>
