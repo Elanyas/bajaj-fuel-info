@@ -440,3 +440,36 @@ body {
         font-size: 1.6em;
     }
 }
+/* ለአዲሱ index.html (Redirect Page) ልዩ ስታይሎች */
+.redirect-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* ሙሉውን ስክሪን እንዲይዝ */
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box; /* Padding በ width ውስጥ እንዲካተት */
+}
+
+.redirect-container p {
+    font-size: 1.3em;
+    color: #e0e0e0; /* ከዋናው የጽሁፍ ከለር ጋር እንዲመሳሰል */
+    margin-bottom: 20px;
+}
+
+.redirect-container a {
+    color: #ffb300; /* ከአክሰንት ከለር ጋር እንዲመሳሰል */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.redirect-container a:hover {
+    color: #e69a00; /* ሆቨር ሲደረግ ከለሩ ይቀየራል */
+    text-decoration: underline;
+}
+
+/* የ<body> ስታይል ከዚህ በፊት ከሰጠኸኝ ጋር ስለሚመሳሰል፣ እዚህ ላይ የተለየ ነገር አያስፈልግም።
+   ይህ የ .redirect-container ኮድ በ <body> ውስጥ እንዲቀመጥ ተደርጎ ነው የተሰራው።
+*/
