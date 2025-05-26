@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የባጃጅ ነዳጅ መረጃ - መግቢያ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <div class="login-section">
+            <div class="login-form-card">
+                <h2 class="form-title">እንኳን ደህና መጡ!</h2>
+                <p class="form-subtitle">የይለፍ ቃልዎን በማስገባት ይግቡ።</p>
+                <div class="input-group">
+                    <label for="passwordInput" class="sr-only">የይለፍ ቃል:</label>
+                    <input type="password" id="passwordInput" placeholder="የይለፍ ቃል ያስገቡ">
+                </div>
+                <button type="submit" onclick="checkPassword()">መግቢያ</button>
+                <p id="errorMessage" class="error-message"></p>
+            </div>
+        </div>
+
+        <div class="info-container">
+            <h2 class="info-title">ለባጃጅ ነጂዎች ወሳኝ መረጃ!</h2>
+            <p>ውድ የባጃጅ ነጂዎች፣ ይህ ድረ-ገጽ የነዳጅ ማደያዎችን ወቅታዊ መረጃ በቀላሉ እንድታገኙ ታስቦ የተሰራ ነው። የነዳጅ ዋጋ፣ የወረፋ ሁኔታ እና የነዳጅ መኖር/አለመኖር መረጃ በእጃችሁ ይገኛል!</p>
+            
+            <div class="info-section">
+                <h3 class="section-heading">ይህንን ድረ-ገጽ መጠቀም የሚጠቅማችሁባቸው ዋና ዋና ምክንያቶች:</h3>
+                <ul>
+                    <li><p><strong>ጊዜ ይቆጥባሉ:</strong> ወደ ነዳጅ ማደያ ከመሄድዎ በፊት ሁኔታውን በማየት ወረፋ ያለበትን ወይም ነዳጅ የሌለበትን ቦታ ለማስወገድ ይረዳዎታል።</p></li>
+                    <li><p><strong>ገንዘብ ይቆጥባሉ:</strong> አላስፈላጊ ጉዞዎችን ይቀንሳሉ፣ ይህም ነዳጅዎን እና ጉልበትዎን ይቆጥባል።</p></li>
+                    <li><p><strong>ውሳኔዎን ያሳድጋል:</strong> የትኛው ማደያ የተሻለ እንደሆነ ፈጣንና ትክክለኛ ውሳኔ እንዲወስኑ ያስችልዎታል።</p></li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h3 class="section-heading">የአጠቃቀም መመሪያ:</h3>
+                <ol>
+                    <li><p>በመጀመሪያ፣ ወደ ስልክ ቁጥር <strong>0989750238</strong> በE-birr <strong>10 ብር</strong> ለአንድ ሳምንት ይከፍላሉ።</p></li>
+                    <li><p>በመቀጠል፣ በቴሌግራም ላይ በዚህው ስልክ ቁጥር (0989750238) ላይ የከፈሉበትን <strong>ስክሪን ሾት</strong> ይልካሉ።</p></li>
+                    <li><p>ከዛ እኛ ለላኩበት የቴሌግራም አካውንትዎ የግል የሆነ የመግቢያ <strong>ፓስወርድ</strong> እንልክልዎታለን።</p></li>
+                    <li><p>ከዚያም ለከፈሉበት ሳምንት ወይም ለ7 ቀን ያህል በተሰጠዎት ፓስወርድ ይህንን ድረ-ገጽ መጠቀም ይችላሉ።</p></li>
+                </ol>
+            </div>
+            
+            <p class="important-note"><strong>ለራስዎ ደህንነት ሲሉ፣ የተሰጠዎትን ፓስወርድ ለግልዎ ብቻ እንዲይዙት በጥብቅ እናሳስባለን። ድረ-ገጹን መጠቀሙ ስራዎን ለማቃለል እና ወጪዎን ለመቀነስ እንደሚረዳዎ እርግጠኞች ነን!</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const correctPassword = "5555"; // የምትፈልገው የይለፍ ቃል
+            const enteredPassword = document.getElementById("passwordInput").value;
+            const errorMessage = document.getElementById("errorMessage");
+
+            if (enteredPassword === correctPassword) {
+                window.location.href = "index.html"; // ትክክል ከሆነ ወደ ዋናው ገጽ ውሰድ
+            } else {
+                errorMessage.textContent = "የተሳሳተ የይለፍ ቃል! እንደገና ይሞክሩ።";
+                errorMessage.style.opacity = "1";
+            }
+        }
+    </script>
+</body>
+</html>
