@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ያገለገሉ ባጃጆች መሸጫ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <h1><span class="accent-text">ያገለገሉ ባጃጆች</span> መሸጫ</h1>
+        <p>የተለያዩ አይነት ያገለገሉ ባጃጆችን እዚህ ያግኙ!</p>
+        <nav class="sub-nav">
+            <a href="data.html">ዋናው ገጽ</a>
+        </nav>
+    </header>
+
+    <main class="container sales-container">
+        <section class="bajaj-listings">
+
+            <div class="bajaj-card">
+                <div class="image-gallery">
+                    <img src="https://via.placeholder.com/400x300?text=Bajaj+1" alt="ባጃጅ 1" class="main-bajaj-image">
+                    <div class="thumbnail-images">
+                        <img src="https://via.placeholder.com/100x75?text=Bajaj+1a" alt="ባጃጅ 1 እይታ" onclick="changeMainImage(this)">
+                        <img src="https://via.placeholder.com/100x75?text=Bajaj+1b" alt="ባጃጅ 1 የኋላ" onclick="changeMainImage(this)">
+                        <img src="https://via.placeholder.com/100x75?text=Bajaj+1c" alt="ባጃጅ 1 ውስጣዊ" onclick="changeMainImage(this)">
+                    </div>
+                </div>
+                <div class="bajaj-details">
+                    <h2 class="bajaj-model">ቲቪኤስ ኪንግ (TVS King) - 2018</h2>
+                    <p class="bajaj-price">ዋጋ: <span class="price-value">250,000 ብር</span></p>
+                    <p class="bajaj-mileage">ርቀት: 85,000 ኪ.ሜ</p>
+                    <p class="bajaj-condition">ሁኔታ: በጣም ጥሩ (ጥቃቅን ጭረቶች)</p>
+                    <p class="bajaj-description">ጥሩ ሁኔታ ላይ ያለ፣ በየጊዜው የተያዘ፣ አዲስ ጎማዎች ያሉት ባጃጅ። ለስራ አገልግሎት ተስማሚ።</p>
+                    <p class="seller-contact">ሻጭ: አብዱ - 09XX-XXX-XXXX <a href="https://t.me/yourtelegramusername" target="_blank" class="telegram-link">ቴሌግራም</a></p>
+                    <div class="video-preview">
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=abcdefg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <p class="video-description">የባጃጁን ሙሉ ገፅታ ለማየት ቪዲዮውን ይመልከቱ።</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bajaj-card">
+                <div class="image-gallery">
+                    <img src="https://via.placeholder.com/400x300?text=Bajaj+2" alt="ባጃጅ 2" class="main-bajaj-image">
+                    <div class="thumbnail-images">
+                        <img src="https://via.placeholder.com/100x75?text=Bajaj+2a" alt="ባጃጅ 2 እይታ" onclick="changeMainImage(this)">
+                        <img src="https://via.placeholder.com/100x75?text=Bajaj+2b" alt="ባጃጅ 2 የኋላ" onclick="changeMainImage(this)">
+                    </div>
+                </div>
+                <div class="bajaj-details">
+                    <h2 class="bajaj-model">ባጃጅ ሬ (Bajaj RE) - 2020</h2>
+                    <p class="bajaj-price">ዋጋ: <span class="price-value">300,000 ብር</span></p>
+                    <p class="bajaj-mileage">ርቀት: 40,000 ኪ.ሜ</p>
+                    <p class="bajaj-condition">ሁኔታ: አዲስ የሚመስል (ጥሩ ጥገና ያለው)</p>
+                    <p class="bajaj-description">እምብዛም ያልሰራ፣ ጥገናው በየጊዜው የተደረገለት ባጃጅ። ለግልም ሆነ ለንግድ አገልግሎት ተስማሚ።</p>
+                    <p class="seller-contact">ሻጭ: ከድር - 09YY-YYY-YYYY <a href="https://t.me/anothertelegramuser" target="_blank" class="telegram-link">ቴሌግራም</a></p>
+                    </div>
+            </div>
+
+            </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 ባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+
+    <script>
+        function changeMainImage(thumbnail) {
+            const mainImage = thumbnail.closest('.image-gallery').querySelector('.main-bajaj-image');
+            mainImage.src = thumbnail.src;
+            mainImage.alt = thumbnail.alt;
+        }
+    </script>
+</body>
+</html>
