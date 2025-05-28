@@ -764,3 +764,138 @@ body {
     color: #a0a0a0;
     text-align: center;
 }
+/* Maintenance Page Specific Styles */
+.maintenance-container {
+    max-width: 1000px; /* Adjust as needed */
+}
+
+.section-card {
+    background-color: #3e5272; /* Same as station/news/bajaj cards */
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px; /* Space between sections */
+    border-top: 5px solid #2196F3; /* Blue accent for info/guide */
+}
+
+.section-title {
+    color: #2196F3; /* Blue accent for titles */
+    font-size: 2em;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid #2a3d5a;
+    padding-bottom: 10px;
+}
+
+.care-item, .troubleshooting-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 25px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #5a6a8a;
+}
+
+.care-item:last-child, .troubleshooting-item:last-child {
+    border-bottom: none; /* No border for the last item */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.care-image, .trouble-image {
+    width: 300px; /* Fixed width for images */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0; /* Prevents image from shrinking */
+    border: 3px solid #ffb300; /* Accent border for images */
+}
+
+.care-content h3, .troubleshooting-item h3 {
+    color: #ffb300; /* Yellow accent for sub-titles */
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.care-content p, .troubleshooting-item p {
+    font-size: 1.1em;
+    color: #d0d0d0;
+    margin-bottom: 10px;
+}
+
+.care-content strong, .troubleshooting-item strong {
+    color: #ffffff;
+}
+
+.troubleshooting-item ul {
+    list-style-type: disc; /* Use bullet points */
+    margin-left: 25px;
+    margin-bottom: 15px;
+    color: #d0d0d0;
+}
+
+.troubleshooting-item ul li {
+    margin-bottom: 8px;
+}
+
+.safety-warning {
+    border-top: 5px solid #F44336; /* Red accent for warnings */
+}
+
+.safety-warning .section-title {
+    color: #F44336;
+}
+
+.safety-warning ul {
+    list-style-type: square; /* Use square bullets */
+    margin-left: 25px;
+    color: #d0d0d0;
+}
+.safety-warning ul li {
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #e0e0e0;
+}
+
+.professional-help {
+    border-top: 5px solid #FFC107; /* Orange accent for advice */
+}
+
+.professional-help .section-title {
+    color: #FFC107;
+}
+
+/* Responsive adjustments for Maintenance Page */
+@media (max-width: 768px) {
+    .section-card {
+        padding: 20px;
+    }
+    .section-title {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+    .care-item, .troubleshooting-item {
+        flex-direction: column; /* Stack image and content vertically */
+        align-items: center;
+        text-align: center; /* Center text for stacked items */
+        gap: 15px;
+    }
+    .care-image, .trouble-image {
+        width: 100%; /* Full width on small screens */
+        height: auto;
+        max-width: 300px; /* Max width to prevent overly large images */
+    }
+    .care-content h3, .troubleshooting-item h3 {
+        font-size: 1.3em;
+    }
+    .care-content p, .troubleshooting-item p {
+        font-size: 1em;
+    }
+    .troubleshooting-item ul, .safety-warning ul {
+        margin-left: 15px; /* Adjust list indentation */
+        text-align: left; /* Keep list items left-aligned */
+    }
+    }
