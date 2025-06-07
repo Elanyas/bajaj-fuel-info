@@ -18,6 +18,8 @@
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-analytics.js";
+  // ** Firestoreን ለመጠቀም ይህን አስገባ! **
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js"; 
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,21 +35,19 @@
     measurementId: "G-2XX2B3RSGP"
   };
 
-  // Initialize Firebase
+  // Initialize Firebase (የተደጋገመውን አስወግደናል)
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
-    // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-// firebase.analytics(); // አስፈላጊ ከሆነ
+  
+  // ** Firestore Databaseን ማስጀመር **
+  const db = getFirestore(app); 
 
-// ይህንን መስመር ጨምር! (ፋየርስቶርን ለመጠቀም)
-const db = firebase.firestore(); 
-
-// Function to read data from Firestore
-async function readData() {
+  // Function to read data from Firestore
+  async function readData() {
     try {
-        const usersRef = db.collection('users'); // 'users' የምትለዋን Collection ስምህን ተጠቀም
-        const snapshot = await usersRef.get(); 
+        // collection() እና getDocs() ከላይ import መደረግ አለባቸው
+        const usersCol = collection(db, 'users'); // 'users' የምትለዋን Collection ስምህን ተጠቀም
+        const snapshot = await getDocs(usersCol); 
 
         if (snapshot.empty) {
             console.log('No matching documents.');
@@ -66,30 +66,28 @@ async function readData() {
         console.error("Error getting documents: ", error);
         document.getElementById('data-output').innerText = 'መረጃ ሲያነብ ስህተት ተፈጠረ: ' + error.message;
     }
-}
+  }
 
-// Call the function when the page loads
-window.onload = readData; // ገጹ ሲጫን readData() እንዲጠራ ያደርጋል
-</script>
-</script>
+  // Call the function when the page loads (ገጹ ሲጫን readData() እንዲጠራ ያደርጋል)
+  // ** ማስታወሻ: ይህ index.html ወደ login.html የሚያዞር ከሆነ መረጃው ላይታይ ይችላል። **
+  window.onload = readData; 
+  </script>
 </head>
 <body>
   <div id="data-output">መረጃ እየተጫነ ነው...</div> 
 
   <div class="redirect-container">
+    <div class="loader"></div>
+    <h1>በመጫን ላይ...</h1>
+    <p>ወደ መግቢያ ገጹ እየተዘዋወሩ ነው...</p>
+    <p class="small-text">ካለተዘዋወሩ <a href="login.html" class="redirect-link">እዚህ ይጫኑ</a></p>
   </div>
-    <div class="redirect-container">
-        <div class="loader"></div>
-        <h1>በመጫን ላይ...</h1>
-        <p>ወደ መግቢያ ገጹ እየተዘዋወሩ ነው...</p>
-        <p class="small-text">ካለተዘዋወሩ <a href="login.html" class="redirect-link">እዚህ ይጫኑ</a></p>
-    </div>
 
-    <script>
-        // JavaScript redirection for better user experience and SEO
-        setTimeout(function() {
-            window.location.href = "login.html";
-        }, 3000); // 3 seconds delay
-    </script>
+  <script>
+    // JavaScript redirection for better user experience and SEO
+    setTimeout(function() {
+        window.location.href = "login.html";
+    }, 3000); // 3 seconds delay
+  </script>
 </body>
-</html>
+  </html>
