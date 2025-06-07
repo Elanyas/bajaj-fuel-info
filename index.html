@@ -45,7 +45,6 @@
   // Function to read data from Firestore
   async function readData() {
     try {
-        // collection() እና getDocs() ከላይ import መደረግ አለባቸው
         const usersCol = collection(db, 'users'); // 'users' የምትለዋን Collection ስምህን ተጠቀም
         const snapshot = await getDocs(usersCol); 
 
@@ -69,25 +68,11 @@
   }
 
   // Call the function when the page loads (ገጹ ሲጫን readData() እንዲጠራ ያደርጋል)
-  // ** ማስታወሻ: ይህ index.html ወደ login.html የሚያዞር ከሆነ መረጃው ላይታይ ይችላል። **
   window.onload = readData; 
   </script>
 </head>
 <body>
   <div id="data-output">መረጃ እየተጫነ ነው...</div> 
 
-  <div class="redirect-container">
-    <div class="loader"></div>
-    <h1>በመጫን ላይ...</h1>
-    <p>ወደ መግቢያ ገጹ እየተዘዋወሩ ነው...</p>
-    <p class="small-text">ካለተዘዋወሩ <a href="login.html" class="redirect-link">እዚህ ይጫኑ</a></p>
-  </div>
-
-  <script>
-    // JavaScript redirection for better user experience and SEO
-    setTimeout(function() {
-        window.location.href = "login.html";
-    }, 3000); // 3 seconds delay
-  </script>
-</body>
-  </html>
+  </body>
+</html>
