@@ -36,6 +36,41 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
+    // Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+// firebase.analytics(); // አስፈላጊ ከሆነ
+
+// ይህንን መስመር ጨምር! (ፋየርስቶርን ለመጠቀም)
+const db = firebase.firestore(); 
+
+// Function to read data from Firestore
+async function readData() {
+    try {
+        const usersRef = db.collection('users'); // 'users' የምትለዋን Collection ስምህን ተጠቀም
+        const snapshot = await usersRef.get(); 
+
+        if (snapshot.empty) {
+            console.log('No matching documents.');
+            document.getElementById('data-output').innerText = 'ምንም መረጃ የለም።';
+            return;
+        }
+
+        let output = '';
+        snapshot.forEach(doc => {
+            console.log(doc.id, '=>', doc.data());
+            output += `ID: ${doc.id}, Name: ${doc.data().name || 'N/A'}, Age: ${doc.data().age || 'N/A'}<br>`;
+        });
+        document.getElementById('data-output').innerHTML = output; 
+
+    } catch (error) {
+        console.error("Error getting documents: ", error);
+        document.getElementById('data-output').innerText = 'መረጃ ሲያነብ ስህተት ተፈጠረ: ' + error.message;
+    }
+}
+
+// Call the function when the page loads
+window.onload = readData; // ገጹ ሲጫን readData() እንዲጠራ ያደርጋል
+</script>
 </script>
 </head>
 <body>
