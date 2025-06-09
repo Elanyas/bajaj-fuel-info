@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ይመዝገቡ | ባጃጅ ነዳጅ መረጃ</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Basic styling for the registration page - you can adjust this */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background-color: #2a2a2a;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #00bcd4; /* Accent color */
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #00bcd4;
+            box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0097a7;
+        }
+        #errorMessage {
+            color: #ff6347; /* Tomato red for errors */
+            margin-top: 15px;
+            font-size: 0.9em;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.3s ease;
+        }
+        #recaptcha-container {
+            margin-top: 20px;
+            transform: scale(0.77); /* Adjust size if needed */
+            transform-origin: 0 0; /* Anchor to top-left */
+            display: flex;
+            justify-content: center;
+        }
+        /* Style for OTP input field */
+        .otp-section {
+            margin-top: 20px;
+            display: none; /* Hidden by default, shown after OTP is sent */
+        }
+        .otp-section label {
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-size: 0.9em;
+        }
+        .otp-section input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            font-size: 1em;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .otp-section button {
+            margin-top: 10px;
+            background-color: #4CAF50; /* Green for OTP verification */
+        }
+        .otp-section button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>ይመዝገቡ</h1>
+        <p id="infoMessage" style="color: #b0b0b0; font-size: 0.9em; margin-bottom: 20px;">
+            ለመመዝገብ ከቴሌግራም ቦት የተላከልህን ልዩ ሊንክ ተጠቅመህ ብቻ አስገባ።
+        </p>
+
+        <div class="input-group">
+            <label for="phoneNumber">ስልክ ቁጥርዎ:</label>
+            <input type="tel" id="phoneNumber" placeholder="ለምሳሌ: 0912345678" required>
+        </div>
+        <div class="input-group">
+            <label for="password">የይለፍ ቃል ይፍጠሩ:</label>
+            <input type="password" id="password" placeholder="ቢያንስ 6 ቁምፊዎች" required>
+        </div>
+        <div class="input-group">
+            <label for="confirmPassword">የይለፍ ቃልዎን ያረጋግጡ:</label>
+            <input type="password" id="confirmPassword" placeholder="የይለፍ ቃልዎን እንደገና ያስገቡ" required>
+        </div>
+
+        <button id="sendOtpButton">የማረጋገጫ ኮድ ላክ</button>
+        
+        <div id="recaptcha-container"></div> 
+        
+        <div class="otp-section" id="otpSection">
+            <label for="otpCode">የማረጋገጫ ኮድ ያስገቡ:</label>
+            <input type="text" id="otpCode" placeholder="የተላከውን ኮድ ያስገቡ" required>
+            <button id="verifyOtpButton">ያረጋግጡ</button>
+        </div>
+
+        <p id="errorMessage"></p>
+    </div>
+
+    <script type="module">
+        // የፋየርቤዝ configuration ዝርዝሮችህ እዚህ ይገባሉ
+        // እነዚህን ከFirebase console -> Project settings -> Your apps -> Web app መቅዳት ትችላለህ
+        const firebaseConfig = {
+          apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+          authDomain: "elanyas-info.firebaseapp.com",
+          projectId: "elanyas-info",
+          storageBucket: "elanyas-info.firebasestorage.app",
+          messagingSenderId: "769306910360",
+          appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+          measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Firebaseን አስጀምር
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js"; 
+        import { getAuth, signInWithPhoneNumber, RecaptchaVerifier, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"; 
+        import { getFirestore, collection, query, where, getDocs, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"; // getDoc ጨምር
+
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app); // Firestore instance
+
+        let confirmationResult = null; // To store the result of signInWithPhoneNumber
+
+        // Get elements
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const sendOtpButton = document.getElementById('sendOtpButton');
+        const otpSection = document.getElementById('otpSection');
+        const otpCodeInput = document.getElementById('otpCode');
+        const verifyOtpButton = document.getElementById('verifyOtpButton');
+        const errorMessageDisplay = document.getElementById('errorMessage');
+        const infoMessageDisplay = document.getElementById('infoMessage');
+
+        // Initialize reCAPTCHA
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible', // or 'normal' if you want it visible
+            'callback': (response) => {
+                // reCAPTCHA solved, this callback is typically not needed for invisible
+            },
+            'expired-callback': () => {
+                errorMessageDisplay.textContent = "reCAPTCHA ጊዜው አልፏል። እባክዎ እንደገና ይሞክሩ።";
+                errorMessageDisplay.style.opacity = "1";
+            }
+        });
+
+        // Function to display error messages
+        function showErrorMessage(message) {
+            errorMessageDisplay.textContent = message;
+            errorMessageDisplay.style.opacity = "1";
+        }
+
+        // Function to hide error messages
+        function hideErrorMessage() {
+            errorMessageDisplay.style.opacity = "0";
+            errorMessageDisplay.textContent = "";
+        }
+
+        // Function to parse URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Check for token on page load
+        const token = getUrlParameter('token');
+        let initialPhoneNumber = ''; // To store the phone number from the token
+
+        async function validateTokenAndLoadData() {
+            if (!token) {
+                showErrorMessage("ትክክለኛ የምዝገባ ሊንክ አልተገኘም። እባክዎ ከቴሌግራም ቦት የተላከልዎትን ሊንክ ይጠቀሙ።");
+                sendOtpButton.disabled = true; // Disable registration if no token
+                return;
+            }
+
+            // Fetch token details from Firestore directly by ID
+            try {
+                const tokenDocRef = doc(db, "registrationTokens", token); // Get document reference by ID
+                const tokenSnapshot = await getDoc(tokenDocRef); // Use getDoc for single document
+
+                if (!tokenSnapshot.exists()) { // Check if document exists
+                    showErrorMessage("የምዝገባ ሊንክዎ ትክክል አይደለም ወይም ጊዜው አልፎበታል። እባክዎ ከቦቱ አዲስ ሊንክ ይጠይቁ።");
+                    sendOtpButton.disabled = true;
+                    return;
+                }
+
+                const tokenData = tokenSnapshot.data(); // Get data from the snapshot
+
+                // Check for expiration
+                // Assuming expires_at is an ISO string (e.g., "2025-06-09T08:33:08.370Z")
+                const expiresAt = new Date(tokenData.expires_at);
+                if (new Date() > expiresAt) {
+                    showErrorMessage("ይህ የምዝገባ ሊንክ ጊዜው አልፏል። እባክዎ ከቦቱ አዲስ ሊንክ ይጠይቁ።");
+                    sendOtpButton.disabled = true;
+                    return;
+                }
+
+                if (tokenData.used) {
+                    showErrorMessage("ይህ የምዝገባ ሊንክ ቀድሞውኑ ጥቅም ላይ ውሏል።");
+                    sendOtpButton.disabled = true;
+                    return;
+                }
+
+                // If token is valid and not used, populate phone number and disable editing
+                initialPhoneNumber = tokenData.phone_number;
+                phoneNumberInput.value = initialPhoneNumber;
+                phoneNumberInput.readOnly = true; // Make it read-only
+                
+                infoMessageDisplay.textContent = `እንኳን ደህና መጡ! ስልክ ቁጥርዎ ${initialPhoneNumber} ተረጋግጧል። እባክዎ የይለፍ ቃል ይፍጠሩ።`;
+                sendOtpButton.disabled = false; // Enable button
+                hideErrorMessage(); // Hide any initial error
+
+            } catch (error) {
+                console.error("Error validating token:", error);
+                showErrorMessage("የምዝገባ ሊንክዎን በማጣራት ላይ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
+                sendOtpButton.disabled = true;
+            }
+        }
+
+        // Event listener for "Send OTP" button
+        sendOtpButton.addEventListener('click', async () => {
+            hideErrorMessage();
+
+            const phoneNumber = phoneNumberInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Basic client-side validation
+            if (!phoneNumber || !password || !confirmPassword) {
+                showErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ!");
+                return;
+            }
+            if (!phoneNumber.startsWith('09') || phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
+                showErrorMessage("ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ (ለምሳሌ: 0912345678)");
+                return;
+            }
+            if (password.length < 6) {
+                showErrorMessage("የይለፍ ቃል ቢያንስ 6 ቁምፊዎች መሆን አለበት።");
+                return;
+            }
+            if (password !== confirmPassword) {
+                showErrorMessage("የይለፍ ቃልዎ እርስ በርስ አይመሳሰልም።");
+                return;
+            }
+            if (phoneNumber !== initialPhoneNumber) { // Ensure phone number wasn't tampered with
+                 showErrorMessage("ስልክ ቁጥርዎ በቴሌግራም ቦት ከተረጋገጠው ጋር አይመሳሰልም።");
+                 return;
+            }
+
+            // Convert to E.164 format for Firebase Auth
+            const formattedPhoneNumber = `+251${phoneNumber.substring(1)}`;
+
+            try {
+                // Send OTP to phone number
+                const appVerifier = window.recaptchaVerifier;
+                confirmationResult = await signInWithPhoneNumber(auth, formattedPhoneNumber, appVerifier);
+                
+                sendOtpButton.style.display = 'none'; // Hide send OTP button
+                otpSection.style.display = 'block'; // Show OTP input section
+                phoneNumberInput.readOnly = true; // Make phone number read-only after sending OTP
+                passwordInput.readOnly = true;
+                confirmPasswordInput.readOnly = true;
+
+                infoMessageDisplay.textContent = "የማረጋገጫ ኮድ ወደ ስልክዎ ተልኳል። እባክዎ ያስገቡ።";
+
+            } catch (error) {
+                console.error("Error sending OTP:", error);
+                let msg = "ኮድ ለመላክ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።";
+                if (error.code === 'auth/invalid-phone-number') {
+                    msg = "የተሳሳተ ስልክ ቁጥር።";
+                } else if (error.code === 'auth/too-many-requests') {
+                    msg = "ብዙ ሙከራ አድርገዋል። እባክዎ ቆይተው ይሞክሩ።";
+                } else if (error.code === 'auth/network-request-failed') {
+                    msg = "የኢንተርኔት ግንኙነት ችግር።";
+                }
+                showErrorMessage(msg);
+                // Re-enable button if OTP sending fails
+                sendOtpButton.disabled = false; 
+                if (window.recaptchaVerifier && typeof window.recaptchaVerifier.render === 'function') {
+                    window.recaptchaVerifier.render().then(function(widgetId) {
+                        grecaptcha.reset(widgetId);
+                    });
+                }
+            }
+        });
+
+        // Event listener for "Verify OTP" button
+        verifyOtpButton.addEventListener('click', async () => {
+            hideErrorMessage();
+
+            const otpCode = otpCodeInput.value.trim();
+            if (!otpCode) {
+                showErrorMessage("እባክዎ የማረጋገጫ ኮዱን ያስገቡ።");
+                return;
+            }
+
+            try {
+                // Verify OTP
+                await confirmationResult.confirm(otpCode);
+                // OTP verified successfully, now the user is authenticated via phone number.
+                // We don't directly set a password for a phone-authenticated user in Firebase Auth.
+                // The password fields in the HTML are for conceptual use or if you plan to link an email/password later.
+                
+                // Find the token in Firestore and mark it as used
+                const tokenDocRef = doc(db, "registrationTokens", token); // Direct reference using the token ID
+                await updateDoc(tokenDocRef, {
+                    used: true,
+                    registeredPhoneNumber: phoneNumberInput.value, // Store the number that registered
+                    registeredAt: new Date().toISOString(), // Store timestamp
+                    // You might want to store the password here if you are not using Firebase Email/Password Auth for login
+                    // enteredPassword: passwordInput.value // Be cautious: storing plain passwords is not recommended. Hash if stored.
+                });
+                console.log("Registration token marked as used.");
+
+                // Redirect to data page after successful registration
+                alert("ምዝገባዎ ተሳክቷል! አሁን ወደ ዌብሳይት ይወሰዳሉ።");
+                window.location.href = "data.html"; // Make sure data.html exists and is also deployed to Firebase Hosting
+
+            } catch (error) {
+                console.error("Error verifying OTP:", error);
+                let msg = "የማረጋገጫ ኮድዎ ስህተት ነው። እባክዎ ትክክለኛውን ኮድ ያስገቡ።";
+                if (error.code === 'auth/invalid-verification-code') {
+                    msg = "የተሳሳተ የማረጋገጫ ኮድ።";
+                } else if (error.code === 'auth/code-expired') {
+                    msg = "የማረጋገጫ ኮድዎ ጊዜው አልፏል። እባክዎ እንደገና ይላኩ።";
+                } else if (error.code === 'auth/credential-already-in-use') {
+                    msg = "ይህ ስልክ ቁጥር ቀድሞውኑ ተመዝግቧል።"; // If phone number is linked to another user
+                }
+                showErrorMessage(msg);
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', validateTokenAndLoadData);
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.0/firebase-ui-auth.js"></script> 
+</body>
+</html>
