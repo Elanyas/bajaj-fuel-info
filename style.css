@@ -1375,3 +1375,66 @@ body {
         max-width: 200px;
     }
 }
+/* --- Login Page Specific Styles (login.html) --- */
+/* ... ሌሎች የ login.html ስታይሎች ... */
+
+.login-form-card input[type="password"],
+.login-form-card input[type="tel"], /* ስልክ ቁጥር */
+.login-form-card input[type="text"] { /* የታርጋ ቁጥር */
+    width: calc(100% - 30px); /* ስፋቱን ከበፊቱ ያነሰ፣ ለ padding የሚሆን ቦታ ትቶ */
+    padding: 15px; /* የውስጥ ክፍተቱን (padding) ቀንሰናል */
+    border: 2px solid #ccc;
+    border-radius: 8px; /* ክብ ቅርጹን ትንሽ ቀንሰናል */
+    font-size: 1.15em; /* የጽሑፉን መጠን ቀንሰናል */
+    background-color: #ffffff;
+    color: #333;
+    box-sizing: border-box;
+    text-align: center; /* ጽሑፉ እና ፕሌስሆልደሩ መሃል እንዲሆኑ */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    margin: 0 auto; /* input ፊልዱን መሃል ለማድረግ */
+}
+
+.login-form-card input[type="password"]:focus,
+.login-form-card input[type="tel"]:focus,
+.login-form-card input[type="text"]:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.3); /* የጥላውን መጠን ቀንሰናል */
+    outline: none;
+}
+
+.login-form-card input[type="password"]::placeholder,
+.login-form-card input[type="tel"]::placeholder,
+.login-form-card input[type="text"]::placeholder {
+    color: #aaa;
+    text-align: center; /* ፕሌስሆልደሩ መሃል እንዲሆን */
+}
+
+/* ... ሌሎች የ style.css ስታይሎች ... */
+
+/* --- Responsive Adjustments (Media Queries) --- */
+@media (max-width: 768px) {
+    /* ... ሌሎች የሞባይል ስታይሎች ... */
+
+    .login-form-card input[type="password"],
+    .login-form-card input[type="tel"],
+    .login-form-card input[type="text"] {
+        padding: 12px; /* በሞባይል ላይ የበለጠ እንዲቀንስ */
+        font-size: 1.1em; /* በሞባይል ላይ የጽሑፉን መጠን የበለጠ እንዲቀንስ */
+    }
+
+    /* ... ሌሎች የሞባይል ስታይሎች ... */
+}
+
+@media (max-width: 480px) {
+    /* ... ሌሎች የሞባይል ስታይሎች ... */
+
+    .login-form-card input[type="password"],
+    .login-form-card input[type="tel"],
+    .login-form-card input[type="text"] {
+        padding: 10px; /* በጣም ትናንሽ ስክሪኖች ላይ የበለጠ እንዲቀንስ */
+        font-size: 1em; /* በጣም ትናንሽ ስክሪኖች ላይ የጽሑፉን መጠን የበለጠ እንዲቀንስ */
+    }
+
+    /* ... ሌሎች የሞባይል ስታይሎች ... */
+    }
