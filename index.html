@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bajaj System - Loading...</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="loader"></div>
+        <h1>ELANYAS</h1>
+        <p>እንኳን ደህና መጡ! እየተጫነ ነው። እባክዎ ትንሽ ይጠብቁ...</p>
+        <p class="small-text">በአንዳንድ ብሮውዘር ላይ በራስ-ሰር ካልሄደ፣ <a href="login.html" class="redirect-link">እዚህ ይጫኑ</a>።</p>
+    </div>
+
+    <script>
+        // ገጹ ከተጫነ ከ 3 ሰከንድ በኋላ ወደ login.html ለመሄድ
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 3000); // 3000 ሚሊሰከንድ = 3 ሰከንድ
+    </script>
+</body>
+</html>
