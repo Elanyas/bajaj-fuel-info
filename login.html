@@ -26,7 +26,7 @@
                     <input type="tel" id="phoneNumberInput" placeholder="ስልክ ቁጥር (ለምሳሌ: 0912345678)" required>
                 </div>
                 <div class="input-group">
-                    <label for="licensePlateInput" class="sr-only">የታርጋ ቁጥር:</label>
+                    <label for="licensePlateInput" class="sr-only">የይለፍ ቃል:</label>
                     <input type="text" id="licensePlateInput" placeholder="የይለፍ ቃል (ለምሳሌ: 1234)" required>
                 </div>
                 
@@ -110,7 +110,7 @@
             showErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ!");
             return;
         }
-        if (!phoneNumber.startsWith('09') || phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
+        if ((!phoneNumber.startsWith('09') && !phoneNumber.startsWith('07')) || phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
             showErrorMessage("ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ (ለምሳሌ: 0912345678)");
             return;
         }
@@ -126,7 +126,7 @@
             const userSnapshot = await getDoc(userDocRef);
 
             if (!userSnapshot.exists()) {
-                showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም ወይም አልተመዘገቡም።");
+                showErrorMessage("ስልክ ቁጥርዎ ወይም የታርጋ ቁጥርዎ ትክክል አይደለም ወይም አልተመዘገቡም።");
                 loginButton.disabled = false;
                 return;
             }
