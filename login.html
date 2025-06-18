@@ -126,7 +126,7 @@
             const userSnapshot = await getDoc(userDocRef);
 
             if (!userSnapshot.exists()) {
-                showErrorMessage("ስልክ ቁጥርዎ ወይም የታርጋ ቁጥርዎ ትክክል አይደለም ወይም አልተመዘገቡም።");
+                showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም ወይም አልተመዘገቡም።");
                 loginButton.disabled = false;
                 return;
             }
