@@ -13,15 +13,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>የባጃጅ ነዳጅ መረጃ - ዋናው ገጽ</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
 
     <script>
         // ገጹ ሲጫን ወዲያውኑ የመግቢያ ሁኔታን አረጋግጥ
         if (localStorage.getItem('isLoggedIn') !== 'true') {
-            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ ይግቡ።");
+            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
             window.location.href = 'login.html';
         }
     </script>
+    <style>
+        /* ተጨማሪ የ CSS ስታይሎች ለተሻለ አቀማመጥ */
+        .fuel-type-details {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .fuel-type-details p {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fuel-type-details strong {
+            font-size: 1.1em;
+        }
+        .status-info p {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .status-info p strong {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -46,75 +72,117 @@
     <main class="container">
         <section class="fuel-station-list">
             <div class="station-card">
-                <h2 class="station-name">ሞቢል(Mobile)</h2>
+                <h2 class="station-name">አፍሪካ ነዳጅ ማደያ (ቦሌ)</h2>
                 <div class="status-info">
-                    <p>ነዳጅ አለ?: <strong class="available">አለ</strong></p>
-                    <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                    <p>የወረፋ ሁኔታ: <strong class="status-short">አጭር (5-10 ደቂቃ)</strong></p>
+                    <div class="fuel-type-details">
+                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
+                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
+                    <div class="fuel-type-details">
+                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
+                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
                 </div>
                 <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:30 ጥዋት</p>
             </div>
 
             <div class="station-card">
-                <h2 class="station-name">ሼል/ሸዋበር(shell)</h2>
+                <h2 class="station-name">አፍሪካ ነዳጅ ማደያ (ቦሌ)</h2>
                 <div class="status-info">
-                    <p>ነዳጅ አለ?: <strong class="unavailable">የለም</strong></p>
-                    <p>የነዳጅ ዋጋ: <strong>---</strong></p>
-                    <p>የወረፋ ሁኔታ: <strong class="status-none">መረጃ የለም</strong></p>
+                    <div class="fuel-type-details">
+                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
+                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
+                    <div class="fuel-type-details">
+                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
+                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
                 </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 11:00 ጥዋት</p>
+                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:30 ጥዋት</p>
             </div>
 
-            <div class="station-card">
-                <h2 class="station-name">ኖክ ነዳጅ ማደያ(NOC)</h2>
+                       <div class="station-card">
+                <h2 class="station-name">አፍሪካ ነዳጅ ማደያ (ቦሌ)</h2>
                 <div class="status-info">
-                    <p>ነዳጅ አለ?: <strong class="available">አለ</strong></p>
-                    <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                    <p>የወረፋ ሁኔታ: <strong class="status-medium">መካከለኛ (15-20 ደቂቃ)</strong></p>
+                    <div class="fuel-type-details">
+                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
+                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
+                    <div class="fuel-type-details">
+                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
+                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
                 </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:45 ጥዋት</p>
+                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:30 ጥዋት</p>
             </div>
 
-            <div class="station-card">
-                <h2 class="station-name">ሐረር ራስ ኦላ (Ras Ola)</h2>
+                       <div class="station-card">
+                <h2 class="station-name">አፍሪካ ነዳጅ ማደያ (ቦሌ)</h2>
                 <div class="status-info">
-                    <p>ነዳጅ አለ?: <strong class="available">አለ</strong></p>
-                    <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                    <p>የወረፋ ሁኔታ: <strong class="status-long">ረጅም (ከ 30 በላይ ባጃጅ)</strong></p>
+                    <div class="fuel-type-details">
+                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
+                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
+                    <div class="fuel-type-details">
+                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
+                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
                 </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:55 ጥዋት</p>
+                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:30 ጥዋት</p>
             </div>
 
-            <div class="station-card">
-                <h2 class="station-name">አራተኛ(Arategna)</h2>
+                        <div class="station-card">
+                <h2 class="station-name">አፍሪካ ነዳጅ ማደያ (ቦሌ)</h2>
                 <div class="status-info">
-                    <p>ነዳጅ አለ?: <strong class="available">አለ</strong></p>
-                    <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                    <p>የወረፋ ሁኔታ: <strong class="status-short">አጭር (5-10 ደቂቃ)</strong></p>
+                    <div class="fuel-type-details">
+                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
+                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
+                    <div class="fuel-type-details">
+                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
+                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
                 </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 11:10 ጥዋት</p>
+                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:30 ጥዋት</p>
             </div>
 
-            <div class="station-card">
-                <h2 class="station-name">ናይል ፔትሮል (Nile)</h2>
+                        <div class="station-card">
+                <h2 class="station-name">አፍሪካ ነዳጅ ማደያ (ቦሌ)</h2>
                 <div class="status-info">
-                    <p>ነዳጅ አለ?: <strong class="unavailable">የለም</strong></p>
-                    <p>የነዳጅ ዋጋ: <strong>---</strong></p>
-                    <p>የወረፋ ሁኔታ: <strong class="status-none">መረጃ የለም</strong></p>
+                    <div class="fuel-type-details">
+                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
+                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
+                    <div class="fuel-type-details">
+                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
+                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
+                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
+                    </div>
                 </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 11:20 ጥዋት</p>
+                <p class="last-updated">የመጨረሻ ዝመና: 2025-06-03 10:30 ጥዋት</p>
             </div>
         </section>
 
         <div style="text-align: center; margin: 30px 0;">
             <button id="logoutButton" 
                     style="
-                        background-color: #f44336; /* ቀይ ከለር */
+                        background-color:#00bcd4; /* ከለር */
                         color: white;
-                        padding: 15px 30px; /* ሰፋ ያለ padding */
+                        padding: 10px 100px; /* ሰፋ ያለ padding */
                         border: none;
-                        border-radius: 8px;
-                        font-size: 1.2em; /* ትልቅ ጽሑፍ */
+                        border-radius: 16px;
+                        font-size: 1.1em; /* ትልቅ ጽሑፍ */
                         cursor: pointer;
                         transition: background-color 0.3s ease, transform 0.2s ease;
                         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
