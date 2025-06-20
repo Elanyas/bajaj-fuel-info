@@ -1528,3 +1528,104 @@ details[open] summary::after {
         font-size: 0.9em; /* የአዝራር ጽሁፍ መቀነስ */
     }
 }
+    /* New and updated styles for image gallery and indicator */
+
+/* Main image gallery container */
+.image-gallery {
+    position: relative; /* ይህ እንዲኖር ያስፈልጋል በተኖቹ በውስጡ እንዲቀመጡ */
+    padding: 20px; /* በዙሪያው ያለውን ክፍተት */
+    background-color: #2a2a2a;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-bottom: 15px; /* ከታች ካለው ኢንዲኬተር ለመለየት */
+}
+
+/* ዋናው ባጃጅ ፎቶ */
+.image-gallery .main-bajaj-image {
+    width: 100%; /* የኮንቴይነሩን ሙሉ ስፋት እንዲይዝ */
+    height: 320px; /* ቋሚ ቁመት */
+    object-fit: contain; /* ፎቶው ሳይቆረጥ በኮንቴይነር ውስጥ እንዲገባ */
+    border-radius: 10px;
+    background-color: #121212;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease-in-out;
+    cursor: zoom-in;
+}
+
+/* የ navigation በተኖች (ቀስቶች) */
+.image-gallery .nav-button {
+    position: absolute; /* በፎቶው ላይ እንዲቀመጡ */
+    top: 50%; /* ወደ መሃል እንዲመጡ */
+    transform: translateY(-50%); /* በትክክል መሃል እንዲሆኑ */
+    background-color: transparent; /* ከበስተጀርባ ቀለም የለም */
+    color: #00bcd4; /* የቀስቶቹ ቀለም */
+    border: none;
+    padding: 0 10px; /* በዙሪያቸው ያለ ክፍተት */
+    cursor: pointer;
+    font-size: 2.5em; /* ትልቅ ቀስቶች */
+    font-weight: bold;
+    border-radius: 0;
+    transition: color 0.3s ease, transform 0.2s ease;
+    z-index: 10; /* ከፎቶው ላይ እንዲታዩ */
+    width: auto;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-gallery .nav-button:hover {
+    color: #008c9e; /* ሲነካ ቀለማቸው እንዲቀየር */
+    transform: translateY(-50%) scale(1.1); /* ሲነካ ትንሽ እንዲያድጉ */
+}
+
+.image-gallery .prev-button {
+    left: 10px; /* በግራ በኩል 10px ርቀት */
+}
+
+.image-gallery .next-button {
+    right: 10px; /* በቀኝ በኩል 10px ርቀት */
+}
+
+/* የምስል አመልካች (ነጥቦች) - አሁን ከምስሉ ጋለሪ ስር */
+.image-indicator {
+    display: flex;
+    justify-content: center; /* ነጥቦቹ በመሃል እንዲሰለፉ */
+    gap: 8px; /* በነጥቦቹ መካከል ያለው ክፍተት */
+    margin-top: 10px; /* ከምስል ጋለሪው በታች ያለው ክፍተት */
+    padding-bottom: 10px;
+    background-color: #1e1e1e; /* ከካርዱ ቀለም ጋር የሚመሳሰል ዳራ */
+    border-radius: 0 0 10px 10px; /* ከታች የተጠጋጉ ጠርዞች */
+}
+
+.image-indicator .indicator-dot {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.4); /* የነጥቦቹ ቀለም */
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.image-indicator .indicator-dot.active {
+    background-color: #00bcd4; /* የነቃው ነጥብ ቀለም */
+    transform: scale(1.2); /* የነቃው ነጥብ ትንሽ እንዲያድግ */
+}
+
+/* Responsive adjustments for the new image gallery */
+@media (max-width: 768px) {
+    .image-gallery .nav-button {
+        font-size: 2em; /* ለሞባይል ትናንሽ ቀስቶች */
+    }
+    .image-indicator {
+        margin-top: 5px;
+        gap: 6px;
+    }
+    .image-indicator .indicator-dot {
+        width: 8px;
+        height: 8px;
+    }
+}
