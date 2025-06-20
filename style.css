@@ -544,8 +544,8 @@ body {
     /* News Page Specific Mobile Adjustments - (ይህ ነው የተስተካከለው) */
     .news-container {
         margin: 0 auto; /* ይህንን ያረጋግጡ ወይም ያክሉ */
-        padding: 0 20px; /* በሁለቱም በኩል የ20px ፓዲንግ */
-        width: calc(100% - 40px); /* 100% ስፋት ሲቀነስ የጎን ፓዲንግ */
+        padding: 0 5px; /* በሁለቱም በኩል የ20px ፓዲንግ */
+        width: calc(100% - 10px); /* 100% ስፋት ሲቀነስ የጎን ፓዲንግ */
         box-sizing: border-box;
     }
     .news-feed {
@@ -706,9 +706,9 @@ body {
 /* News Page Specific Styles - **እዚህ ጋር ነው ማስተካከያው የተደረገው** */
 .news-container {
     max-width: 1200px; /* ከmaintenance-container ጋር ተመሳሳይ */
-    margin: 40px auto; /* መሃል ላይ እንዲሆን */
-    padding: 0 30px; /* የጎን ፓዲንግ */
-    width: calc(100% - 60px); /* Padding ን ከግምት ውስጥ በማስገባት */
+    margin: 0 auto; /* መሃል ላይ እንዲሆን */
+    padding: 0 5px; /* የጎን ፓዲንግ */
+    width: calc(100% - 10px); /* Padding ን ከግምት ውስጥ በማስገባት */
     box-sizing: border-box; /* ፓዲንግ በ width ውስጥ እንዲካተት */
     display: flex;
     flex-direction: column;
@@ -1436,5 +1436,95 @@ body {
         font-size: 1em; /* በጣም ትናንሽ ስክሪኖች ላይ የጽሑፉን መጠን የበለጠ እንዲቀንስ */
     }
 
-    /* ... ሌሎች የሞባይል ስታይሎች ... */
+/* ለአኒሜሽን ተጨማሪ ስታይሎች */
+details {
+    overflow: hidden; /* ይዘቱ ከመታየቱ በፊት እንዲደበቅ */
+    transition: height 0.8s ease-out; /* የከፍታ ለውጥ ላይ አኒሜሽን */
+}
+
+details[open] summary ~ * {
+    animation: fadeInContent 1s ease-out forwards; /* ይዘቱ ሲታይ አኒሜሽን */
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+summary {
+    cursor: pointer;
+    list-style: none; /* ነጥቡን ለማጥፋት */
+    position: relative; /* ይህን እንዳለ ይተውት ለበኋላ ማስተካከያ ሊጠቅም ይችላል */
+    /* padding-right: 30px; /* ለአይከን የሚሆን ቦታ - አሁን አያስፈልግም እናስወግደዋለን */ */
+
+    /* አዲስ የተጨመሩ ስታይሎች ለ + ምልክት አቀማመጥ */
+    display: flex; /* Flexbox እንዲጠቀም */
+    flex-direction: column; /* እቃዎቹ (ርዕስ እና ምልክት) በአምድ እንዲደረደሩ */
+    align-items: flex-start; /* እቃዎች ወደ ግራ እንዲደረደሩ (ምልክቱ ራሱ ይስተካከላል) */
+}
+
+summary::-webkit-details-marker {
+    display: none; /* የChrome ነባሪ አይከንን ለማጥፋት */
+}
+summary::after {
+    content: '▼'; /* ሲዘጋ የሚታይ ምልክት */
+    position: static;
+    align-self: flex-end; /* በራሱ መስመር ላይ ሆኖ ወደ ቀኝ እንዲሄድ */
+    margin-top: 10px; /* ከጽሁፉ ላይ ትንሽ ክፍተት ለመፍጠር */
+    font-size: 1.5em;
+    color: #00bcd4;
+    transition: transform 0.8s ease;
+
+    /* አዲስ የተጨመሩ ስታይሎች ለመስመሩ */
+    border-top: 2px solid #555; /* 1px ውፍረት ያለው ጠንካራ ግራጫ መስመር */
+    padding-top: 10px; /* ከመስመሩ በላይ ትንሽ ክፍተት ለመፍጠር */
+    width: 50px; /* የመስመሩን ስፋት መወሰን (እንደፈለግክ መቀየር ትችላለህ) */
+}
+
+
+details[open] summary::after {
+    content: '△'; /* ሲከፈት የሚታይ ምልክት */
+    transform: rotate(180deg); /* ሲከፈት እንዲሽከረከር (translateY ተወግዷል) */
+}
+
+/* ለሞባይል እይታ የዜና ካርዶች ተጨማሪ ማስተካከያ */
+@media (max-width: 768px) {
+    .news-feed {
+        grid-template-columns: 1fr; /* በሞባይል ላይ አንዱ ከሌላው ስር */
+        gap: 25px;
+    }
+    .news-article-card {
+        width: 100%; /* የካርዱን ስፋት ወደ 100% ያድርጉት */
+        /* max-width: 450px; /* ይህንን ሙሉ በሙሉ እናስወግደዋለን */ */
+        margin: 0 auto; /* ካርዱን በመሃል ለማምጣት */
+        box-sizing: border-box;
+    }
+    .news-image {
+        width: 100%;
+        height: auto;
+        max-height: 250px; /* የምስሉን ቁመት መቆጣጠር */
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+    .article-content {
+        padding: 20px; /* የውስጥ ፓዲንግ መቀነስ */
+        text-align: center; /* የጽሁፍ ይዘቱን ማዕከል ማድረግ */
+    }
+    .article-title {
+        font-size: 1.8em; /* ርዕስን ትንሽ መቀነስ */
+    }
+    .article-summary {
+        font-size: 1em; /* ማጠቃለያ ጽሁፍን ትንሽ መቀነስ */
+    }
+    .read-more {
+        align-self: center; /* አዝራሩን በመሃል ለማምጣት */
+        padding: 10px 18px; /* የአዝራር ፓዲንግ መቀነስ */
+        font-size: 0.9em; /* የአዝራር ጽሁፍ መቀነስ */
+    }
+}
