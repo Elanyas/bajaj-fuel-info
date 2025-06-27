@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XX2B3RSGP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2XX2B3RSGP');
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>መረጃ ማስገቢያ - ባጃጅ መረጃ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+     <script>
+        // ገጹ ሲጫን ወዲያውኑ የመግቢያ ሁኔታን አረጋግጥ
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+            window.location.href = 'login.html';
+        }
+    </script>
+    
+    <script type="module">
+        // Firebase SDKs and config for data_entry.html
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+          authDomain: "elanyas-info.firebaseapp.com",
+          projectId: "elanyas-info",
+          storageBucket: "elanyas-info.firebasestorage.app",
+          messagingSenderId: "769306910360",
+          appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+          measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // For Cloud Firestore
+        const analytics = getAnalytics(app); // For Firebase Analytics
+
+        // Expose db and analytics globally (optional, but helpful for quick testing in console)
+        window.db = db;
+        window.analytics = analytics;
+        window.collection = collection; // Expose collection and addDoc as well for easier use
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp; // Expose serverTimestamp
+
+        console.log("Firebase initialized and Firestore DB instance available for data_entry.html."); // ለመፈተሽ
+
+    </script>
+</head>
+<body>
+    <header class="main-header">
+      <div class="ad-marquee-container">
+        <p class="ad-marquee-text">
+            ✨ አዲስ ባጃጅ ሞዴሎች በቅርቡ ይመጣሉ! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 የነዳጅ ቅናሽ መረጃ በቅርቡ ይፋ ይሆናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ! &nbsp; &nbsp; &nbsp; &nbsp;
+        </p>
+      </div>
+        <h1><span class="accent-text">መረጃ</span> ማስገቢያ</h1>
+        <p>የነዳጅ ጥቆማ፣ የማደያ ወይም የማህበረሰብ መረጃ ያስገቡ</p>
+        <nav class="sub-nav">
+            <a href="data.html">ዋናው ገጽ</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="community_data.html">ልውውጥ</a> </nav>
+    </header>
+
+    <main class="container">
+        <section class="data-entry-selection-card">
+            <h2>የመረጃ አይነት ይምረጡ</h2>
+            <div class="selection-options">
+                <input type="radio" id="tipOffOption" name="dataType" value="tipOff" checked>
+                <label for="tipOffOption">ጥቁር ገበያ ጥቆማ (ለተቆጣጣሪው ብቻ)</label><br>
+
+                <input type="radio" id="stationInfoOption" name="dataType" value="stationInfo">
+                <label for="stationInfoOption">የማደያ መረጃ ማስገቢያ (ለሁሉም ይታያል)</label><br>
+
+                <input type="radio" id="communityPostOption" name="dataType" value="communityPost">
+                <label for="communityPostOption">የማህበረሰብ ልጥፍ (ለሁሉም ይታያል)</label>
+            </div>
+        </section>
+
+        <section id="tipOffFormSection" class="data-entry-form-card">
+            <h2>ጥቁር ገበያ ጥቆማ</h2>
+            <form id="tipOffForm" class="data-form">
+                <label for="tipOffLocation">የሽያጩ ቦታ መግለጫ/አድራሻ:</label>
+                <textarea id="tipOffLocation" name="location" rows="4" required placeholder="ለምሳሌ: ቃሊቲ አደባባይ አካባቢ ካለው ድልድይ ስር"></textarea>
+
+                <label for="tipOffDetails">ተጨማሪ ዝርዝሮች:</label>
+                <textarea id="tipOffDetails" name="details" rows="3" placeholder="ለምሳሌ: የመኪና አይነት፣ የሻጩ መግለጫ፣ የዋጋ ግምት"></textarea>
+                
+                <button type="submit" class="submit-button">ጥቆማ አስገባ</button>
+                <p id="tipOffMessage" class="form-message"></p>
+            </form>
+        </section>
+
+        <section id="stationInfoFormSection" class="data-entry-form-card" style="display: none;">
+            <h2>የማደያ መረጃ ማስገቢያ</h2>
+            <form id="stationInfoForm" class="data-form">
+                <label for="stationName">የማደያው ስም:</label>
+                <input type="text" id="stationName" name="stationName" required placeholder="ለምሳሌ: ቶታል ጋራዥ">
+
+                <label for="fuelType">የነዳጅ አይነት:</label>
+                <select id="fuelType" name="fuelType" required>
+                    <option value="">ይምረጡ</option>
+                    <option value="ቤንዚን">ቤንዚን</option>
+                    <option value="ናፍጣ">ናፍጣ</option>
+                    <option value="ጋዝ">ጋዝ</option>
+                </select>
+
+                <label for="fuelStatus">የነዳጅ ሁኔታ:</label>
+                <select id="fuelStatus" name="fuelStatus" required>
+                    <option value="">ይምረጡ</option>
+                    <option value="አለ">አለ</option>
+                    <option value="አነስተኛ">አነስተኛ</option>
+                    <option value="የለም">የለም</option>
+                </select>
+
+                <label for="queueStatus">የወረፋ ሁኔታ:</label>
+                <select id="queueStatus" name="queueStatus" required>
+                    <option value="">ይምረጡ</option>
+                    <option value="የለም">የለም</option>
+                    <option value="አጭር">አጭር</option>
+                    <option value="መካከለኛ">መካከለኛ</option>
+                    <option value="ረጅም">ረጅም</option>
+                </select>
+                
+                <button type="submit" class="submit-button">መረጃ አስገባ</button>
+                <p id="stationInfoMessage" class="form-message"></p>
+            </form>
+        </section>
+
+        <section id="communityPostEntryFormSection" class="data-entry-form-card" style="display: none;">
+            <h2>የማህበረሰብ ልጥፍ ይፍጠሩ</h2>
+            <form id="communityPostForm" class="data-form">
+                <label for="postTitle">ርዕስ:</label>
+                <input type="text" id="postTitle" name="postTitle" required placeholder="የልጥፉን ርዕስ ያስገቡ">
+
+                <label for="postContent">ጽሑፍ:</label>
+                <textarea id="postContent" name="postContent" rows="8" required placeholder="ልጥፍዎን እዚህ ይጻፉ..."></textarea>
+                
+                <button type="submit" class="submit-button">ልጥፍ አስገባ</button>
+                <p id="communityPostMessage" class="form-message"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+
+    <script type="module">
+        // Firebase modules are already imported at the top of the head section via type="module"
+        // and 'app', 'db', 'analytics', 'collection', 'addDoc', 'serverTimestamp' are globally exposed.
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form Selection Logic
+            const tipOffOption = document.getElementById('tipOffOption');
+            const stationInfoOption = document.getElementById('stationInfoOption');
+            const communityPostOption = document.getElementById('communityPostOption');
+
+            const tipOffFormSection = document.getElementById('tipOffFormSection');
+            const stationInfoFormSection = document.getElementById('stationInfoFormSection');
+            const communityPostEntryFormSection = document.getElementById('communityPostEntryFormSection');
+
+            function toggleForms() {
+                if (tipOffOption.checked) {
+                    tipOffFormSection.style.display = 'block';
+                    stationInfoFormSection.style.display = 'none';
+                    communityPostEntryFormSection.style.display = 'none';
+                } else if (stationInfoOption.checked) {
+                    tipOffFormSection.style.display = 'none';
+                    stationInfoFormSection.style.display = 'block';
+                    communityPostEntryFormSection.style.display = 'none';
+                } else if (communityPostOption.checked) {
+                    tipOffFormSection.style.display = 'none';
+                    stationInfoFormSection.style.display = 'none';
+                    communityPostEntryFormSection.style.display = 'block';
+                }
+            }
+
+            // Initial form display on page load
+            toggleForms();
+
+            // Event listeners for radio button changes
+            tipOffOption.addEventListener('change', toggleForms);
+            stationInfoOption.addEventListener('change', toggleForms);
+            communityPostOption.addEventListener('change', toggleForms);
+            
+            // --- Form Submission Logic ---
+
+            // 1. Tip-Off Form Submission (ጥቁር ገበያ ጥቆማ)
+            const tipOffForm = document.getElementById('tipOffForm');
+            const tipOffMessage = document.getElementById('tipOffMessage');
+
+            tipOffForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                tipOffMessage.textContent = 'መረጃ በመላክ ላይ...';
+                tipOffMessage.style.color = '#e0e0e0';
+
+                const location = tipOffForm.tipOffLocation.value;
+                const details = tipOffForm.tipOffDetails.value;
+                
+                try {
+                    // Using addDoc and collection for Firestore (ESM syntax)
+                    await window.addDoc(window.collection(window.db, "tipOffs"), {
+                        location: location,
+                        details: details,
+                        timestamp: window.serverTimestamp() // Firestore's server-side timestamp
+                    });
+
+                    tipOffForm.reset(); // Clear form fields
+                    tipOffMessage.textContent = 'ጥቆማው በተሳካ ሁኔታ ተልኳል! እናመሰግናለን።';
+                    tipOffMessage.style.color = '#4CAF50'; // Green for success
+
+                } catch (error) {
+                    console.error("Error adding tip-off document: ", error);
+                    tipOffMessage.textContent = 'ጥቆማውን በመላክ ላይ ስህተት ተፈጥሯል: ' + error.message;
+                    tipOffMessage.style.color = '#f44336'; // Red for error
+                }
+            });
+
+            // 2. Station Info Form Submission (የማደያ መረጃ ማስገቢያ)
+            const stationInfoForm = document.getElementById('stationInfoForm');
+            const stationInfoMessage = document.getElementById('stationInfoMessage');
+
+            stationInfoForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                stationInfoMessage.textContent = 'መረጃ በመላክ ላይ...';
+                stationInfoMessage.style.color = '#e0e0e0';
+
+                const stationName = stationInfoForm.stationName.value;
+                const fuelType = stationInfoForm.fuelType.value;
+                const fuelStatus = stationInfoForm.fuelStatus.value;
+                const queueStatus = stationInfoForm.queueStatus.value;
+
+                try {
+                    await window.addDoc(window.collection(window.db, "fuelStations"), {
+                        stationName: stationName,
+                        fuelType: fuelType,
+                        fuelStatus: fuelStatus,
+                        queueStatus: queueStatus,
+                        timestamp: window.serverTimestamp() // Firestore's server-side timestamp
+                    });
+
+                    stationInfoForm.reset(); // Clear form fields
+                    stationInfoMessage.textContent = 'የማደያ መረጃው በተሳካ ሁኔታ ተልኳል!';
+                    stationInfoMessage.style.color = '#4CAF50'; // Green for success
+
+                } catch (error) {
+                    console.error("Error adding station info document: ", error);
+                    stationInfoMessage.textContent = 'የማደያ መረጃውን በመላክ ላይ ስህተት ተፈጥሯል: ' + error.message;
+                    stationInfoMessage.style.color = '#f44336'; // Red for error
+                }
+            });
+
+            // 3. Community Post Form Submission (የማህበረሰብ ልጥፍ)
+            const communityPostForm = document.getElementById('communityPostForm');
+            const communityPostMessage = document.getElementById('communityPostMessage');
+
+            communityPostForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                communityPostMessage.textContent = 'ልጥፍ በመላክ ላይ...';
+                communityPostMessage.style.color = '#e0e0e0';
+
+                const postTitle = communityPostForm.postTitle.value;
+                const postContent = communityPostForm.postContent.value;
+                // በኢትዮጵያ ስላለን እና ተጠቃሚው ገብቶ (Login) ስላልሆነ 'Unknown User' ወይም 'Guest' እንበለው
+                // ወደፊት የመግቢያ ሲስተም ስንሰራ ተጠቃሚውን ከAuth እናገናኘዋለን
+                const author = "Guest"; // ለጊዜው 'Guest' እንጠቀም
+
+                try {
+                    await window.addDoc(window.collection(window.db, "communityPosts"), {
+                        title: postTitle,
+                        content: postContent,
+                        author: author,
+                        timestamp: window.serverTimestamp() // Firestore's server-side timestamp
+                    });
+
+                    communityPostForm.reset(); // Clear form fields
+                    communityPostMessage.textContent = 'ልጥፍዎ በተሳካ ሁኔታ ታትሟል!';
+                    communityPostMessage.style.color = '#4CAF50'; // Green for success
+
+                } catch (error) {
+                    console.error("Error adding community post document: ", error);
+                    communityPostMessage.textContent = 'ልጥፉን በመላክ ላይ ስህተት ተፈጥሯል: ' + error.message;
+                    communityPostMessage.style.color = '#f44336'; // Red for error
+                }
+            });
+
+            console.log("All form submission listeners are set up.");
+        });
+    </script>
+</body>
+</html>

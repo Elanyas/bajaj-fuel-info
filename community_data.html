@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XX2B3RSGP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2XX2B3RSGP');
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የመረጃ ልውውጥ - ባጃጅ መረጃ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+     <script>
+        // ገጹ ሲጫን ወዲያውኑ የመግቢያ ሁኔታን አረጋግጥ
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+            window.location.href = 'login.html';
+        }
+    </script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+          authDomain: "elanyas-info.firebaseapp.com",
+          projectId: "elanyas-info",
+          storageBucket: "elanyas-info.firebasestorage.app",
+          messagingSenderId: "769306910360",
+          appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+          measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); // For Cloud Firestore
+        const analytics = getAnalytics(app); // For Firebase Analytics
+
+        // Expose db, collection, query, orderBy, getDocs globally for easier use in script below
+        window.db = db;
+        window.collection = collection;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.getDocs = getDocs;
+        
+        console.log("Firebase initialized and Firestore DB instance available for community_data.html."); // ለመፈተሽ
+
+    </script>
+</head>
+<body>
+    <header class="main-header">
+      <div class="ad-marquee-container">
+        <p class="ad-marquee-text">
+            ✨ አዲስ ባጃጅ ሞዴሎች በቅርቡ ይመጣሉ! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 የነዳጅ ቅናሽ መረጃ በቅርቡ ይፋ ይሆናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ! &nbsp; &nbsp; &nbsp; &nbsp;
+        </p>
+      </div>
+        <h1><span class="accent-text">የመረጃ</span> ልውውጥ</h1>
+        <p>የተጠቃሚዎች ተሞክሮዎች፣ ምክሮች እና ጥያቄዎች</p>
+        <nav class="sub-nav">
+            <a href="data.html">ዋናው ገጽ</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="data_entry.html">መረጃ አስገባ</a>
+        </nav>
+    </header>
+
+    <main class="container community-container">
+        <section class="community-posts-display">
+            <h2>የቅርብ ጊዜ ልጥፎች</h2>
+            <div id="postsList" class="posts-list">
+                <p class="loading-message">ልጥፎችን በመጫን ላይ...</p>
+                </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+
+    <script type="module">
+        // Firebase modules are already imported at the top of the head section via type="module"
+        // and 'app', 'db', 'analytics', 'collection', 'query', 'orderBy', 'getDocs' are globally exposed.
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const postsList = document.getElementById('postsList');
+
+            async function fetchCommunityPosts() {
+                postsList.innerHTML = '<p class="loading-message">ልጥፎችን በመጫን ላይ...</p>'; // Loading message
+
+                try {
+                    // Using global Firebase Firestore functions
+                    const q = window.query(window.collection(window.db, "communityPosts"), window.orderBy("timestamp", "desc"));
+                    const querySnapshot = await window.getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        postsList.innerHTML = '<p class="loading-message">ምንም ልጥፎች የሉም። የመጀመሪያው ልጥፍ የእርስዎ ይሁን!</p>';
+                        return;
+                    }
+
+                    postsList.innerHTML = ''; // Clear loading message and example post
+
+                    querySnapshot.forEach((doc) => {
+                        const post = doc.data();
+                        // const postId = doc.id; // የልጥፉ መታወቂያ - ለጊዜው ባያስፈልግም ለወደፊት ሊጠቅም ይችላል
+
+                        // የጊዜ ማህተምን ወደ የሚነበብ ቅርጸት መቀየር
+                        let postDate = 'ያልታወቀ ቀን';
+                        if (post.timestamp && post.timestamp.toDate) {
+                            // Firestore Timestamp object (from serverTimestamp())
+                            const date = post.timestamp.toDate();
+                            postDate = date.toLocaleString('am-ET', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });
+                        } else if (post.timestamp && typeof post.timestamp === 'string') {
+                            // If it's a string (e.g., from older entries or different format)
+                            try {
+                                const date = new Date(post.timestamp);
+                                postDate = date.toLocaleString('am-ET', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            } catch (e) {
+                                console.warn("Invalid timestamp string format for post:", post.timestamp, e);
+                            }
+                        }
+
+                        const postCard = `
+                            <div class="community-post-card">
+                                <h3 class="post-title">${post.title}</h3>
+                                <p class="post-meta">በ <strong>${post.author || 'ያልታወቀ'}</strong> - ${postDate}</p>
+                                <p class="post-content">${post.content}</p>
+                            </div>
+                        `;
+                        postsList.insertAdjacentHTML('beforeend', postCard);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching community posts: ", error);
+                    postsList.innerHTML = '<p class="loading-message" style="color: #f44336;">ልጥፎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
+                }
+            }
+
+            // Fetch posts when the page loads
+            fetchCommunityPosts();
+
+            console.log("Community Data display page loaded and post fetching is set up.");
+        });
+    </script>
+</body>
+</html>

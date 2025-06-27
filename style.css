@@ -1629,3 +1629,325 @@ details[open] summary::after {
         height: 8px;
     }
 }
+/* --- Community Post Card Styles (for community_data.html) --- */
+
+.community-posts-display h2 {
+    color: #00bcd4; /* Accent color */
+    margin-top: 25px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8em;
+}
+
+.posts-list {
+    display: flex;
+    flex-direction: column; /* ልጥፎች አንዱ ከሌላው በታች እንዲሆኑ */
+    gap: 25px; /* በልጥፎች መካከል ያለው ክፍተት */
+    padding: 10px;
+}
+
+.loading-message {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 20px;
+}
+
+.community-post-card {
+    background-color: #1e1e1e; /* ከሌሎች ካርዶች ጋር ተመሳሳይ ዳራ */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid #333; /* ትንሽ ቀለል ያለ ድንበር */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.community-post-card:hover {
+    transform: translateY(-5px); /* ሲነካ ትንሽ ወደ ላይ እንዲወጣ */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.community-post-card .post-title {
+    color: #00bcd4; /* Accent color for title */
+    font-size: 1.6em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    word-wrap: break-word; /* ረጅም ቃላት እንዲሰበሩ */
+}
+
+.community-post-card .post-meta {
+    font-size: 0.9em;
+    color: #bbb;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #444; /* ከይዘቱ ለመለየት */
+    padding-bottom: 10px;
+}
+
+.community-post-card .post-meta strong {
+    color: #e0e0e0;
+}
+
+.community-post-card .post-content {
+    font-size: 1em;
+    color: #e0e0e0;
+    line-height: 1.8;
+    white-space: pre-wrap; /* የጽሁፍ ቅርጸት (spacing, newlines) እንዲጠበቅ */
+    word-wrap: break-word; /* ረጅም ቃላት እንዲሰበሩ */
+}
+
+
+/* Responsive Adjustments for Community Page Posts */
+@media (max-width: 768px) {
+    .posts-list {
+        padding: 0 15px; /* በሞባይል ላይ ከዳር ዳር ትንሽ ክፍተት */
+        gap: 20px; /* ክፍተቱን በትንሹ ቀንሷል */
+    }
+
+    .community-post-card {
+        padding: 20px;
+    }
+
+    .community-post-card .post-title {
+        font-size: 1.4em;
+    }
+
+    .community-post-card .post-meta {
+        font-size: 0.85em;
+    }
+
+    .community-post-card .post-content {
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .community-post-card {
+        padding: 15px;
+    }
+
+    .community-post-card .post-title {
+        font-size: 1.3em;
+    }
+}
+
+/* Styles for the Post Entry Form (if it were still here, but now it's for data_entry.html) */
+.post-form-card { /* ይህ አሁን በ data_entry.html ላይ ይሆናል */
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+}
+
+.post-form-card h2 {
+    color: #00bcd4;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8em;
+}
+/* --- Data Entry Page Specific Styles (for data_entry.html) --- */
+
+.data-entry-selection-card {
+    background-color: #1e1e1e; /* ከmain-header ጋር የሚመሳሰል ዳራ */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.data-entry-selection-card h2 {
+    color: #00bcd4; /* Accent color */
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.selection-options label {
+    display: inline-block;
+    background-color: #333;
+    color: #e0e0e0;
+    padding: 12px 25px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.1em;
+    border: 1px solid #444;
+}
+
+.selection-options input[type="radio"] {
+    display: none; /* የሬዲዮ ቁልፎችን ደብቅ */
+}
+
+.selection-options input[type="radio"]:checked + label {
+    background-color: #00bcd4; /* ሲመረጥ Accent color */
+    color: #ffffff;
+    border-color: #00bcd4;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.selection-options input[type="radio"]:hover + label {
+    background-color: #444;
+}
+
+/* Form Card Styles */
+.data-entry-form-card {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+}
+
+.data-entry-form-card h2 {
+    color: #00bcd4;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8em;
+}
+
+.data-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.data-form input[type="text"],
+.data-form textarea,
+.data-form select {
+    width: calc(100% - 20px); /* ፔዲንግን አካቶ */
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #333;
+    color: #e0e0e0;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-form input[type="text"]:focus,
+.data-form textarea:focus,
+.data-form select:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.3);
+    outline: none;
+}
+
+.data-form textarea {
+    resize: vertical; /* የtextarea ርዝመት እንዲቀየር */
+    min-height: 80px;
+}
+
+/* የፎቶ ማስገቢያው ክፍል (አሁን የማይኖር) ስታይል ነበር - ካስፈለገ ይመለሳል */
+/*
+.data-form input[type="file"] {
+    display: block;
+    width: calc(100% - 20px);
+    margin-bottom: 20px;
+    color: #e0e0e0;
+    padding: 10px 0;
+}
+
+.photo-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px dashed #555;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+}
+
+.photo-preview-container img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #666;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+*/
+
+.submit-button {
+    background-color: #00bcd4;
+    color: #ffffff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: 100%;
+    max-width: 300px; /* ቁልፉ ብዙ እንዳይለጠጥ */
+    margin: 25px auto 10px auto; /* መሃል ላይ ለማድረግ */
+}
+
+.submit-button:hover {
+    background-color: #00acc1;
+    transform: translateY(-2px);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+    background-color: #0097a7;
+}
+
+.form-message {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #e0e0e0; /* ነባሪ መልእክት ቀለም */
+}
+
+/* Responsive Adjustments for Data Entry Page */
+@media (max-width: 768px) {
+    .data-entry-selection-card,
+    .data-entry-form-card {
+        padding: 20px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .selection-options label {
+        display: block; /* ሞባይል ላይ አንድ በአንድ እንዲደረደሩ */
+        margin: 8px auto;
+        width: 80%; /* በስፋት እንዲታዩ */
+    }
+
+    .data-form input[type="text"],
+    .data-form textarea,
+    .data-form select {
+        width: 100%; /* ሞባይል ላይ ሙሉውን ስፋት እንዲይዙ */
+        padding: 10px;
+    }
+
+    .submit-button {
+        padding: 12px 25px;
+        font-size: 1.1em;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-entry-selection-card h2,
+    .data-entry-form-card h2 {
+        font-size: 1.5em;
+    }
+
+    .selection-options label {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+}
