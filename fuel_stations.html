@@ -93,7 +93,7 @@
                         const stationCard = `
                             <div class="fuel-station-card">
                                 <h3 class="station-name">${station.stationName || 'ያልታወቀ ማደያ'}</h3>
-                                <p class="station-info">የነዳጅ አይነት: <span class="fuel-type">${station.fuelType || 'አልተገለጸም'}</span></p>
+                                <p class="station-info">የነዳጅ አይነት:<strong> <span class="fuel-type">${station.fuelType || 'አልተገለጸም'}</span></strong></p>
                                 <p class="station-info">የነዳጅ ሁኔታ: <span class="fuel-status status-${station.fuelStatus ? station.fuelStatus.toLowerCase() : 'unknown'}" style="color: ${station.fuelStatus === 'አለ' ? '#4CAF50' : station.fuelStatus === 'አነስተኛ' ? '#FFC107' : '#f44336'};">${station.fuelStatus || 'አልታወቀም'}</span></p>
                                 <p class="station-info">የወረፋ ሁኔታ: <span class="queue-status status-${station.queueStatus ? station.queueStatus.toLowerCase() : 'unknown'}">${station.queueStatus || 'አልታወቀም'}</span></p>
                                 <p class="station-meta">የተዘመነ በ: ${stationDate}</p>
