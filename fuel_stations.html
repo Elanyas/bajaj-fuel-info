@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>የማደያ መረጃ - ባጃጅ መረጃ</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
      <script>
@@ -28,85 +28,57 @@
         import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
-        // Your web app's Firebase configuration
+        // Your web app's Firebase configuration - ይህን እንዳለ ነው የተውኩት።
         const firebaseConfig = {
           apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
           authDomain: "elanyas-info.firebaseapp.com",
           projectId: "elanyas-info",
           storageBucket: "elanyas-info.firebasestorage.app",
           messagingSenderId: "769306910360",
-          appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+          appId: "1:769306910360:web:70988eed5b1da5ffa0faed",
           measurementId: "G-2XX2B3RSGP"
         };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app); // For Cloud Firestore
-        const analytics = getAnalytics(app); // For Firebase Analytics
-
-        // Expose db, collection, query, orderBy, getDocs globally for easier use in script below
-        window.db = db;
-        window.collection = collection;
-        window.query = query;
-        window.orderBy = orderBy;
-        window.getDocs = getDocs;
-        
-        console.log("Firebase initialized and Firestore DB instance available for fuel_stations.html.");
-
-    </script>
-</head>
-<body>
-    <header class="main-header">
-      <div class="ad-marquee-container">
-        <p class="ad-marquee-text">
-            ✨ አዲስ ባጃጅ ሞዴሎች በቅርቡ ይመጣሉ! &nbsp; &nbsp; &nbsp; &nbsp;
-            💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ? &nbsp; &nbsp; &nbsp; &nbsp;
-            💰 የነዳጅ ቅናሽ መረጃ በቅርቡ ይፋ ይሆናል! &nbsp; &nbsp; &nbsp; &nbsp;
-            🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ! &nbsp; &nbsp; &nbsp; &nbsp;
-        </p>
-      </div>
-        <h1><span class="accent-text">የማደያ</span> መረጃ</h1>
-        <p>በተጠቃሚዎች የተዘመኑ የነዳጅ ማደያ ሁኔታዎች</p>
-        <nav class="sub-nav">
-            <a href="data.html">ዋናው ገጽ</a>
-            <a href="news.html">ዜናዎች</a>
-            <a href="sales.html">መሸጫ</a>
-            <a href="maintenance.html">እንክብካቤ</a>
-            <a href="community_data.html">ልውውጥ</a>
-            <a href="data_entry.html">መረጃ አስገባ</a>
-        </nav>
-    </header>
-
-    <main class="container fuel-stations-container">
-        <section class="fuel-stations-display">
-            <h2>የቅርብ ጊዜ የማደያ መረጃዎች</h2>
-            <div id="fuelStationsList" class="stations-list">
-                <p class="loading-message">የማደያ መረጃዎችን በመጫን ላይ...</p>
-            </div>
-        </section>
-    </main>
-
-    <footer class="main-footer">
-        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
-        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
-    </footer>
-
-    <script type="module">
-        // Firebase modules and globals are already set up in the head section.
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
 
         document.addEventListener('DOMContentLoaded', function() {
             const fuelStationsList = document.getElementById('fuelStationsList');
+            const searchInput = document.getElementById('searchInput');
 
+            // Function to format timestamp to a readable date/time string
+            function formatTimestamp(timestamp) {
+                if (!timestamp || !timestamp.toDate) return 'ያልታወቀ ቀን';
+                const date = timestamp.toDate();
+                const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                return date.toLocaleDateString('am-ET', options); // Use Amharic locale for formatting
+            }
+
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const cards = fuelStationsList.querySelectorAll('.fuel-station-card');
+                cards.forEach(card => {
+                    const stationName = card.querySelector('.station-name').textContent.toLowerCase();
+                    if (stationName.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Function to fetch and display fuel station data
             async function fetchFuelStations() {
-                fuelStationsList.innerHTML = '<p class="loading-message">የማደያ መረጃዎችን በመጫን ላይ...</p>'; // Loading message
-
+                fuelStationsList.innerHTML = '<p class="loading-message">የማደያ መረጃዎችን በመጫን ላይ...</p>';
                 try {
-                    // Query the 'fuelStations' collection
-                    const q = window.query(window.collection(window.db, "fuelStations"), window.orderBy("timestamp", "desc"));
-                    const querySnapshot = await window.getDocs(q);
+                    const q = query(collection(db, "fuelStations"), orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
 
                     if (querySnapshot.empty) {
-                        fuelStationsList.innerHTML = '<p class="loading-message">ምንም የማደያ መረጃ የለም። እባክዎ መረጃ ያስገቡ።</p>';
+                        fuelStationsList.innerHTML = '<p class="loading-message">ምንም የማደያ መረጃ የለም።</p>';
                         return;
                     }
 
@@ -114,40 +86,18 @@
 
                     querySnapshot.forEach((doc) => {
                         const station = doc.data();
-                        
-                        // Format timestamp
-                        let stationDate = 'ያልታወቀ ቀን';
-                        if (station.timestamp && station.timestamp.toDate) {
-                            const date = station.timestamp.toDate();
-                            stationDate = date.toLocaleString('am-ET', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                        } else if (station.timestamp && typeof station.timestamp === 'string') {
-                            try {
-                                const date = new Date(station.timestamp);
-                                stationDate = date.toLocaleString('am-ET', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                });
-                            } catch (e) {
-                                console.warn("Invalid timestamp string format for station:", station.timestamp, e);
-                            }
-                        }
+                        const stationDate = formatTimestamp(station.timestamp);
+                        // የsubmittedBy መስክን ከFirebase እናገኛለን
+                        const submittedBy = station.submittedBy || 'ያልታወቀ ተጠቃሚ'; 
 
                         const stationCard = `
                             <div class="fuel-station-card">
                                 <h3 class="station-name">${station.stationName || 'ያልታወቀ ማደያ'}</h3>
-                                <p class="station-info">**የነዳጅ አይነት:** <span class="fuel-type">${station.fuelType || 'አልተገለጸም'}</span></p>
-                                <p class="station-info">**የነዳጅ ሁኔታ:** <span class="fuel-status status-${station.fuelStatus ? station.fuelStatus.toLowerCase() : 'unknown'}">${station.fuelStatus || 'አልታወቀም'}</span></p>
-                                <p class="station-info">**የወረፋ ሁኔታ:** <span class="queue-status status-${station.queueStatus ? station.queueStatus.toLowerCase() : 'unknown'}">${station.queueStatus || 'አልታወቀም'}</span></p>
+                                <p class="station-info">የነዳጅ አይነት: <span class="fuel-type">${station.fuelType || 'አልተገለጸም'}</span></p>
+                                <p class="station-info">የነዳጅ ሁኔታ: <span class="fuel-status status-${station.fuelStatus ? station.fuelStatus.toLowerCase() : 'unknown'}" style="color: ${station.fuelStatus === 'አለ' ? '#4CAF50' : station.fuelStatus === 'አነስተኛ' ? '#FFC107' : '#f44336'};">${station.fuelStatus || 'አልታወቀም'}</span></p>
+                                <p class="station-info">የወረፋ ሁኔታ: <span class="queue-status status-${station.queueStatus ? station.queueStatus.toLowerCase() : 'unknown'}">${station.queueStatus || 'አልታወቀም'}</span></p>
                                 <p class="station-meta">የተዘመነ በ: ${stationDate}</p>
+                                <p class="station-meta">የተላከው በ: <strong>${submittedBy}</strong></p>
                             </div>
                         `;
                         fuelStationsList.insertAdjacentHTML('beforeend', stationCard);
@@ -165,5 +115,35 @@
             console.log("Fuel Stations display page loaded and data fetching is set up.");
         });
     </script>
+</head>
+<body>
+    <header class="main-header">
+        <h1>የማደያ መረጃ</h1>
+        <p>የትኞቹ ማደያዎች ነዳጅ እንዳላቸው እና የወረፋ ሁኔታቸውን ይወቁ።</p>
+        <nav class="sub-nav">
+            <a href="data.html">ዋናው ገጽ</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="data_entry.html">መረጃ አስገባ</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="search-filter-section">
+            <input type="text" id="searchInput" placeholder="የማደያ ስም ፈልግ...">
+        </section>
+
+        <section class="fuel-stations-display">
+            <h2>የቅርብ ጊዜ የማደያ መረጃዎች</h2>
+            <div id="fuelStationsList" class="stations-list">
+                </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
 </body>
 </html>
