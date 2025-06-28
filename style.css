@@ -1746,6 +1746,212 @@ details[open] summary::after {
     text-align: center;
     font-size: 1.8em;
 }
+
+/* --- Data Entry Page Specific Styles (for data_entry.html) --- */
+
+.data-entry-selection-card {
+    background-color: #1e1e1e; /* ከmain-header ጋር የሚመሳሰል ዳራ */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.data-entry-selection-card h2 {
+    color: #00bcd4; /* Accent color */
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.selection-options label {
+    display: inline-block;
+    background-color: #333;
+    color: #e0e0e0;
+    padding: 12px 25px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.1em;
+    border: 1px solid #444;
+}
+
+.selection-options input[type="radio"] {
+    display: none; /* የሬዲዮ ቁልፎችን ደብቅ */
+}
+
+.selection-options input[type="radio"]:checked + label {
+    background-color: #00bcd4; /* ሲመረጥ Accent color */
+    color: #ffffff;
+    border-color: #00bcd4;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+.selection-options input[type="radio"]:hover + label {
+    background-color: #444;
+}
+
+/* Form Card Styles */
+.data-entry-form-card {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 30px;
+}
+
+.data-entry-form-card h2 {
+    color: #00bcd4;
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.8em;
+}
+
+.data-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e0e0e0;
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.data-form input[type="text"],
+.data-form textarea,
+.data-form select {
+    width: calc(100% - 20px); /* ፔዲንግን አካቶ */
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #333;
+    color: #e0e0e0;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-form input[type="text"]:focus,
+.data-form textarea:focus,
+.data-form select:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.3);
+    outline: none;
+}
+
+.data-form textarea {
+    resize: vertical; /* የtextarea ርዝመት እንዲቀየር */
+    min-height: 80px;
+}
+
+/* የፎቶ ማስገቢያው ክፍል (አሁን የማይኖር) ስታይል ነበር - ካስፈለገ ይመለሳል */
+/*
+.data-form input[type="file"] {
+    display: block;
+    width: calc(100% - 20px);
+    margin-bottom: 20px;
+    color: #e0e0e0;
+    padding: 10px 0;
+}
+
+.photo-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px dashed #555;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+}
+
+.photo-preview-container img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #666;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+*/
+
+.submit-button {
+    background-color: #00bcd4;
+    color: #ffffff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: 100%;
+    max-width: 300px; /* ቁልፉ ብዙ እንዳይለጠጥ */
+    margin: 25px auto 10px auto; /* መሃል ላይ ለማድረግ */
+}
+
+.submit-button:hover {
+    background-color: #00acc1;
+    transform: translateY(-2px);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+    background-color: #0097a7;
+}
+
+.form-message {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #e0e0e0; /* ነባሪ መልእክት ቀለም */
+}
+
+/* Responsive Adjustments for Data Entry Page */
+@media (max-width: 768px) {
+    .data-entry-selection-card,
+    .data-entry-form-card {
+        padding: 20px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .selection-options label {
+        display: block; /* ሞባይል ላይ አንድ በአንድ እንዲደረደሩ */
+        margin: 8px auto;
+        width: 80%; /* በስፋት እንዲታዩ */
+    }
+
+    .data-form input[type="text"],
+    .data-form textarea,
+    .data-form select {
+        width: 100%; /* ሞባይል ላይ ሙሉውን ስፋት እንዲይዙ */
+        padding: 10px;
+    }
+
+    .submit-button {
+        padding: 12px 25px;
+        font-size: 1.1em;
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .data-entry-selection-card h2,
+    .data-entry-form-card h2 {
+        font-size: 1.5em;
+    }
+
+    .selection-options label {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+}
 /* --- Fuel Stations Page Specific Styles --- */
 /* የነዳጅ ማደያ መረጃ የሚታይበት ዋና ክፍል */
 .fuel-stations-display {
@@ -1961,209 +2167,4 @@ details[open] summary::after {
     color: #00bcd4;
     font-size: 1.2em;
     padding: 20px;
-}
-/* --- Data Entry Page Specific Styles (for data_entry.html) --- */
-
-.data-entry-selection-card {
-    background-color: #1e1e1e; /* ከmain-header ጋር የሚመሳሰል ዳራ */
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.data-entry-selection-card h2 {
-    color: #00bcd4; /* Accent color */
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-}
-
-.selection-options label {
-    display: inline-block;
-    background-color: #333;
-    color: #e0e0e0;
-    padding: 12px 25px;
-    margin: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    font-size: 1.1em;
-    border: 1px solid #444;
-}
-
-.selection-options input[type="radio"] {
-    display: none; /* የሬዲዮ ቁልፎችን ደብቅ */
-}
-
-.selection-options input[type="radio"]:checked + label {
-    background-color: #00bcd4; /* ሲመረጥ Accent color */
-    color: #ffffff;
-    border-color: #00bcd4;
-    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
-}
-
-.selection-options input[type="radio"]:hover + label {
-    background-color: #444;
-}
-
-/* Form Card Styles */
-.data-entry-form-card {
-    background-color: #1e1e1e;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    margin-bottom: 30px;
-}
-
-.data-entry-form-card h2 {
-    color: #00bcd4;
-    margin-top: 0;
-    margin-bottom: 25px;
-    text-align: center;
-    font-size: 1.8em;
-}
-
-.data-form label {
-    display: block;
-    margin-bottom: 8px;
-    color: #e0e0e0;
-    font-weight: bold;
-    font-size: 1.05em;
-}
-
-.data-form input[type="text"],
-.data-form textarea,
-.data-form select {
-    width: calc(100% - 20px); /* ፔዲንግን አካቶ */
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #444;
-    border-radius: 5px;
-    background-color: #333;
-    color: #e0e0e0;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.data-form input[type="text"]:focus,
-.data-form textarea:focus,
-.data-form select:focus {
-    border-color: #00bcd4;
-    box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.3);
-    outline: none;
-}
-
-.data-form textarea {
-    resize: vertical; /* የtextarea ርዝመት እንዲቀየር */
-    min-height: 80px;
-}
-
-/* የፎቶ ማስገቢያው ክፍል (አሁን የማይኖር) ስታይል ነበር - ካስፈለገ ይመለሳል */
-/*
-.data-form input[type="file"] {
-    display: block;
-    width: calc(100% - 20px);
-    margin-bottom: 20px;
-    color: #e0e0e0;
-    padding: 10px 0;
-}
-
-.photo-preview-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    border: 1px dashed #555;
-    padding: 10px;
-    border-radius: 5px;
-    min-height: 50px;
-    align-items: center;
-    justify-content: center;
-    color: #888;
-}
-
-.photo-preview-container img {
-    max-width: 100px;
-    max-height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #666;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-*/
-
-.submit-button {
-    background-color: #00bcd4;
-    color: #ffffff;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: block;
-    width: 100%;
-    max-width: 300px; /* ቁልፉ ብዙ እንዳይለጠጥ */
-    margin: 25px auto 10px auto; /* መሃል ላይ ለማድረግ */
-}
-
-.submit-button:hover {
-    background-color: #00acc1;
-    transform: translateY(-2px);
-}
-
-.submit-button:active {
-    transform: translateY(0);
-    background-color: #0097a7;
-}
-
-.form-message {
-    text-align: center;
-    margin-top: 15px;
-    font-weight: bold;
-    color: #e0e0e0; /* ነባሪ መልእክት ቀለም */
-}
-
-/* Responsive Adjustments for Data Entry Page */
-@media (max-width: 768px) {
-    .data-entry-selection-card,
-    .data-entry-form-card {
-        padding: 20px;
-        margin-left: 15px;
-        margin-right: 15px;
-    }
-
-    .selection-options label {
-        display: block; /* ሞባይል ላይ አንድ በአንድ እንዲደረደሩ */
-        margin: 8px auto;
-        width: 80%; /* በስፋት እንዲታዩ */
-    }
-
-    .data-form input[type="text"],
-    .data-form textarea,
-    .data-form select {
-        width: 100%; /* ሞባይል ላይ ሙሉውን ስፋት እንዲይዙ */
-        padding: 10px;
-    }
-
-    .submit-button {
-        padding: 12px 25px;
-        font-size: 1.1em;
-        max-width: 250px;
-    }
-}
-
-@media (max-width: 480px) {
-    .data-entry-selection-card h2,
-    .data-entry-form-card h2 {
-        font-size: 1.5em;
-    }
-
-    .selection-options label {
-        font-size: 1em;
-        padding: 10px 20px;
-    }
 }
