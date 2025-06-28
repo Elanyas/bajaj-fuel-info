@@ -161,6 +161,8 @@
             }
 
             localStorage.setItem('isLoggedIn', 'true'); // የመግቢያ ሁኔታን በ Local Storage ውስጥ አስቀምጥ
+           localStorage.setItem('loggedInUserName', userData.full_name || 'ያልታወቀ ተጠቃሚ');
+             localStorage.setItem('loggedInUserPhone', phoneNumber); 
             
             alert("በተሳካ ሁኔታ ገብተዋል!");
             window.location.href = "data.html"; // ወደ ዋናው ገጽ ምራ
