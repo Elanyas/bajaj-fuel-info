@@ -2168,3 +2168,143 @@ details[open] summary::after {
     font-size: 1.2em;
     padding: 20px;
 }
+/* --- Tip-Offs Page Specific Styles --- */
+/* የጥቆማ መረጃ የሚታይበት ዋና ክፍል */
+.tip-offs-display {
+    background-color: #1e1e1e; /* ከዋናው ዳራ ትንሽ የደመቀ */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5); /* ለካርዱ ጥላ */
+    margin-top: 30px;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-out; /* ሲጫን ቀስ ብሎ እንዲታይ */
+}
+
+/* የጥቆማ ገጽ ርዕስ (ለምሳሌ "የቅርብ ጊዜ ጥቆማዎች") */
+.tip-offs-display h2 {
+    color: #FFC107; /* ብርቱካናማ ቀለም ለርዕሱ */
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2.2em; /* ትልቅ የርዕስ መጠን */
+    border-bottom: 2px solid #ffaa00; /* ከስር መስመር */
+    padding-bottom: 15px;
+    text-shadow: 0 0 8px rgba(255, 193, 7, 0.5); /* ለርዕሱ ጥላ */
+}
+
+/* ካርዶቹ የሚደረደሩበት ፍርግርግ */
+.tip-offs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* ለብዙ ስክሪን መጠኖች ተስማሚ */
+    gap: 25px; /* በካርዶች መካከል ያለው ክፍተት */
+    padding: 0;
+    list-style: none; /* የነጥብ ምልክቶችን ያጠፋል */
+}
+
+/* እያንዳንዱ የጥቆማ ካርድ */
+.tip-off-card {
+    background-color: #2a2a2a; /* የካርድ ዳራ ቀለም */
+    border-radius: 12px; /* ትንሽ የተጠጋጉ ጠርዞች */
+    padding: 20px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.4); /* የካርድ ጥላ */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* ሲነኩ የሚለወጥ */
+    border-left: 6px solid #FFC107; /* የደመቀ የግራ ጠርዝ (ከላይኛው ገጽ ጋር ተመጣጣኝ) */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px; /* ዝቅተኛ የካርድ ከፍታ */
+}
+
+.tip-off-card:hover {
+    transform: translateY(-8px) rotate(-0.5deg); /* ሲነኩ በትንሹ እንዲወጣና እንዲዞር */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* የጥላው መጠን እንዲጨምር */
+}
+
+/* የጥቆማ ቦታ */
+.tip-off-card .tip-location {
+    color: #f0f0f0; /* ቀለል ያለ ነጭ */
+    font-size: 1.6em; /* ትልቅ የፊደል መጠን */
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444; /* ከስር መስመር */
+    padding-bottom: 10px;
+    font-weight: 700; /* ደመቅ ያለ */
+    line-height: 1.3;
+}
+
+/* የጥቆማ ዝርዝር */
+.tip-off-card .tip-details {
+    margin-bottom: 15px;
+    color: #ccc; /* መካከለኛ ግራጫ */
+    font-size: 1.05em;
+    flex-grow: 1; /* በካርዱ ውስጥ ቦታ እንዲይዝ */
+    line-height: 1.5;
+}
+
+.tip-off-card .tip-details strong {
+    color: #e0e0e0; /* የደመቀ ጽሑፍ ቀለም */
+}
+
+/* የMeta መረጃ (ላኪ እና ቀን) */
+.tip-off-card .tip-meta {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 10px; /* ከላይ ክፍተት */
+    text-align: right;
+    border-top: 1px solid #333; /* ከላይ መስመር */
+    padding-top: 8px;
+}
+
+.tip-off-card .tip-meta strong {
+    color: #c0c0c0; /* የላኪው ስም ትንሽ እንዲደመቅ */
+}
+
+/* Loading/Error Messages (ከሌሎች ገጾች ጋር ተመሳሳይ) */
+.loading-message {
+    text-align: center;
+    color: #00bcd4; /* የዋናው ዲዛይን ቀለም */
+    font-size: 1.2em;
+    padding: 20px;
+}
+.loading-message.error-message {
+    color: #f44336; /* ለስህተት ቀይ ቀለም */
+}
+
+
+/* ምላሽ ሰጪነት (Responsive adjustments) */
+@media (max-width: 768px) {
+    .tip-offs-display h2 {
+        font-size: 1.8em;
+    }
+
+    .tip-offs-list {
+        grid-template-columns: 1fr; /* በትናንሽ ስክሪኖች ላይ አንድ አምድ */
+        gap: 20px;
+    }
+
+    .tip-off-card {
+        padding: 18px;
+    }
+
+    .tip-off-card .tip-location {
+        font-size: 1.4em;
+    }
+
+    .tip-off-card .tip-details {
+        font-size: 1em;
+    }
+
+    .tip-off-card .tip-meta {
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 480px) {
+    .tip-offs-display {
+        padding: 15px;
+    }
+
+    .tip-offs-display h2 {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+}

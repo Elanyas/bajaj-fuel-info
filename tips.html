@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XX2B3RSGP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2XX2B3RSGP');
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ጥቆማዎች - ባጃጅ መረጃ</title>
+    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // ገጹ ሲጫን ወዲያውኑ የመግቢያ ሁኔታን አረጋግጥ
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <script type="module">
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+
+        // Your web app's Firebase configuration (ከዚህ በፊት የሰጠኸኝን ነው የተጠቀምኩት)
+        const firebaseConfig = {
+          apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+          authDomain: "elanyas-info.firebaseapp.com",
+          projectId: "elanyas-info",
+          storageBucket: "elanyas-info.firebasestorage.app",
+          messagingSenderId: "769306910360",
+          appId: "1:769306910360:web:70988eed5b1da5ffa0faed",
+          measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const analytics = getAnalytics(app);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const tipOffsList = document.getElementById('tipOffsList');
+
+            // Function to format timestamp to a readable date/time string
+            function formatTimestamp(timestamp) {
+                if (!timestamp || !timestamp.toDate) return 'ያልታወቀ ቀን';
+                const date = timestamp.toDate();
+                const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                return date.toLocaleDateString('am-ET', options); // Use Amharic locale for formatting
+            }
+
+            // Function to fetch and display tip-off data
+            async function fetchTipOffs() {
+                tipOffsList.innerHTML = '<p class="loading-message">ጥቆማዎችን በመጫን ላይ...</p>';
+                try {
+                    // ከ 'tipOffs' collection ላይ መረጃ እናመጣለን
+                    const q = query(collection(db, "tipOffs"), orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        tipOffsList.innerHTML = '<p class="loading-message">ምንም ጥቆማ የለም።</p>';
+                        return;
+                    }
+
+                    tipOffsList.innerHTML = ''; // Clear loading message
+
+                    querySnapshot.forEach((doc) => {
+                        const tip = doc.data();
+                        const tipDate = formatTimestamp(tip.timestamp);
+                        const submittedBy = tip.submittedBy || 'ያልታወቀ ተጠቃሚ'; 
+
+                        const tipOffCard = `
+                            <div class="tip-off-card">
+                                <h3 class="tip-location">${tip.location || 'ያልታወቀ ቦታ'}</h3>
+                                <p class="tip-details">**ዝርዝር:** ${tip.details || 'ዝርዝር አልተገለጸም'}</p>
+                                <p class="tip-meta">የተላከው በ: <strong>${submittedBy}</strong></p>
+                                <p class="tip-meta">የተዘመነ በ: ${tipDate}</p>
+                            </div>
+                        `;
+                        tipOffsList.insertAdjacentHTML('beforeend', tipOffCard);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching tip-off data: ", error);
+                    tipOffsList.innerHTML = '<p class="loading-message error-message" style="color: #f44336;">ጥቆማዎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
+                }
+            }
+
+            // Fetch tip-off data when the page loads
+            fetchTipOffs();
+
+            console.log("Tip-off display page loaded and data fetching is set up.");
+        });
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <h1>ጥቁር ገበያ ጥቆማዎች</h1>
+        <p>ከህግ ውጭ የነዳጅ ሽያጭ የሚካሄድባቸው ቦታዎች</p>
+        </header>
+
+    <main class="container">
+        <section class="tip-offs-display">
+            <h2>የቅርብ ጊዜ ጥቆማዎች</h2>
+            <div id="tipOffsList" class="tip-offs-list">
+                </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+</body>
+</html>
