@@ -16,12 +16,51 @@
         <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
 
     <script>
-        // ገጹ ሲጫን ወዲያውኑ የመግቢያ ሁኔታን አረጋግጥ
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const loggedInUserName = localStorage.getItem('loggedInUserName');
+        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+        const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
+
+        // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
+        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
             alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+            localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
             window.location.href = 'login.html';
+            return; // ከዚህ በላይ እንዳይቀጥል
         }
-    </script>
+
+        // የክፍያ ቀን ማረጋገጥ
+        try {
+            const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
+            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+            const today = new Date();
+            const expirationDate = new Date(lastPaymentDate);
+            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
+
+            // የክፍያ ጊዜው አልፎ ከሆነ ወደ login.html ይመልስ
+            if (today > expirationDate) {
+                alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
+                localStorage.clear(); // ጊዜው ካለፈ ሁሉንም ያጥፋ
+                window.location.href = 'login.html';
+                return; // ከዚህ በላይ እንዳይቀጥል
+            }
+        } catch (error) {
+            console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
+            alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
+            localStorage.clear();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // መረጃው ሙሉ ከሆነ እና ጊዜው ካላለፈ, postAuthor input ካለ ይሙላው
+        const postAuthorInput = document.getElementById('postAuthor');
+        if (postAuthorInput) {
+            postAuthorInput.value = loggedInUserName;
+        }
+    });
+</script>
     <style>
         /* ተጨማሪ የ CSS ስታይሎች ለተሻለ አቀማመጥ */
         .fuel-type-details {

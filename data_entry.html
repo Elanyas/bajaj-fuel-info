@@ -16,14 +16,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if the user is logged in (by checking the stored username)
-            const loggedInUserName = localStorage.getItem('loggedInUserName');
-            if (!loggedInUserName) { // If username is not found in localStorage
-                window.location.href = 'login.html'; // Redirect to login page
+    // ከላይ የሰጠሁህ ስክሪፕት እዚህ ጋር ይመጣል
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const loggedInUserName = localStorage.getItem('loggedInUserName');
+        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+        const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
+
+        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
+            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+            localStorage.clear();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const SUBSCRIPTION_DURATION_DAYS = 30;
+            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+            const today = new Date();
+            const expirationDate = new Date(lastPaymentDate);
+            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
+
+            if (today > expirationDate) {
+                alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
+                localStorage.clear();
+                window.location.href = 'login.html';
+                return;
             }
-        });
-    </script>
+        } catch (error) {
+            console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
+            alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
+            localStorage.clear();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // For data_entry.html, it will fill the author field if available
+        const postAuthorInput = document.getElementById('postAuthor');
+        if (postAuthorInput) {
+            postAuthorInput.value = loggedInUserName;
+        }
+    });
+  </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -185,23 +220,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Retrieve loggedInUserName from localStorage immediately
             const loggedInUserName = localStorage.getItem('loggedInUserName');
+            console.log("data_entry.html - Logged in user name:", loggedInUserName); // For debugging
             
+            // Set the author for the community post form
             const postAuthorInput = document.getElementById('postAuthor');
             if (postAuthorInput && loggedInUserName) {
                 postAuthorInput.value = loggedInUserName;
             }
 
-            // --- Form Selection Logic (updated for radio buttons and proper active class management) ---
+            // --- Form Selection Logic ---
             const formTypeRadios = document.querySelectorAll('input[name="formType"]');
             const dataEntryForms = document.querySelectorAll('.data-entry-form-card');
 
             function showForm(formId) {
                 dataEntryForms.forEach(form => {
                     if (form.id === formId) {
-                        form.classList.add('active'); // የዚህን ቅጽ 'active' class ጨምር
+                        form.classList.add('active');
                     } else {
-                        form.classList.remove('active'); // የሌሎቹን ቅጾች 'active' class አስወግድ
+                        form.classList.remove('active');
                     }
                 });
             }
@@ -214,13 +252,11 @@
                 });
             });
 
-            // Initially show the checked form (the first one, fuelStationForm, by default)
-            // This ensures only one form is visible when the page loads
+            // Initially show the checked form (fuelStationForm)
             const initialCheckedRadio = document.querySelector('input[name="formType"]:checked');
             if (initialCheckedRadio) {
                 showForm(initialCheckedRadio.value);
             } else {
-                // Fallback: If no radio is checked, default to showing the first form
                 if (dataEntryForms.length > 0) {
                     dataEntryForms[0].classList.add('active');
                 }
@@ -249,7 +285,9 @@
                         fuelType: fuelType,
                         fuelStatus: fuelStatus,
                         queueStatus: queueStatus,
-                        submittedBy: loggedInUserName, 
+                        // --- NEW MODIFICATION ---
+                        submittedBy: loggedInUserName, // Uses the user's full_name
+                        // --- NEW MODIFICATION END ---
                         timestamp: window.serverTimestamp()
                     });
                     stationMessage.textContent = 'የማደያ መረጃ በተሳካ ሁኔታ ገብቷል!';
@@ -278,7 +316,9 @@
                     await window.addDoc(window.collection(window.db, "tipOffs"), {
                         location: tipOffLocation,
                         details: tipOffDetails,
-                        submittedBy: loggedInUserName,
+                        // --- NEW MODIFICATION ---
+                        submittedBy: loggedInUserName, // Uses the user's full_name
+                        // --- NEW MODIFICATION END ---
                         timestamp: window.serverTimestamp()
                     });
                     tipOffMessage.textContent = 'ጥቆማ በተሳካ ሁኔታ ገብቷል! እናመሰግናለን።';
@@ -313,7 +353,12 @@
                     });
 
                     communityPostSubmissionForm.reset();
-                    document.getElementById('postAuthor').value = loggedInUserName; // Re-fill after reset
+                    // --- NEW MODIFICATION ---
+                    // Re-fill author after reset only if loggedInUserName is available
+                    if (loggedInUserName) {
+                        document.getElementById('postAuthor').value = loggedInUserName; 
+                    }
+                    // --- NEW MODIFICATION END ---
                     communityPostMessage.textContent = 'ልጥፍዎ በተሳካ ሁኔታ ታትሟል!';
                     communityPostMessage.style.color = '#4CAF50';
 
