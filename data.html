@@ -6,63 +6,15 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-GW2Y1BE243');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>የባጃጅ ነዳጅ መረጃ - ዋናው ገጽ</title>
     <link rel="stylesheet" href="style.css">
-        <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const loggedInUserName = localStorage.getItem('loggedInUserName');
-        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
-        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
-        const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
-
-        // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
-        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
-            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
-            localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
-            window.location.href = 'login.html';
-            return; // ከዚህ በላይ እንዳይቀጥል
-        }
-
-        // የክፍያ ቀን ማረጋገጥ
-        try {
-            const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
-            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
-            const today = new Date();
-            const expirationDate = new Date(lastPaymentDate);
-            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
-
-            // የክፍያ ጊዜው አልፎ ከሆነ ወደ login.html ይመልስ
-            if (today > expirationDate) {
-                alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
-                localStorage.clear(); // ጊዜው ካለፈ ሁሉንም ያጥፋ
-                window.location.href = 'login.html';
-                return; // ከዚህ በላይ እንዳይቀጥል
-            }
-        } catch (error) {
-            console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
-            alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
-            localStorage.clear();
-            window.location.href = 'login.html';
-            return;
-        }
-
-        // መረጃው ሙሉ ከሆነ እና ጊዜው ካላለፈ, postAuthor input ካለ ይሙላው
-        const postAuthorInput = document.getElementById('postAuthor');
-        if (postAuthorInput) {
-            postAuthorInput.value = loggedInUserName;
-        }
-    });
-</script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* ተጨማሪ የ CSS ስታይሎች ለተሻለ አቀማመጥ */
+        /* ተጨማሪ የ CSS ስታይሎች ለተሻለ አቀማመጥ - ከዋናው data.html ኮፒ የተደረጉ */
         .fuel-type-details {
             margin-top: 10px;
             border-top: 1px solid #eee;
@@ -109,130 +61,16 @@
             <a href="data_entry.html">መረጃ አስገባ</a>
             <a href="fuel_stations.html">በተጠቃሚ የተመዘገቡ የማደያ መረጃዎች</a>
         </nav>
-        </header>
+    </header>
 
     <main class="container">
-        <section class="fuel-station-list">
-            <div class="station-card">
-                <h2 class="station-name">ሞቢል | Mobil</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                </div>
-                <p class="last-updated">የመጨረሻ ዝመና:2017-10-12 10:30 </p>
-            </div>
-
-            <div class="station-card">
-                <h2 class="station-name">ራስ ኦላ | Ras Ola</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2017-10-12 10:30</p>
-            </div>
-
-                       <div class="station-card">
-                <h2 class="station-name">ሼል | Shall</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2017-10-12 10:30</p>
-            </div>
-
-                       <div class="station-card">
-                <h2 class="station-name">አራተኛ | Arategna</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2017-10-12 10:30 </p>
-            </div>
-
-                        <div class="station-card">
-                <h2 class="station-name">አቦከር | Aboker</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2017-10-12 10:30</p>
-            </div>
-
-                        <div class="station-card">
-                <h2 class="station-name">ኖክ | NOC</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                </div>
-                <p class="last-updated">የመጨረሻ ዝመና: 2017-10-12 10:30</p>
-             </div>
-
-            <div class="station-card">
-                <h2 class="station-name">Afrikan oil | አፍሪካን ኦይል</h2>
-                <div class="status-info">
-                    <div class="fuel-type-details">
-                        <p>ቤንዚን: <strong class="available">አለ</strong></p>
-                        <p>ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-                    <div class="fuel-type-details">
-                        <p>ናፍጣ: <strong class="available">አለ</strong></p>
-                        <p>የነዳጅ ዋጋ: <strong>49.90 ብር/ሊትር</strong></p>
-                        <p>የወረፋ ሁኔታ: <strong class="status-short">(5-10 ባጃጅ)</strong></p>
-                    </div>
-            
+        <section class="fuel-station-list" id="fuelStationList">
+            <p id="loadingMessage" style="text-align: center; margin-top: 20px;">መረጃዎች እየተጫኑ ነው... እባክዎ ይጠብቁ።</p>
+            <p id="errorMessage" class="error-message" style="display: none; text-align: center; margin-top: 20px;"></p>
         </section>
 
         <div style="text-align: center; margin: 30px 0;">
-            <button id="logoutButton" 
+            <button id="logoutButton"
                     style="
                         background-color:#00bcd4; /* ከለር */
                         color: white;
@@ -256,13 +94,127 @@
         <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
         <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
     </footer>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const loggedInUserName = localStorage.getItem('loggedInUserName');
+            const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+            const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+            const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
+
+            // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
+            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
+                alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+                localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
+                window.location.href = 'login.html';
+                return; // ከዚህ በላይ እንዳይቀጥል
+            }
+
+            // የክፍያ ቀን ማረጋገጥ
+            try {
+                const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
+                const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+                const today = new Date();
+                const expirationDate = new Date(lastPaymentDate);
+                expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
+
+                // የክፍያ ጊዜው አልፎ ከሆነ ወደ login.html ይመልስ
+                if (today > expirationDate) {
+                    alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
+                    localStorage.clear(); // ጊዜው ካለፈ ሁሉንም ያጥፋ
+                    window.location.href = 'login.html';
+                    return; // ከዚህ በላይ እንዳይቀጥል
+                }
+            } catch (error) {
+                console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
+                alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
+                localStorage.clear();
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const fuelStationList = document.getElementById('fuelStationList');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const errorMessageDisplay = document.getElementById('errorMessage');
+
+            try {
+                // መረጃዎችን ከ Firebase Firestore አምጣ
+                const q = query(collection(db, "fueldata"), orderBy("stationName", "asc"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    loadingMessage.style.display = 'none';
+                    errorMessageDisplay.textContent = "ምንም የነዳጅ ማደያ መረጃ የለም።";
+                    errorMessageDisplay.style.display = 'block';
+                    return;
+                }
+
+                fuelStationList.innerHTML = ''; // ያሉትን መልዕክቶች አጥፋ
+
+                querySnapshot.forEach((doc) => {
+                    const station = doc.data();
+                    const stationId = doc.id; // የሰነዱን መታወቂያ እንይዛለን
+
+                    const lastUpdated = station.lastUpdated ? new Date(station.lastUpdated.toDate()).toLocaleString('am-ET', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', hour12: false
+                    }) : 'ያልታወቀ';
+
+                    const cardHtml = `
+                        <div class="station-card">
+                            <h2 class="station-name">${station.stationName} | ${station.stationNameEnglish || ''}</h2>
+                            <div class="status-info">
+                                <div class="fuel-type-details">
+                                    <p>ቤንዚን: <strong class="${station.petrolStatus === 'አለ' ? 'available' : 'unavailable'}">${station.petrolStatus}</strong></p>
+                                    <p>ዋጋ: <strong>${station.petrolPrice ? station.petrolPrice + ' ብር/ሊትር' : 'ያልታወቀ'}</strong></p>
+                                    <p>የወረፋ ሁኔታ: <strong class="status-short">${station.petrolQueue || 'ያልታወቀ'}</strong></p>
+                                </div>
+                                <div class="fuel-type-details">
+                                    <p>ናፍጣ: <strong class="${station.dieselStatus === 'አለ' ? 'available' : 'unavailable'}">${station.dieselStatus}</strong></p>
+                                    <p>የነዳጅ ዋጋ: <strong>${station.dieselPrice ? station.dieselPrice + ' ብር/ሊትር' : 'ያልታወቀ'}</strong></p>
+                                    <p>የወረፋ ሁኔታ: <strong class="status-short">${station.dieselQueue || 'ያልታወቀ'}</strong></p>
+                                </div>
+                            </div>
+                            <p class="last-updated">የመጨረሻ ዝመና: ${lastUpdated}</p>
+                        </div>
+                    `;
+                    fuelStationList.innerHTML += cardHtml;
+                });
+            } catch (error) {
+                console.error("መረጃዎችን ከFirebase ሲያመጡ ስህተት ተፈጠረ:", error);
+                loadingMessage.style.display = 'none';
+                errorMessageDisplay.textContent = "መረጃዎችን ማምጣት አልተቻለም። እባክዎ እንደገና ይሞክሩ።";
+                errorMessageDisplay.style.display = 'block';
+            } finally {
+                loadingMessage.style.display = 'none'; // የመጫኛ መልዕክቱን አስወግድ
+            }
+
             // የመውጫው በተን ተግባር
             const logoutButton = document.getElementById('logoutButton');
             if (logoutButton) {
                 logoutButton.addEventListener('click', () => {
                     localStorage.removeItem('isLoggedIn'); // የመግቢያ ሁኔታን አጥፋ
+                    localStorage.removeItem('loggedInUserName');
+                    localStorage.removeItem('loggedInUserPhone');
+                    localStorage.removeItem('loggedInUserLicensePlate');
+                    localStorage.removeItem('loggedInUserLastPaymentDate');
                     alert("በተሳካ ሁኔታ ወጥተዋል!");
                     window.location.href = "login.html"; // ወደ መግቢያ ገጽ ምራ
                 });
