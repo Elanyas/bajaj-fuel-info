@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የባጃጅ ነዳጅ መረጃ - ማደያ አስመዝግብ</title>
+    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GW2Y1BE243"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GW2Y1BE243');
+    </script>
+    <style>
+        /* ለዚህ ገጽ ብቻ የሚያገለግሉ ተጨማሪ ስታይሎች */
+        .register-container {
+            background-color: #1e1e1e; /* ጥቁር ግራጫ ዳራ */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* ጠቆር ያለ ጥላ */
+            max-width: 500px;
+            margin: 30px auto;
+            color: #e0e0e0; /* ቀላል ግራጫ ጽሁፍ */
+        }
+        .register-container h2 {
+            text-align: center;
+            color: #ffffff; /* ነጭ ርዕስ */
+            margin-bottom: 25px;
+        }
+        .register-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ffffff; /* ነጭ label */
+        }
+        .register-container input[type="text"],
+        .register-container input[type="tel"],
+        .register-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #555; /* ጠቆር ያለ ድንበር */
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: #333; /* ጠቆር ያለ የ input ዳራ */
+            color: #e0e0e0; /* የ input ጽሁፍ ቀለም */
+        }
+        .register-container input[type="text"]:focus,
+        .register-container input[type="tel"]:focus,
+        .register-container input[type="password"]:focus {
+            outline: none;
+            border-color: #00bcd4; /* ሲነካ ሰማያዊ ድንበር */
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+        }
+        .register-container button {
+            background-color: #00bcd4; /* ሰማያዊ በተን */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        .register-container button:hover {
+            background-color: #0097a7; /* ጠቆር ያለ ሰማያዊ */
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .message.success {
+            background-color: #28a745; /* ጥቁር አረንጓዴ */
+            color: #fff;
+            border: 1px solid #218838;
+        }
+        .message.error {
+            background-color: #dc3545; /* ጥቁር ቀይ */
+            color: #fff;
+            border: 1px solid #c82333;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1><span class="accent-text">የባጃጅ ነዳጅ</span> መረጃ</h1>
+        <p>የነዳጅ ማደያ አስመዝግብ</p>
+        <nav class="sub-nav">
+            <a href="data.html">ዋና ገጽ</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="community_data.html">ልውውጥ</a>
+            <a href="fuel_stations.html">በተጠቃሚ የተመዘገቡ የማደያ መረጃዎች</a>
+            <a href="fuel_station_data_entry.html">መረጃ አስገባ</a> </nav>
+    </header>
+
+    <main class="container">
+        <div class="register-container">
+            <h2>አዲስ ነዳጅ ማደያ አስመዝግብ</h2>
+            <form id="registerStationForm">
+                <label for="newStationNameAmh">የማደያ ስም (አማርኛ):</label>
+                <input type="text" id="newStationNameAmh" required>
+
+                <label for="newStationNameEng">የማደያ ስም (እንግሊዝኛ - እንደ አማራጭ):</label>
+                <input type="text" id="newStationNameEng">
+
+                <label for="newStationPhone">ስልክ ቁጥር:</label>
+                <input type="tel" id="newStationPhone" pattern="[0-9]{10}" title="እባክዎ 10 ዲጂት ስልክ ቁጥር ያስገቡ" required>
+
+                <label for="newStationPassword">የመግቢያ ፓስወርድ (6 ዲጂት ቁጥር):</label>
+                <input type="password" id="newStationPassword" maxlength="6" pattern="\d{6}" title="እባክዎ 6 ዲጂት ቁጥር ያስገቡ" required>
+                
+                <button type="submit">ማደያ አስመዝግብ</button>
+            </form>
+            <div id="registerMessage" class="message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // Firebase Configuration (ከሌሎች ፋይሎች የተወሰደ)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Firebase App ን አስጀምር
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // የ HTML Elements ዎችን ያዝ
+        const registerStationForm = document.getElementById('registerStationForm');
+        const newStationNameAmhInput = document.getElementById('newStationNameAmh');
+        const newStationNameEngInput = document.getElementById('newStationNameEng');
+        const newStationPhoneInput = document.getElementById('newStationPhone');
+        const newStationPasswordInput = document.getElementById('newStationPassword');
+        const registerMessage = document.getElementById('registerMessage');
+
+        // የማስመዝገቢያ ቅጽ ሲላክ የሚሰራ ተግባር
+        registerStationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            registerMessage.style.display = 'none'; // ቀደም ሲል ያለውን መልዕክት ደብቅ
+
+            const stationNameAmh = newStationNameAmhInput.value.trim();
+            const stationNameEng = newStationNameEngInput.value.trim();
+            const phoneNumber = newStationPhoneInput.value.trim();
+            const password = newStationPasswordInput.value.trim();
+
+            // መስኮች መሞላታቸውን አረጋግጥ
+            if (!stationNameAmh || !phoneNumber || !password) {
+                showMessage(registerMessage, "እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ!", "error");
+                return;
+            }
+
+            // የፓስወርድ እና የስልክ ቁጥር validation
+            if (password.length !== 6 || !/^\d+$/.test(password)) {
+                showMessage(registerMessage, "የፓስወርድ ማስገቢያው ባለ 6 ዲጂት ቁጥር መሆን አለበት።", "error");
+                return;
+            }
+            if (phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
+                showMessage(registerMessage, "የስልክ ቁጥሩ 10 ዲጂት መሆን አለበት።", "error");
+                return;
+            }
+
+            try {
+                // ተመሳሳይ ስም ያለው ማደያ እንዳይመዘገብ አረጋግጥ
+                const nameQuery = query(collection(db, "fuelowners"), where("stationNameAmh", "==", stationNameAmh));
+                const nameSnapshot = await getDocs(nameQuery);
+                if (!nameSnapshot.empty) {
+                    showMessage(registerMessage, "ይህ የማደያ ስም ቀድሞውኑ ተመዝግቧል።", "error");
+                    return;
+                }
+
+                // ተመሳሳይ ስልክ ቁጥር ያለው ማደያ እንዳይመዘገብ አረጋግጥ
+                const phoneQuery = query(collection(db, "fuelowners"), where("phoneNumber", "==", phoneNumber));
+                const phoneSnapshot = await getDocs(phoneQuery);
+                if (!phoneSnapshot.empty) {
+                    showMessage(registerMessage, "ይህ ስልክ ቁጥር ቀድሞውኑ ተመዝግቧል።", "error");
+                    return;
+                }
+
+                // ተመሳሳይ ፓስወርድ ያለው ማደያ እንዳይመዘገብ አረጋግጥ
+                const passwordQuery = query(collection(db, "fuelowners"), where("password", "==", password));
+                const passwordSnapshot = await getDocs(passwordQuery);
+                if (!passwordSnapshot.empty) {
+                    showMessage(registerMessage, "ይህ ፓስወርድ ቀድሞውኑ በሌላ ማደያ ጥቅም ላይ ውሏል። እባክዎ ሌላ ፓስወርድ ይምረጡ።", "error");
+                    return;
+                }
+
+                // ሁሉንም ማረጋገጫዎች ካለፈ በኋላ አዲስ ማደያ አስመዝግብ
+                await addDoc(collection(db, "fuelowners"), {
+                    stationNameAmh: stationNameAmh,
+                    stationNameEng: stationNameEng,
+                    phoneNumber: phoneNumber,
+                    password: password, // ፓስወርዱ አሁን ባለው መልኩ ይገባል
+                    createdAt: new Date() // የተመዘገበበት ቀን
+                });
+
+                showMessage(registerMessage, "ማደያው በተሳካ ሁኔታ ተመዝግቧል!", "success");
+                registerStationForm.reset(); // ቅጹን ባዶ አድርግ
+            } catch (error) {
+                console.error("ማደያ ሲያስመዘግቡ ስህተት ተፈጠረ:", error);
+                showMessage(registerMessage, "ማደያውን ማስመዝገብ አልተቻለም። እባክዎ እንደገና ይሞክሩ።", "error");
+            }
+        });
+
+        // የመልዕክት ማሳያ ተግባር
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

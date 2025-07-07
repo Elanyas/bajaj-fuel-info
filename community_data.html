@@ -15,182 +15,249 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const loggedInUserName = localStorage.getItem('loggedInUserName');
-        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
-        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
-        const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
-
-        // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
-        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
-            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
-            localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
-            window.location.href = 'login.html';
-            return; // ከዚህ በላይ እንዳይቀጥል
+    <style>
+        /* ለዚህ ገጽ ብቻ ተጨማሪ ስታይሎች */
+        .posts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
         }
 
-        // የክፍያ ቀን ማረጋገጥ
-        try {
-            const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
-            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
-            const today = new Date();
-            const expirationDate = new Date(lastPaymentDate);
-            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
-
-            // የክፍያ ጊዜው አልፎ ከሆነ ወደ login.html ይመልስ
-            if (today > expirationDate) {
-                alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
-                localStorage.clear(); // ጊዜው ካለፈ ሁሉንም ያጥፋ
-                window.location.href = 'login.html';
-                return; // ከዚህ በላይ እንዳይቀጥል
-            }
-        } catch (error) {
-            console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
-            alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
-            localStorage.clear();
-            window.location.href = 'login.html';
-            return;
+        .community-post-card {
+            background-color: #1e1e1e; /* ጥቁር ግራጫ ዳራ */
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            color: #e0e0e0; /* ቀላል ግራጫ ጽሁፍ */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* ይዘቶች እንዲሰራጩ */
         }
 
-        // መረጃው ሙሉ ከሆነ እና ጊዜው ካላለፈ, postAuthor input ካለ ይሙላው
-        const postAuthorInput = document.getElementById('postAuthor');
-        if (postAuthorInput) {
-            postAuthorInput.value = loggedInUserName;
+        .community-post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
-    });
-</script>
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
-          authDomain: "elanyas-info.firebaseapp.com",
-          projectId: "elanyas-info",
-          storageBucket: "elanyas-info.firebasestorage.app",
-          messagingSenderId: "769306910360",
-          appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
-          measurementId: "G-2XX2B3RSGP"
-        };
+        .community-post-card h3.post-title {
+            color: #ffffff; /* ነጭ ርዕስ */
+            font-size: 1.6em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #00bcd4; /* ሰማያዊ ከስር መስመር */
+            padding-bottom: 10px;
+        }
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app); // For Cloud Firestore
-        const analytics = getAnalytics(app); // For Firebase Analytics
+        .community-post-card .post-meta {
+            font-size: 0.9em;
+            color: #a0a0a0;
+            margin-bottom: 15px;
+        }
 
-        // Expose db, collection, query, orderBy, getDocs globally for easier use in script below
-        window.db = db;
-        window.collection = collection;
-        window.query = query;
-        window.orderBy = orderBy;
-        window.getDocs = getDocs;
+        .community-post-card .post-content {
+            font-size: 1em;
+            color: #d0d0d0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1; /* ይዘቱ ያለውን ቦታ እንዲሞላ */
+        }
+
+        .loading-message {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #00bcd4;
+        }
         
-        console.log("Firebase initialized and Firestore DB instance available for community_data.html."); // ለመፈተሽ
+        /* Like System Styles */
+        .post-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #444; /* ቀለል ያለ መስመር */
+        }
 
-    </script>
+        .like-button {
+            background: none;
+            border: none;
+            color: #00bcd4; /* Default color for unlike */
+            cursor: pointer;
+            font-size: 1.1em; /* Icon size */
+            transition: color 0.2s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .like-button.liked {
+            color: #ffaa00; /* Red for liked */
+            transform: scale(1);
+        }
+
+        .like-button:hover {
+            color: #a0a0a0; /* Accent color on hover */
+            transform: scale(1.1);
+        }
+
+        .like-count {
+            margin-left: 8px;
+            font-size: 1.1em;
+            color: #ffffff; /* Count color */
+            font-weight: bold;
+        }
+
+        .like-button .icon {
+            margin-right: 5px; /* Space between icon and text if any */
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
-      <div class="ad-marquee-container">
-        <p class="ad-marquee-text">
-            ✨ አዲስ ባጃጅ ሞዴሎች በቅርቡ ይመጣሉ! &nbsp; &nbsp; &nbsp; &nbsp;
-            💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ? &nbsp; &nbsp; &nbsp; &nbsp;
-            💰 የነዳጅ ቅናሽ መረጃ በቅርቡ ይፋ ይሆናል! &nbsp; &nbsp; &nbsp; &nbsp;
-            🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ! &nbsp; &nbsp; &nbsp; &nbsp;
-        </p>
-      </div>
-        <h1><span class="accent-text">የመረጃ</span> ልውውጥ</h1>
-        <p>የተጠቃሚዎች ተሞክሮዎች፣ ምክሮች እና ጥያቄዎች</p>
+        <h1><span class="accent-text">የባጃጅ ነዳጅ</span> መረጃ</h1>
+        <p>የማህበረሰብ ልውውጥ</p>
         <nav class="sub-nav">
-            <a href="data.html">ዋናው ገጽ</a>
+            <a href="data.html">ዋና ገጽ</a>
             <a href="news.html">ዜናዎች</a>
             <a href="sales.html">መሸጫ</a>
             <a href="maintenance.html">እንክብካቤ</a>
-            <a href="data_entry.html">መረጃ አስገባ</a>
+            <a href="community_data.html">ልውውጥ</a>
+            <a href="fuel_station_data_entry.html">መረጃ አስገባ</a>
+            <a href="register_fuel_station.html">ማደያ አስመዝግብ</a>
+            <button id="logoutButton" class="nav-button">ውጣ</button>
         </nav>
     </header>
 
-    <main class="container community-container">
-        <section class="community-posts-display">
-            <h2>የቅርብ ጊዜ ልጥፎች</h2>
-            <div id="postsList" class="posts-list">
-                <p class="loading-message">ልጥፎችን በመጫን ላይ...</p>
-                </div>
-        </section>
+    <main class="container">
+        <div id="postsList" class="posts-container">
+            <p class="loading-message">ልጥፎች እየተጫኑ ነው...</p>
+        </div>
     </main>
 
     <footer class="main-footer">
-        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
         <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
     </footer>
 
     <script type="module">
-        // Firebase modules are already imported at the top of the head section via type="module"
-        // and 'app', 'db', 'analytics', 'collection', 'query', 'orderBy', 'getDocs' are globally exposed.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        // getDoc ከአንድ document ለማምጣት ነው (getDocs ለ query ነው)
+        import { getFirestore, collection, getDocs, orderBy, query, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // Firebase Configuration (ይህ በትክክል መቀመጡን አረጋግጥ)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         document.addEventListener('DOMContentLoaded', function() {
             const postsList = document.getElementById('postsList');
+            const logoutButton = document.getElementById('logoutButton');
 
+            // የተጠቃሚ መረጃ ከ Local Storage
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const loggedInUserName = localStorage.getItem('loggedInUserName');
+            const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+            const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+            const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
+
+            // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
+            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate) {
+                alert("ለመቀጠል እባክዎ ይግቡ።");
+                window.location.href = "login.html"; // ወደ መግቢያ ገጽ ይምራ
+                return; // ኮዱ እዚህ ጋር ይቁም
+            }
+
+            // የመውጫው በተን ተግባር
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('isLoggedIn'); // የመግቢያ ሁኔታን አጥፋ
+                    localStorage.removeItem('loggedInUserName');
+                    localStorage.removeItem('loggedInUserPhone');
+                    localStorage.removeItem('loggedInUserLicensePlate');
+                    localStorage.removeItem('loggedInUserLastPaymentDate');
+                    alert("በተሳካ ሁኔታ ወጥተዋል!");
+                    window.location.href = "login.html"; // ወደ መግቢያ ገጽ ምራ
+                });
+            }
+
+            // ልጥፎችን ከ Firebase የሚያመጣ ተግባር
             async function fetchCommunityPosts() {
-                postsList.innerHTML = '<p class="loading-message">ልጥፎችን በመጫን ላይ...</p>'; // Loading message
-
+                postsList.innerHTML = '<p class="loading-message">ልጥፎች እየተጫኑ ነው...</p>';
                 try {
-                    // Using global Firebase Firestore functions
-                    const q = window.query(window.collection(window.db, "communityPosts"), window.orderBy("timestamp", "desc"));
-                    const querySnapshot = await window.getDocs(q);
+                    const q = query(collection(db, "communityPosts"), orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
 
                     if (querySnapshot.empty) {
-                        postsList.innerHTML = '<p class="loading-message">ምንም ልጥፎች የሉም። የመጀመሪያው ልጥፍ የእርስዎ ይሁን!</p>';
+                        postsList.innerHTML = '<p class="loading-message" style="color: #a0a0a0;">ምንም የልውውጥ ልጥፎች የሉም።</p>';
                         return;
                     }
 
-                    postsList.innerHTML = ''; // Clear loading message and example post
+                    postsList.innerHTML = ''; // የመጫኛ መልዕክቱን አስወግድ
+                    querySnapshot.forEach((docSnap) => {
+                        const post = docSnap.data();
+                        const postId = docSnap.id; // የልጥፉን ID ያዝ
 
-                    querySnapshot.forEach((doc) => {
-                        const post = doc.data();
-                        // const postId = doc.id; // የልጥፉ መታወቂያ - ለጊዜው ባያስፈልግም ለወደፊት ሊጠቅም ይችላል
-
-                        // የጊዜ ማህተምን ወደ የሚነበብ ቅርጸት መቀየር
-                        let postDate = 'ያልታወቀ ቀን';
-                        if (post.timestamp && post.timestamp.toDate) {
-                            // Firestore Timestamp object (from serverTimestamp())
-                            const date = post.timestamp.toDate();
-                            postDate = date.toLocaleString('am-ET', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                        } else if (post.timestamp && typeof post.timestamp === 'string') {
-                            // If it's a string (e.g., from older entries or different format)
+                        let postDate = 'አልታወቀም';
+                        if (post.timestamp) {
                             try {
-                                const date = new Date(post.timestamp);
-                                postDate = date.toLocaleString('am-ET', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                });
+                                // For Firestore Timestamp objects
+                                if (typeof post.timestamp.toDate === 'function') {
+                                    postDate = post.timestamp.toDate().toLocaleString('am-ET', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                } else { // For string timestamps if any
+                                    postDate = new Date(post.timestamp).toLocaleString('am-ET', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+                                }
                             } catch (e) {
-                                console.warn("Invalid timestamp string format for post:", post.timestamp, e);
+                                console.warn("Invalid timestamp format for post:", post.timestamp, e);
                             }
                         }
+
+                        // የልጥፉ ላይክ ሁኔታን አረጋግጥ
+                        // likes field ከሌለ ባዶ array እንጠቀም
+                        const likesArray = post.likes || []; 
+                        const isLiked = likesArray.includes(loggedInUserName); // ተጠቃሚው ላይክ አድርጎ እንደሆነ
 
                         const postCard = `
                             <div class="community-post-card">
                                 <h3 class="post-title">${post.title}</h3>
                                 <p class="post-meta">በ <strong>${post.author || 'ያልታወቀ'}</strong> - ${postDate}</p>
                                 <p class="post-content">${post.content}</p>
+                                <div class="post-actions">
+                                    <button class="like-button ${isLiked ? 'liked' : ''}" data-post-id="${postId}">
+                                        <span class="icon">👍 Like</span> 
+                                    </button>
+                                    <span class="like-count">${likesArray.length}</span>
+                                </div>
                             </div>
                         `;
                         postsList.insertAdjacentHTML('beforeend', postCard);
+                    });
+
+                    // የላይክ በተኖችን ክሊክ event አታች አድርግ
+                    document.querySelectorAll('.like-button').forEach(button => {
+                        button.addEventListener('click', handleLikeClick);
                     });
 
                 } catch (error) {
@@ -199,10 +266,61 @@
                 }
             }
 
+            // ላይክ በተን ሲጫን የሚሰራ ተግባር
+            async function handleLikeClick(event) {
+                if (!loggedInUserName) {
+                    alert("ልጥፎችን ለመውደድ መግባት አለብዎት።");
+                    return;
+                }
+
+                const button = event.currentTarget;
+                const postId = button.dataset.postId;
+                const likeCountSpan = button.nextElementSibling; // የላይክ ቆጣሪው ስፓን
+
+                const postRef = doc(db, "communityPosts", postId); // የልጥፉን DocumentReference ያዝ
+
+                try {
+                    // የልጥፉን ወቅታዊ መረጃ አምጣ
+                    const docSnap = await getDoc(postRef); 
+                    
+                    if (!docSnap.exists()) {
+                        console.error("Post not found:", postId);
+                        alert("የተፈለገው ልጥፍ አልተገኘም።");
+                        return;
+                    }
+                    
+                    // የ likes array ን አምጣ (ከሌለ ባዶ array ይሁን)
+                    const currentLikes = docSnap.data().likes || [];
+                    
+                    let newLikes = [];
+                    // የተጠቃሚው ስም ቀደም ሲል ላይክ ካደረገው፣ ያስወግዱት (unlike)
+                    if (currentLikes.includes(loggedInUserName)) {
+                        newLikes = currentLikes.filter(name => name !== loggedInUserName);
+                        button.classList.remove('liked');
+                    } else {
+                        // ላይክ ካልተደረገ፣ ስሙን ጨምሩ (like)
+                        newLikes = [...currentLikes, loggedInUserName];
+                        button.classList.add('liked');
+                    }
+
+                    // Firebase ላይ ያለውን document አዘምን
+                    await updateDoc(postRef, {
+                        likes: newLikes
+                    });
+
+                    // በገጹ ላይ የላይክ ቆጣሪውን አዘምን
+                    likeCountSpan.textContent = newLikes.length; 
+
+                } catch (error) {
+                    console.error("Like operation failed:", error);
+                    alert("ላይክ ለማድረግ አልተቻለም። እባክዎ እንደገና ይሞክሩ።");
+                }
+            }
+
             // Fetch posts when the page loads
             fetchCommunityPosts();
 
-            console.log("Community Data display page loaded and post fetching is set up.");
+            console.log("Community Data display page loaded and post fetching is set up with like system.");
         });
     </script>
 </body>
