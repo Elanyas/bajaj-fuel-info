@@ -15,148 +15,170 @@
     <link rel="stylesheet" href="style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const loggedInUserName = localStorage.getItem('loggedInUserName');
-        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
-        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
-        const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
-
-        // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
-        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
-            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
-            localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
-            window.location.href = 'login.html';
-            return; // ከዚህ በላይ እንዳይቀጥል
+    <style>
+        /* General styling from style.css should apply, but adding specific styles for this page if needed */
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: #2c2c2c; /* Darker background */
+            color: #e0e0e0; /* Light text */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
-        // የክፍያ ቀን ማረጋገጥ
-        try {
-            const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
-            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
-            const today = new Date();
-            const expirationDate = new Date(lastPaymentDate);
-            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
-
-            // የክፍያ ጊዜው አልፎ ከሆነ ወደ login.html ይመልስ
-            if (today > expirationDate) {
-                alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
-                localStorage.clear(); // ጊዜው ካለፈ ሁሉንም ያጥፋ
-                window.location.href = 'login.html';
-                return; // ከዚህ በላይ እንዳይቀጥል
-            }
-        } catch (error) {
-            console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
-            alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
-            localStorage.clear();
-            window.location.href = 'login.html';
-            return;
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1e1e1e; /* Dark background for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
-        // መረጃው ሙሉ ከሆነ እና ጊዜው ካላለፈ, postAuthor input ካለ ይሙላው
-        const postAuthorInput = document.getElementById('postAuthor');
-        if (postAuthorInput) {
-            postAuthorInput.value = loggedInUserName;
+        h2 {
+            color: #00bcd4; /* Accent color */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-    });
-</script>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        .search-filter-section {
+            margin-bottom: 20px;
+            text-align: center;
+        }
 
-        // Your web app's Firebase configuration - ይህን እንዳለ ነው የተውኩት።
-        const firebaseConfig = {
-          apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
-          authDomain: "elanyas-info.firebaseapp.com",
-          projectId: "elanyas-info",
-          storageBucket: "elanyas-info.firebasestorage.app",
-          messagingSenderId: "769306910360",
-          appId: "1:769306910360:web:70988eed5b1da5ffa0faed",
-          measurementId: "G-2XX2B3RSGP"
-        };
+        #searchInput {
+            width: 80%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            font-size: 1em;
+        }
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const analytics = getAnalytics(app);
+        .stations-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const fuelStationsList = document.getElementById('fuelStationsList');
-            const searchInput = document.getElementById('searchInput');
+        .station-card {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
 
-            // Function to format timestamp to a readable date/time string
-            function formatTimestamp(timestamp) {
-                if (!timestamp || !timestamp.toDate) return 'ያልታወቀ ቀን';
-                const date = timestamp.toDate();
-                const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-                return date.toLocaleDateString('am-ET', options); // Use Amharic locale for formatting
-            }
+        .station-card h3 {
+            color: #00bcd4;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
 
-            // Search functionality
-            searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const cards = fuelStationsList.querySelectorAll('.fuel-station-card');
-                cards.forEach(card => {
-                    const stationName = card.querySelector('.station-name').textContent.toLowerCase();
-                    if (stationName.includes(searchTerm)) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
+        .station-card p {
+            margin-bottom: 8px;
+        }
 
-            // Function to fetch and display fuel station data
-            async function fetchFuelStations() {
-                fuelStationsList.innerHTML = '<p class="loading-message">የማደያ መረጃዎችን በመጫን ላይ...</p>';
-                try {
-                    const q = query(collection(db, "fuelStations"), orderBy("timestamp", "desc"));
-                    const querySnapshot = await getDocs(q);
+        .station-card .status-indicator {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 5px;
+        }
 
-                    if (querySnapshot.empty) {
-                        fuelStationsList.innerHTML = '<p class="loading-message">ምንም የማደያ መረጃ የለም።</p>';
-                        return;
-                    }
+        .status-indicator.available { background-color: #4CAF50; color: white; } /* Green */
+        .status-indicator.low { background-color: #FFC107; color: #333; } /* Amber */
+        .status-indicator.unavailable { background-color: #f44336; color: white; } /* Red */
+        .status-indicator.none { background-color: #f44336; color: white; } /* Red */
 
-                    fuelStationsList.innerHTML = ''; // Clear loading message
+        .status-indicator.short-queue { background-color: #8BC34A; color: white; } /* Light Green */
+        .status-indicator.medium-queue { background-color: #FF9800; color: white; } /* Orange */
+        .status-indicator.long-queue { background-color: #D32F2F; color: white; } /* Dark Red */
+        .status-indicator.no-queue { background-color: #2196F3; color: white; } /* Blue */
 
-                    querySnapshot.forEach((doc) => {
-                        const station = doc.data();
-                        const stationDate = formatTimestamp(station.timestamp);
-                        // የsubmittedBy መስክን ከFirebase እናገኛለን
-                        const submittedBy = station.submittedBy || 'ያልታወቀ ተጠቃሚ'; 
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
 
-                        const stationCard = `
-                            <div class="fuel-station-card">
-                                <h3 class="station-name">${station.stationName || 'ያልታወቀ ማደያ'}</h3>
-                                <p class="station-info">የነዳጅ አይነት:<strong> <span class="fuel-type">${station.fuelType || 'አልተገለጸም'}</span></strong></p>
-                                <p class="station-info">የነዳጅ ሁኔታ: <span class="fuel-status status-${station.fuelStatus ? station.fuelStatus.toLowerCase() : 'unknown'}" style="color: ${station.fuelStatus === 'አለ' ? '#4CAF50' : station.fuelStatus === 'አነስተኛ' ? '#FFC107' : '#f44336'};">${station.fuelStatus || 'አልታወቀም'}</span></p>
-                                <p class="station-info">የወረፋ ሁኔታ: <span class="queue-status status-${station.queueStatus ? station.queueStatus.toLowerCase() : 'unknown'}">${station.queueStatus || 'አልታወቀም'}</span></p>
-                                <p class="station-meta">የተዘመነ በ: ${stationDate}</p>
-                                <p class="station-meta">የተላከው በ: <strong>${submittedBy}</strong></p>
-                            </div>
-                        `;
-                        fuelStationsList.insertAdjacentHTML('beforeend', stationCard);
-                    });
+        .action-buttons button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
 
-                } catch (error) {
-                    console.error("Error fetching fuel station data: ", error);
-                    fuelStationsList.innerHTML = '<p class="loading-message" style="color: #f44336;">የማደያ መረጃዎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
-                }
-            }
+        .action-buttons button:hover {
+            background-color: #0097a7;
+        }
+        
+        .vote-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #3a3a3a;
+        }
 
-            // Fetch fuel station data when the page loads
-            fetchFuelStations();
+        .vote-controls button {
+            background: none;
+            border: 1px solid #00bcd4;
+            color: #00bcd4;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-            console.log("Fuel Stations display page loaded and data fetching is set up.");
-        });
-    </script>
+        .vote-controls button:hover {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .vote-controls button.liked {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .vote-controls button.disliked {
+            background-color: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .vote-controls span {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
+       <div class="ad-marquee-container">
+        <p class="ad-marquee-text">
+            ✨  እስከ ሐምሌ 18 የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ይህንን እድል ለሌሎች ሹፌር ጓደኞችዎ አሳዎቀዋል? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 ይህንን ሰፊ የመገናኛ መድረክ እና የመረጃ ምንጭ ለሌሎች ጓደኞቾም ያስተዋውቁ! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ የአገልግሎታችን ተጠቃሚ ስለሆኑ እናመሰግናለን! &nbsp; &nbsp; &nbsp; &nbsp;
+        </p>
+      </div>
         <h1>የማደያ መረጃ</h1>
         <p>የትኞቹ ማደያዎች ነዳጅ እንዳላቸው እና የወረፋ ሁኔታቸውን ይወቁ።</p>
         <nav class="sub-nav">
@@ -164,7 +186,9 @@
             <a href="news.html">ዜናዎች</a>
             <a href="sales.html">መሸጫ</a>
             <a href="maintenance.html">እንክብካቤ</a>
-            <a href="data_entry.html">መረጃ አስገባ</a>
+            <a href="data_entry.html">መረጃ ማስገቢያ</a>
+            <a href="community_data.html">ልውውጥ</a>
+            <button id="logoutButton" class="nav-button">መውጫ</button>
         </nav>
     </header>
 
@@ -176,13 +200,335 @@
         <section class="fuel-stations-display">
             <h2>የቅርብ ጊዜ የማደያ መረጃዎች</h2>
             <div id="fuelStationsList" class="stations-list">
+                <p class="loading-message">መረጃዎች እየተጫኑ ነው...</p>
                 </div>
         </section>
     </main>
 
     <footer class="main-footer">
-        <p>&copy; 2025 የባጃጅ መረጃ ማዕከል. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
-        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+        <p>&copy; 2024 ባጃጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
     </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        // የጠፉትን getDoc እና deleteDoc ጨምረናል!
+        import { getFirestore, collection, getDocs, query, orderBy, limit, doc, updateDoc, arrayUnion, arrayRemove, addDoc, where, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da5ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutButton = document.getElementById('logoutButton');
+            const fuelStationsList = document.getElementById('fuelStationsList');
+            const searchInput = document.getElementById('searchInput');
+
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const loggedInUserName = localStorage.getItem('loggedInUserName'); // Note: For consistency, consider using loggedInUserPhone for identity
+            const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+            const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+            const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
+
+
+            // Check if user is logged in and has all required info
+            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate) {
+                alert("ይህንን ገጽ ለመጠቀም መግባት አለብዎት።");
+                localStorage.clear(); 
+                window.location.href = 'login.html'; 
+                return;
+            }
+
+            // Check if subscription is active (within 30 days from last payment)
+            const today = new Date();
+            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+
+            if (lastPaymentDate < thirtyDaysAgo) {
+                alert("የደንበኝነት ምዝገባዎ ጊዜው አልፎበታል። እባክዎ ያድሱ።");
+                // Clear all user-related localStorage items except possibly the phone number if you want them to log in again with same phone
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('loggedInUserName');
+                localStorage.removeItem('loggedInUserPhone');
+                localStorage.removeItem('loggedInUserLicensePlate');
+                localStorage.removeItem('loggedInUserLastPaymentDate');
+                window.location.href = 'login.html'; // Redirect to login or subscription page
+                return;
+            }
+
+
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('loggedInUserName');
+                    localStorage.removeItem('loggedInUserPhone');
+                    localStorage.removeItem('loggedInUserLicensePlate');
+                    localStorage.removeItem('loggedInUserLastPaymentDate');
+                    alert("በተሳካ ሁኔታ ወጥተዋል!");
+                    window.location.href = "login.html"; 
+                });
+            }
+
+            let allFuelStations = []; // To store all fetched stations for search functionality
+
+            async function fetchFuelStations() {
+                try {
+                    const q = query(collection(db, "fuelStations"), orderBy("timestamp", "desc"), limit(20));
+                    const querySnapshot = await getDocs(q);
+                    allFuelStations = [];
+                    fuelStationsList.innerHTML = ''; 
+
+                    if (querySnapshot.empty) {
+                        fuelStationsList.innerHTML = '<p class="loading-message">ምንም የማደያ መረጃ አልተገኘም።</p>';
+                        return;
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        const station = doc.data();
+                        const stationId = doc.id;
+                        const fuelStatusClass = station.fuelStatus === "አለ" ? "available" : (station.fuelStatus === "አነስተኛ" ? "low" : "unavailable");
+                        const queueStatusClass = station.queueStatus === "የለም" ? "no-queue" : (station.queueStatus === "አጭር" ? "short-queue" : (station.queueStatus === "መካከለኛ" ? "medium-queue" : "long-queue"));
+                        
+                        // Ensure likes and dislikes are arrays
+                        const likes = station.likes || [];
+                        const dislikes = station.dislikes || [];
+
+                        const stationCard = document.createElement('div');
+                        stationCard.className = 'station-card';
+                        stationCard.innerHTML = `
+                            <h3>${station.stationName}</h3>
+                            <p><strong>የነዳጅ አይነት:</strong> ${station.fuelType}</p>
+                            <p><strong>የነዳጅ ሁኔታ:</strong> <span class="status-indicator ${fuelStatusClass}">${station.fuelStatus}</span></p>
+                            <p><strong>የወረፋ ሁኔታ:</strong> <span class="status-indicator ${queueStatusClass}">${station.queueStatus}</span></p>
+                            <p><strong>መረጃ የለጠፈው:</strong> ${station.submittedBy || 'ያልታወቀ'}</p>
+                            <p><strong>የተለጠፈበት ቀን:</strong> ${station.timestamp ? new Date(station.timestamp.toDate()).toLocaleString('am-ET') : 'ያልታወቀ'}</p>
+                            
+                            <div class="vote-controls">
+                                <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${stationId}">👍 <span class="like-count">${likes.length}</span></button>
+                                <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${stationId}">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                            </div>
+                        `;
+                        fuelStationsList.appendChild(stationCard);
+                        allFuelStations.push({ id: stationId, ...station });
+                    });
+
+                    // Attach event listeners after all cards are added
+                    document.querySelectorAll('.like-button').forEach(button => {
+                        button.addEventListener('click', (e) => handleVote(e, 'like'));
+                    });
+                    document.querySelectorAll('.dislike-button').forEach(button => {
+                        button.addEventListener('click', (e) => handleVote(e, 'dislike'));
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching fuel station data: ", error);
+                    fuelStationsList.innerHTML = '<p class="loading-message" style="color: #f44336;">የማደያ መረጃዎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
+                }
+            }
+
+            // Function to handle like/dislike votes
+            async function handleVote(event, type) {
+                const button = event.currentTarget;
+                const stationId = button.dataset.id;
+                const stationRef = doc(db, "fuelStations", stationId);
+
+                if (!loggedInUserPhone) {
+                    alert("ለድምፅ መስጠት መግባት አለብዎት።");
+                    return;
+                }
+
+                try {
+                    const docSnap = await getDoc(stationRef);
+                    if (!docSnap.exists()) {
+                        console.error("No such document!");
+                        alert("የማደያ መረጃው አልተገኘም።");
+                        return;
+                    }
+
+                    const currentLikes = docSnap.data().likes || [];
+                    const currentDislikes = docSnap.data().dislikes || [];
+                    const submittedBy = docSnap.data().submittedBy; // Get the original submitter
+
+                    let newLikes = [...currentLikes];
+                    let newDislikes = [...currentDislikes];
+
+                    const isAlreadyLiked = newLikes.includes(loggedInUserPhone);
+                    const isAlreadyDisliked = newDislikes.includes(loggedInUserPhone);
+
+                    if (type === 'like') {
+                        if (isAlreadyLiked) {
+                            // Unlike: remove user from likes array
+                            newLikes = newLikes.filter(phone => phone !== loggedInUserPhone);
+                            button.classList.remove('liked');
+                        } else {
+                            // Like: add user to likes array
+                            newLikes.push(loggedInUserPhone);
+                            button.classList.add('liked');
+                            // If user was disliked, remove from dislikes
+                            if (isAlreadyDisliked) {
+                                newDislikes = newDislikes.filter(phone => phone !== loggedInUserPhone);
+                                document.querySelector(`.dislike-button[data-id="${stationId}"]`).classList.remove('disliked');
+                            }
+                        }
+                    } else if (type === 'dislike') {
+                        if (isAlreadyDisliked) {
+                            // Undislike: remove user from dislikes array
+                            newDislikes = newDislikes.filter(phone => phone !== loggedInUserPhone);
+                            button.classList.remove('disliked');
+                        } else {
+                            // Dislike: add user to dislikes array
+                            newDislikes.push(loggedInUserPhone);
+                            button.classList.add('disliked');
+                            // If user was liked, remove from likes
+                            if (isAlreadyLiked) {
+                                newLikes = newLikes.filter(phone => phone !== loggedInUserPhone);
+                                document.querySelector(`.like-button[data-id="${stationId}"]`).classList.remove('liked');
+                            }
+                        }
+                    }
+
+                    await updateDoc(stationRef, {
+                        likes: newLikes,
+                        dislikes: newDislikes
+                    });
+
+                    // Update counts on the page
+                    document.querySelector(`.like-button[data-id="${stationId}"] .like-count`).textContent = newLikes.length;
+                    document.querySelector(`.dislike-button[data-id="${stationId}"] .dislike-count`).textContent = newDislikes.length;
+
+                    // --- Automated Deletion and Ban Logic ---
+                    if (type === 'dislike' && newDislikes.length >= 5) { // Check only on dislike, and if threshold met
+                        // Optional: More sophisticated logic like community_data.html
+                        // Example: If likes >= 15 AND dislikes >= 10, don't delete.
+                        if (!(newLikes.length >= 15 && newDislikes.length >= 10)) {
+                            await deleteDoc(stationRef);
+                            console.log(`Fuel station ${stationId} deleted due to excessive dislikes.`);
+                            alert("የማደያ መረጃው በተደጋጋሚ ዲስላይክ በመደረጉ ተሰርዟል።");
+
+                            // Add the submitter to falspost
+                            if (submittedBy) {
+                                await addDoc(collection(db, "falspost"), {
+                                    phoneNumber: submittedBy,
+                                    reason: "Fuel Station Deleted due to excessive dislikes",
+                                    timestamp: new Date()
+                                });
+                                console.log(`Submitter ${submittedBy} added to falspost.`);
+
+                                // Check if submitter should be banned
+                                await checkAndBanUser(submittedBy);
+                            }
+
+                            // Refresh the list after deletion
+                            fetchFuelStations();
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Vote operation failed:", error);
+                    alert("ድምፅ ለመስጠት አልተቻለም እንደገና ይሞክሩ።");
+                }
+            }
+
+            // Function to check if a user needs to be banned
+            async function checkAndBanUser(phoneNumber) {
+                try {
+                    const falspostQuery = query(collection(db, "falspost"), where("phoneNumber", "==", phoneNumber));
+                    const falspostSnapshot = await getDocs(falspostQuery);
+
+                    if (falspostSnapshot.size >= 3) {
+                        const banusersRef = collection(db, "banusers");
+                        const banQuery = query(banusersRef, where("phoneNumber", "==", phoneNumber));
+                        const banSnapshot = await getDocs(banQuery);
+
+                        if (banSnapshot.empty) {
+                            await addDoc(banusersRef, {
+                                phoneNumber: phoneNumber,
+                                bannedAt: new Date()
+                            });
+                            console.log(`User ${phoneNumber} has been banned.`);
+                            alert(`ተጠቃሚ ${phoneNumber} በተደጋጋሚ የተሳሳተ መረጃ በመለጠፉ ተገድቧል።`);
+                        } else {
+                            console.log(`User ${phoneNumber} is already banned.`);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error checking or banning user:", error);
+                }
+            }
+
+
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredStations = allFuelStations.filter(station => {
+                    const stationName = (station.stationName || '').toLowerCase();
+                    const fuelStatus = (station.fuelStatus || '').toLowerCase();
+                    const queueStatus = (station.queueStatus || '').toLowerCase();
+
+                    // Search by station name, fuel status, or queue status
+                    return stationName.includes(searchTerm) || 
+                           fuelStatus.includes(searchTerm) || 
+                           queueStatus.includes(searchTerm);
+                });
+                displayFuelStations(filteredStations);
+            });
+
+            // Display filtered stations (re-use logic from initial fetch)
+            function displayFuelStations(stationsToDisplay) {
+                fuelStationsList.innerHTML = '';
+                if (stationsToDisplay.length === 0) {
+                    fuelStationsList.innerHTML = '<p class="loading-message">ምንም የሚዛመድ የማደያ መረጃ አልተገኘም።</p>';
+                    return;
+                }
+                stationsToDisplay.forEach((station) => {
+                    const fuelStatusClass = station.fuelStatus === "አለ" ? "available" : (station.fuelStatus === "አነስተኛ" ? "low" : "unavailable");
+                    const queueStatusClass = station.queueStatus === "የለም" ? "no-queue" : (station.queueStatus === "አጭር" ? "short-queue" : (station.queueStatus === "መካከለኛ" ? "medium-queue" : "long-queue"));
+                    
+                    const likes = station.likes || [];
+                    const dislikes = station.dislikes || [];
+
+                    const stationCard = document.createElement('div');
+                    stationCard.className = 'station-card';
+                    stationCard.innerHTML = `
+                        <h3>${station.stationName}</h3>
+                        <p><strong>የነዳጅ አይነት:</strong> ${station.fuelType}</p>
+                        <p><strong>የነዳጅ ሁኔታ:</strong> <span class="status-indicator ${fuelStatusClass}">${station.fuelStatus}</span></p>
+                        <p><strong>የወረፋ ሁኔታ:</strong> <span class="status-indicator ${queueStatusClass}">${station.queueStatus}</span></p>
+                        <p><strong>መረጃ የለጠፈው:</strong> ${station.submittedBy || 'ያልታወቀ'}</p>
+                        <p><strong>የተለጠፈበት ቀን:</strong> ${station.timestamp ? new Date(station.timestamp.toDate()).toLocaleString('am-ET') : 'ያልታወቀ'}</p>
+                        
+                        <div class="vote-controls">
+                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${station.id}">👍 <span class="like-count">${likes.length}</span></button>
+                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${station.id}">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                        </div>
+                    `;
+                    fuelStationsList.appendChild(stationCard);
+                });
+
+                // Attach event listeners to newly rendered cards
+                document.querySelectorAll('.like-button').forEach(button => {
+                    button.addEventListener('click', (e) => handleVote(e, 'like'));
+                });
+                document.querySelectorAll('.dislike-button').forEach(button => {
+                    button.addEventListener('click', (e) => handleVote(e, 'dislike'));
+                });
+            }
+
+
+            // Fetch fuel station data when the page loads
+            fetchFuelStations();
+
+            console.log("Fuel Stations display page loaded with voting system.");
+        });
+    </script>
 </body>
 </html>

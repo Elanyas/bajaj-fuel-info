@@ -11,70 +11,271 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>የባጃጅ ነዳጅ መረጃ - አስተዳደር ፓነል</title>
-    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
-    </head>
+    <link rel="stylesheet" href="style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General styling for admin panel */
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: #2c2c2c; /* Darker background */
+            color: #e0e0e0; /* Light text */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1e1e1e; /* Dark background for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        h2 {
+            color: #00bcd4; /* Accent color */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .collection-selection {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            display: flex; /* For alignment of select and button */
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 15px; /* Space between elements */
+        }
+
+        .collection-selection label {
+            margin-right: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .collection-selection select {
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .collection-selection .add-button {
+            background-color: #28a745; /* Green for add */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .collection-selection .add-button:hover {
+            background-color: #218838;
+        }
+
+        .data-display-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-display-table th, .data-display-table td {
+            border: 1px solid #444;
+            padding: 12px;
+            text-align: left;
+            word-wrap: break-word; /* For long content */
+            max-width: 250px; /* Limit cell width */
+        }
+
+        .data-display-table th {
+            background-color: #00bcd4;
+            color: #1e1e1e;
+            font-weight: bold;
+        }
+
+        .data-display-table tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+
+        .data-display-table tr:hover {
+            background-color: #3a3a3a;
+        }
+
+        .action-buttons button {
+            background-color: #007bff; /* Blue for default actions */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-right: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-buttons button.edit-btn {
+            background-color: #4CAF50; /* Green for edit */
+        }
+
+        .action-buttons button.delete-btn {
+            background-color: #f44336; /* Red for delete */
+        }
+
+        .action-buttons button:hover {
+            opacity: 0.9;
+        }
+
+        .form-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+        }
+
+        .form-section .input-group {
+            margin-bottom: 15px;
+        }
+
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .form-section input[type="text"],
+        .form-section input[type="password"],
+        .form-section input[type="number"],
+        .form-section textarea,
+        .form-section select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+
+        .form-section .submit-button {
+            background-color: #00bcd4;
+            color: #1e1e1e;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.2s ease;
+        }
+
+        .form-section .submit-button:hover {
+            background-color: #0097a7;
+        }
+
+        .form-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none; /* Hidden by default */
+        }
+
+        .form-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .form-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .data-display-table th, .data-display-table td {
+                padding: 8px;
+            }
+            .action-buttons button {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+            .collection-selection {
+                flex-direction: column; /* Stack on small screens */
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
 <body>
     <header class="main-header">
         <h1><span class="accent-text">የባጃጅ ነዳጅ</span> መረጃ</h1>
         <p>የአስተዳደር ፓነል</p>
         <nav class="sub-nav">
             <a href="data.html">ዋና ገጽ</a>
-            <a href="data_entry.html">መረጃ አስገባ (የቀድሞ)</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="community_data.html">ልውውጥ</a>
+            <a href="fuel_stations.html">የግለሰብ የማደያ መረጃ</a>
+            <a href="data_entry.html">መረጃ ማስገቢያ(የቀድሞ)</a>
+            
             <button id="logoutButton" class="nav-button">መውጫ</button>
         </nav>
     </header>
 
     <main class="container">
-        <div class="admin-container">
-            <h2>የመረጃ አስተዳደር</h2>
-
-            <div class="collection-selector">
-                <label for="collectionSelect">Collection ምረጥ:</label>
-                <select id="collectionSelect">
-                    <option value="">-- ምረጥ --</option>
-                    <option value="fueldata">የነዳጅ ማደያ መረጃ</option>
-                    <option value="fuelStations">የነዳጅ ማደያዎች</option>
-                    <option value="users">ተጠቃሚዎች</option>
-                    <option value="tipOffs">ጥቆማዎች</option>
-                    <option value="communityPosts">የማህበረሰብ ልጥፎች</option>
+        <section class="collection-selection">
+            <h2>የመረጃ ስብስብ ይምረጡ</h2>
+            <select id="collectionSelect">
+                <option value="communityPosts">የማህበረሰብ ልጥፎች (communityPosts)</option>
+                <option value="fuelStations">የማደያ መረጃ (fuelStations)</option>
+                <option value="fueldata">የነዳጅ ዋጋ/ሁኔታ (fueldata)</option>
+                <option value="fuelowners">የማደያ ባለቤቶች (fuelowners)</option>
+                <option value="tipOffs">የጥቁር ገበያ ጥቆማዎች (tipOffs)</option>
+                <option value="users">ተጠቃሚዎች (users)</option>
                 </select>
-            </div>
+            <button id="addUserButton" class="add-button" style="display: none;">አዲስ ተጠቃሚ ጨምር</button>
+        </section>
 
-            <div id="dataDisplay" class="data-display">
-                <p id="loadingMessage" class="loading-message" style="display: none;">መረጃዎች እየተጫኑ ነው...</p>
-                <p id="errorMessage" class="error-message" style="display: none;"></p>
-                <table class="data-table" id="dataTable" style="display: none;">
-                    <thead>
-                        <tr id="tableHeaders">
-                            </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        </tbody>
-                </table>
+        <section class="data-display-section">
+            <h2 id="dataListTitle">መረጃ ዝርዝር</h2>
+            <div id="dataList">
+                <p class="loading-message">መረጃ እየተጫነ ነው...</p>
             </div>
+        </section>
 
-            <div id="formSection" class="form-section" style="display: none;">
-                <h3>መረጃ አስገባ/አዘምን</h3>
-                <form id="dataEntryForm">
-                    <div id="dynamicFormFields"></div>
-                    <button type="submit" id="submitButton">መረጃ አስገባ</button>
-                </form>
-                <div id="formMessage" class="message" style="display: none;"></div>
-            </div>
-        </div>
+        <section class="form-section" id="dataEntryFormSection" style="display: none;">
+            <h2 id="formTitle">መረጃ አስገባ/አዘምን</h2>
+            <form id="dataEntryForm" class="data-form">
+                <div id="formFieldsContainer">
+                    </div>
+                <button type="submit" class="submit-button" id="submitButton">መረጃ አስገባ</button>
+                <p id="formMessage" class="form-message"></p>
+            </form>
+        </section>
     </main>
 
     <footer class="main-footer">
         <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
-        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+        <p>ለአስተዳዳሪዎች ብቻ የተዘጋጀ።</p>
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-        import { serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase Configuration
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
             authDomain: "elanyas-info.firebaseapp.com",
@@ -82,494 +283,383 @@
             storageBucket: "elanyas-info.firebasestorage.app",
             messagingSenderId: "769306910360",
             appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
-            measurementId: "G-2XX2B3RSGP"
+            measurementId: "G-GW2Y1BE243"
         };
 
-        // Firebase Initialization
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // DOM Elements
+        // UI Elements
         const collectionSelect = document.getElementById('collectionSelect');
-        const dataDisplay = document.getElementById('dataDisplay');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const errorMessageDisplay = document.getElementById('errorMessage');
-        const dataTable = document.getElementById('dataTable');
-        const tableHeaders = document.getElementById('tableHeaders');
-        const tableBody = document.getElementById('tableBody');
-        const formSection = document.getElementById('formSection');
-        const dynamicFormFields = document.getElementById('dynamicFormFields');
+        const dataList = document.getElementById('dataList');
+        const dataListTitle = document.getElementById('dataListTitle');
+        const dataEntryFormSection = document.getElementById('dataEntryFormSection');
         const dataEntryForm = document.getElementById('dataEntryForm');
+        const formTitle = document.getElementById('formTitle');
+        const formFieldsContainer = document.getElementById('formFieldsContainer');
         const submitButton = document.getElementById('submitButton');
         const formMessageDisplay = document.getElementById('formMessage');
         const logoutButton = document.getElementById('logoutButton');
+        const addUserButton = document.getElementById('addUserButton'); // New button
 
-        let currentCollection = '';
-        let editingDocId = null; // ለመረጃ ማዘመኛ (update) የምንጠቀመው
+        let currentCollection = 'communityPosts'; // Default collection
+        let editingDocId = null; // To keep track of the document being edited
 
-        // የመግቢያ ማረጋገጫ (Login Validation)
-        document.addEventListener('DOMContentLoaded', () => {
-            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-            const loggedInUserName = localStorage.getItem('loggedInUserName');
-            const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
-            const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
-            const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
+        // Define which collections are editable (update, view, delete) and which can also have new items added via the form
+        // I've added 'fueldata' to editableCollections as per your request.
+        const editableCollections = ['fueldata', 'fuelowners', 'users', 'communityPosts', 'fuelStations', 'tipOffs'];
+        const addableCollections = ['fueldata', 'fuelowners', 'users', 'communityPosts', 'fuelStations', 'tipOffs']; // Collections where you can 'add new' via form
 
-            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
-                alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
-                localStorage.clear();
-                window.location.href = 'login.html';
-                return;
-            }
 
-            try {
-                const SUBSCRIPTION_DURATION_DAYS = 30;
-                const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
-                const today = new Date();
-                const expirationDate = new Date(lastPaymentDate);
-                expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
+        // Define the specific fields for each editable collection for form generation
+        // These fields determine what inputs appear when editing or adding.
+        const collectionFields = {
+            'fueldata': [
+                { id: 'stationName', label: 'የማደያ ስም', type: 'text', required: true },
+                { id: 'stationNameEnglish', label: 'Station Name (Eng)', type: 'text', required: false },
+                { id: 'dieselQueue', label: 'ናፍጣ ወረፋ', type: 'text', required: false },
+                { id: 'dieselStatus', label: 'ናፍጣ ሁኔታ', type: 'select', options: ['አለ', 'አነስተኛ', 'የለም'], required: true },
+                { id: 'petrolPrice', label: 'ቤንዚን ዋጋ', type: 'number', required: false },
+                { id: 'petrolQueue', label: 'ቤንዚን ወረፋ', type: 'text', required: false },
+                { id: 'petrolStatus', label: 'ቤንዚን ሁኔታ', type: 'select', options: ['አለ', 'አነስተኛ', 'የለም'], required: true },
+                { id: 'postedBy', label: 'የለጠፈው', type: 'text', required: false, readonly: true }
+            ],
+            'fuelowners': [
+                { id: 'phoneNumber', label: 'ስልክ ቁጥር', type: 'text', required: true },
+                { id: 'password', label: 'የይለፍ ቃል', type: 'password', required: true },
+                { id: 'stationNameAmh', label: 'የማደያ ስም (አማርኛ)', type: 'text', required: true },
+                { id: 'stationNameEng', label: 'Station Name (English)', type: 'text', required: false }
+            ],
+            'users': [
+                { id: 'full_name', label: 'ሙሉ ስም', type: 'text', required: true },
+                { id: 'license_plate', label: 'የሰሌዳ ቁጥር', type: 'text', required: false },
+                { id: 'phone_number', label: 'ስልክ ቁጥር', type: 'text', required: true },
+                { id: 'registered_status', label: 'የተመዘገበ ሁኔታ', type: 'checkbox', required: false }
+            ],
+            'communityPosts': [
+                { id: 'title', label: 'ርዕስ', type: 'text', required: true },
+                { id: 'author', label: 'ጸሐፊ', type: 'text', required: true, readonly: true },
+                { id: 'content', label: 'ይዘት', type: 'textarea', required: true }
+            ],
+            'fuelStations': [
+                { id: 'stationName', label: 'የማደያ ስም', type: 'text', required: true },
+                { id: 'fuelType', label: 'የነዳጅ አይነት', type: 'select', options: ['ቤንዚን', 'ናፍጣ', 'ሁለቱም'], required: true },
+                { id: 'fuelStatus', label: 'የነዳጅ ሁኔታ', type: 'select', options: ['አለ', 'አነስተኛ', 'የለም'], required: true },
+                { id: 'queueStatus', label: 'የወረፋ ሁኔታ', type: 'select', options: ['የለም', 'አጭር', 'መካከለኛ', 'ረጅም'], required: true },
+                { id: 'submittedBy', label: 'የላከው', type: 'text', required: true, readonly: true }
+            ],
+            'tipOffs': [
+                { id: 'location', label: 'ቦታ', type: 'text', required: true },
+                { id: 'details', label: 'ዝርዝር', type: 'textarea', required: true },
+                { id: 'submittedBy', label: 'የላከው', type: 'text', required: true, readonly: true }
+            ]
+        };
 
-                if (today > expirationDate) {
-                    alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
-                    localStorage.clear();
-                    window.location.href = 'login.html';
-                    return;
-                }
-            } catch (error) {
-                console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
-                alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
-                localStorage.clear();
-                window.location.href = 'login.html';
-                return;
-            }
 
-            // የመውጫ በተን ተግባር
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Authentication is removed as per your last request.
+            // This page will now load directly without any login check.
+            
+            // Logout button functionality (still here, but won't "log out" anything if no login is happening)
             if (logoutButton) {
                 logoutButton.addEventListener('click', () => {
-                    localStorage.removeItem('isLoggedIn');
-                    localStorage.removeItem('loggedInUserName');
-                    localStorage.removeItem('loggedInUserPhone');
-                    localStorage.removeItem('loggedInUserLicensePlate');
-                    localStorage.removeItem('loggedInUserLastPaymentDate');
-                    alert("በተሳካ ሁኔታ ወጥተዋል!");
-                    window.location.href = "login.html";
+                    // Only clear 'isAdminLoggedIn' if it was ever set.
+                    // If no login is happening, this button effectively just redirects.
+                    localStorage.removeItem('isAdminLoggedIn'); 
+                    alert("ወደ መግቢያ ገጽ እየተመለሱ ነው።"); // Change message to reflect current behavior
+                    window.location.href = "login.html"; 
                 });
             }
-        });
 
-        // Collection ሲመረጥ መረጃዎችን አምጣ
-        collectionSelect.addEventListener('change', async (event) => {
-            currentCollection = event.target.value;
-            if (currentCollection) {
+            // Initial fetch based on default collection
+            await fetchData(currentCollection);
+            toggleAddButtonVisibility(); // Show/hide add button on initial load
+
+
+            // Event listener for collection selection change
+            collectionSelect.addEventListener('change', async (event) => {
+                currentCollection = event.target.value;
+                dataListTitle.textContent = `${collectionSelect.options[collectionSelect.selectedIndex].text} ዝርዝር`;
                 await fetchData(currentCollection);
-                displayForm(currentCollection); // ቅጹን ለማሳየት
-            } else {
-                dataTable.style.display = 'none';
-                tableBody.innerHTML = '';
-                tableHeaders.innerHTML = '';
-                formSection.style.display = 'none';
-                errorMessageDisplay.style.display = 'none';
-                loadingMessage.style.display = 'none';
+                dataEntryFormSection.style.display = 'none'; // Hide form when changing collection
+                editingDocId = null; // Reset editing state
+                submitButton.textContent = 'መረጃ አስገባ'; // Reset button text
+                formMessageDisplay.style.display = 'none'; // Hide messages
+                toggleAddButtonVisibility(); // Update add button visibility
+            });
+
+            // Event listener for Add User button (or general Add Item button)
+            addUserButton.addEventListener('click', () => {
+                editingDocId = null; // Ensure we are in "add new" mode
+                dataEntryForm.reset(); // Clear any previous form data
+                formTitle.textContent = `አዲስ ${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '')} አስገባ`; // Dynamically change title
+                submitButton.textContent = 'መረጃ አስገባ';
+                formMessageDisplay.style.display = 'none';
+                dataEntryFormSection.style.display = 'block'; // Show the form
+                generateFormFields(currentCollection, {}); // Generate empty fields for new entry
+            });
+
+            // Function to control the visibility of the "Add New User" button
+            function toggleAddButtonVisibility() {
+                if (currentCollection === 'users' || addableCollections.includes(currentCollection)) {
+                    addUserButton.style.display = 'inline-block'; // Show the button
+                    // Change text dynamically based on selected collection
+                    addUserButton.textContent = `አዲስ ${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '').replace('መረጃ', '')} ጨምር`;
+                } else {
+                    addUserButton.style.display = 'none'; // Hide the button
+                }
             }
-        });
 
-        // መረጃዎችን ከ Firebase የሚያመጣ ተግባር
-        async function fetchData(collectionName) {
-            loadingMessage.style.display = 'block';
-            errorMessageDisplay.style.display = 'none';
-            dataTable.style.display = 'none';
-            tableBody.innerHTML = '';
-            tableHeaders.innerHTML = '';
-            formMessageDisplay.style.display = 'none'; // የቅጽ መልዕክትን ደብቅ
 
-            try {
-                const colRef = collection(db, collectionName);
-                const q = query(colRef, orderBy("timestamp", "desc")); // በ timestamp ደርድር
-                const querySnapshot = await getDocs(q);
+            // Handle form submission
+            dataEntryForm.addEventListener('submit', handleFormSubmit);
 
-                if (querySnapshot.empty) {
-                    errorMessageDisplay.textContent = `በ '${collectionName}' collection ውስጥ ምንም መረጃ የለም።`;
-                    errorMessageDisplay.style.display = 'block';
-                    loadingMessage.style.display = 'none';
+            // Function to fetch and display data for the selected collection
+            async function fetchData(collectionName) {
+                dataList.innerHTML = '<p class="loading-message">መረጃ እየተጫነ ነው...</p>';
+                try {
+                    const q = collection(db, collectionName);
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        dataList.innerHTML = `<p class="loading-message">ምንም ${collectionName} መረጃ የለም።</p>`;
+                        return;
+                    }
+
+                    let tableHtml = '<table class="data-display-table"><thead><tr>';
+                    const headers = new Set();
+                    const dataRows = [];
+
+                    querySnapshot.forEach((docSnap) => {
+                        const data = docSnap.data();
+                        data.id = docSnap.id; // Add document ID for actions
+                        Object.keys(data).forEach(key => headers.add(key));
+                        dataRows.push(data);
+                    });
+
+                    // Convert Set to Array and sort headers, put 'id' first if it exists
+                    const sortedHeaders = Array.from(headers).sort((a, b) => {
+                        if (a === 'id') return -1;
+                        if (b === 'id') return 1;
+                        return a.localeCompare(b);
+                    });
+
+                    sortedHeaders.forEach(header => {
+                        tableHtml += `<th>${header}</th>`;
+                    });
+                    tableHtml += `<th>ድርጊቶች</th></tr></thead><tbody>`;
+
+                    dataRows.forEach(row => {
+                        tableHtml += '<tr>';
+                        sortedHeaders.forEach(header => {
+                            let displayValue = row[header];
+                            if (displayValue && typeof displayValue.toDate === 'function') {
+                                displayValue = displayValue.toDate().toLocaleString('am-ET', {
+                                    year: 'numeric', month: 'short', day: 'numeric',
+                                    hour: '2-digit', minute: '2-digit'
+                                });
+                            } else if (typeof displayValue === 'boolean') {
+                                displayValue = displayValue ? 'እውነት' : 'ሀሰት';
+                            } else if (displayValue === undefined) {
+                                displayValue = 'N/A';
+                            }
+                            tableHtml += `<td>${displayValue}</td>`;
+                        });
+                        tableHtml += `<td class="action-buttons">`;
+                        
+                        // Check if collection is editable or only view/delete
+                        if (editableCollections.includes(collectionName)) { // Now includes 'fueldata'
+                            tableHtml += `<button class="edit-btn" data-id="${row.id}" data-collection="${collectionName}">አርትዕ</button>`;
+                        }
+                        tableHtml += `<button class="delete-btn" data-id="${row.id}" data-collection="${collectionName}">ሰርዝ</button>`;
+                        tableHtml += `</td></tr>`;
+                    });
+
+                    tableHtml += '</tbody></table>';
+                    dataList.innerHTML = tableHtml;
+
+                    // Add event listeners for edit and delete buttons
+                    document.querySelectorAll('.edit-btn').forEach(button => {
+                        button.addEventListener('click', handleEdit);
+                    });
+                    document.querySelectorAll('.delete-btn').forEach(button => {
+                        button.addEventListener('click', handleDelete);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching data: ", error);
+                    dataList.innerHTML = `<p class="loading-message" style="color: #f44336;">መረጃውን በመጫን ላይ ስህተት ተፈጥሯል: ${error.message}</p>`;
+                }
+            }
+
+            // Function to generate form fields based on collection configuration
+            function generateFormFields(collectionName, docData = {}) {
+                formFieldsContainer.innerHTML = ''; // Clear previous fields
+                const fieldsConfig = collectionFields[collectionName]; 
+
+                if (!fieldsConfig) {
+                    formFieldsContainer.innerHTML = `<p style="color: #f44336;">ለዚህ ኮሌክሽን የመረጃ ማስገቢያ ቅጽ አልተገለጸም።</p>`;
                     return;
                 }
 
-                const data = [];
-                const headers = new Set();
-                querySnapshot.forEach((doc) => {
-                    const docData = doc.data();
-                    data.push({ id: doc.id, ...docData });
-                    Object.keys(docData).forEach(key => headers.add(key));
-                });
+                fieldsConfig.forEach(field => {
+                    const div = document.createElement('div');
+                    div.className = 'input-group';
+                    const label = document.createElement('label');
+                    label.htmlFor = field.id;
+                    label.textContent = field.label + ':';
+                    div.appendChild(label);
 
-                renderTable(data, Array.from(headers));
-            } catch (error) {
-                console.error("መረጃ ሲያመጡ ስህተት ተፈጠረ:", error);
-                errorMessageDisplay.textContent = `መረጃዎችን ከ '${collectionName}' collection ማምጣት አልተቻለም። ስህተት: ${error.message}`;
-                errorMessageDisplay.style.display = 'block';
-            } finally {
-                loadingMessage.style.display = 'none';
-            }
-        }
-
-        // መረጃዎችን በሰንጠረዥ የሚያሳይ ተግባር
-        function renderTable(data, headers) {
-            tableHeaders.innerHTML = '';
-            tableBody.innerHTML = '';
-
-            // ርዕሶችን አክል (ID እና Actions)
-            const sortedHeaders = ["id", ...headers.filter(h => h !== "id" && h !== "timestamp" && h !== "lastUpdated").sort(), "lastUpdated", "timestamp"];
-            sortedHeaders.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = formatHeader(header); // ርዕሱን የሚያስተካክል ተግባር
-                tableHeaders.appendChild(th);
-            });
-            const actionsTh = document.createElement('th');
-            actionsTh.textContent = 'ድርጊቶች';
-            tableHeaders.appendChild(actionsTh);
-
-            // ዳታውን አክል
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                sortedHeaders.forEach(header => {
-                    const td = document.createElement('td');
-                    let value = item[header];
-                    if (value && typeof value.toDate === 'function') { // Firebase Timestamp ከሆነ
-                        value = value.toDate().toLocaleString('am-ET', {
-                            year: 'numeric', month: '2-digit', day: '2-digit',
-                            hour: '2-digit', minute: '2-digit', hour12: false
+                    let inputElement;
+                    if (field.type === 'select') {
+                        inputElement = document.createElement('select');
+                        field.options.forEach(optionText => {
+                            const option = document.createElement('option');
+                            option.value = optionText;
+                            option.textContent = optionText;
+                            inputElement.appendChild(option);
                         });
-                    } else if (typeof value === 'object' && value !== null) {
-                        value = JSON.stringify(value); // Object ከሆኑ ወደ string ቀይር
-                    }
-                    td.textContent = value || ''; // ባዶ ከሆነ ባዶ string
-                    row.appendChild(td);
-                });
-
-                const actionsTd = document.createElement('td');
-                actionsTd.classList.add('actions');
-                const editButton = document.createElement('button');
-                editButton.textContent = 'አስተካክል';
-                editButton.addEventListener('click', () => editData(item));
-                actionsTd.appendChild(editButton);
-
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'ሰርዝ';
-                deleteButton.classList.add('delete');
-                deleteButton.addEventListener('click', () => deleteData(currentCollection, item.id));
-                actionsTd.appendChild(deleteButton);
-
-                row.appendChild(actionsTd);
-                tableBody.appendChild(row);
-            });
-
-            dataTable.style.display = 'table';
-        }
-
-        // ርዕሶችን ለማስተካከል የሚያገለግል ረዳት ተግባር
-        function formatHeader(header) {
-            switch (header) {
-                case 'id': return 'መለያ';
-                case 'lastUpdated': return 'የመጨረሻ ዝመና';
-                case 'timestamp': return 'የተለጠፈበት ቀን';
-                case 'stationName': return 'የማደያ ስም (አማርኛ)';
-                case 'stationNameEnglish': return 'የማደያ ስም (እንግሊዝኛ)';
-                case 'petrolStatus': return 'ቤንዚን ሁኔታ';
-                case 'petrolPrice': return 'ቤንዚን ዋጋ';
-                case 'petrolQueue': return 'ቤንዚን ወረፋ';
-                case 'dieselStatus': return 'ናፍጣ ሁኔታ';
-                case 'dieselPrice': return 'ናፍጣ ዋጋ';
-                case 'dieselQueue': return 'ናፍጣ ወረፋ';
-                case 'full_name': return 'ሙሉ ስም';
-                case 'phone_number': return 'ስልክ ቁጥር';
-                case 'license_plate': return 'የታርጋ ቁጥር';
-                case 'last_payment_date': return 'የመጨረሻ ክፍያ ቀን';
-                case 'registered_status': return 'የምዝገባ ሁኔታ';
-                case 'tipOffType': return 'የጥቆማ አይነት';
-                case 'location': return 'አካባቢ';
-                case 'description': return 'ዝርዝር መረጃ';
-                case 'reporterPhone': return 'ሪፖርት ያደረገው ስልክ';
-                case 'resolved': return 'ተፈቷል?';
-                case 'postTitle': return 'የልጥፍ ርዕስ';
-                case 'postContent': return 'የልጥፍ ይዘት';
-                case 'postedBy': return 'የለጠፈው';
-                default: return header.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()); // CamelCaseን ወደ Spaced Word ይቀይራል
-            }
-        }
-
-        // ቅጹን የሚያዘጋጅ ተግባር (በ collection አይነት ይለያያል)
-        function displayForm(collectionName, data = {}) {
-            dynamicFormFields.innerHTML = '';
-            formSection.style.display = 'block';
-            editingDocId = data.id || null;
-            submitButton.textContent = editingDocId ? 'መረጃ አዘምን' : 'መረጃ አስገባ';
-            formMessageDisplay.style.display = 'none';
-
-            let fields = [];
-
-            if (collectionName === 'fueldata' || collectionName === 'fuelStations') {
-                fields = [
-                    { id: 'stationNameAmh', label: 'የማደያ ስም (አማርኛ)', type: 'text', value: data.stationName || '', required: true },
-                    { id: 'stationNameEng', label: 'የማደያ ስም (እንግሊዝኛ)', type: 'text', value: data.stationNameEnglish || '' },
-                    { id: 'petrolStatus', label: 'የቤንዚን ሁኔታ', type: 'select', options: ['አለ', 'የለም', 'አልታወቀም'], value: data.petrolStatus || 'አለ', required: true },
-                    { id: 'petrolPrice', label: 'የቤንዚን ዋጋ (ብር/ሊትር)', type: 'number', step: '0.01', value: data.petrolPrice || '' },
-                    { id: 'petrolQueue', label: 'የቤንዚን ወረፋ ሁኔታ', type: 'select', options: ['አጭር ወረፋ (ከ5 ባጃጅ በታች)', '(5-10 ባጃጅ)', '(10-20 ባጃጅ)', '(ከ20 ባጃጅ በላይ)', 'ወረፋ የለም', 'አልታወቀም'], value: data.petrolQueue || 'አጭር ወረፋ (ከ5 ባጃጅ በታች)', required: true },
-                    { id: 'dieselStatus', label: 'የናፍጣ ሁኔታ', type: 'select', options: ['አለ', 'የለም', 'አልታወቀም'], value: data.dieselStatus || 'አለ', required: true },
-                    { id: 'dieselPrice', label: 'የናፍጣ ዋጋ (ብር/ሊትር)', type: 'number', step: '0.01', value: data.dieselPrice || '' },
-                    { id: 'dieselQueue', label: 'የናፍጣ ወረፋ ሁኔታ', type: 'select', options: ['አጭር ወረፋ (ከ5 ባጃጅ በታች)', '(5-10 ባጃጅ)', '(10-20 ባጃጅ)', '(ከ20 ባጃጅ በላይ)', 'ወረፋ የለም', 'አልታወቀም'], value: data.dieselQueue || 'አጭር ወረፋ (ከ5 ባጃጅ በታች)', required: true },
-                ];
-            } else if (collectionName === 'users') {
-                fields = [
-                    { id: 'full_name', label: 'ሙሉ ስም', type: 'text', value: data.full_name || '', required: true },
-                    { id: 'phone_number', label: 'ስልክ ቁጥር', type: 'text', value: data.phone_number || '', required: true },
-                    { id: 'license_plate', label: 'የታርጋ ቁጥር', type: 'text', value: data.license_plate || '', required: true },
-                    { id: 'last_payment_date', label: 'የመጨረሻ የክፍያ ቀን (YYYY-MM-DD)', type: 'date', value: data.last_payment_date && typeof data.last_payment_date.toDate === 'function' ? data.last_payment_date.toDate().toISOString().split('T')[0] : data.last_payment_date || '', required: true },
-                    { id: 'registered_status', label: 'የምዝገባ ሁኔታ', type: 'select', options: ['true', 'false'], value: String(data.registered_status || 'true'), required: true }
-                ];
-            } else if (collectionName === 'tipOffs') {
-                fields = [
-                    { id: 'tipOffType', label: 'የጥቆማ አይነት', type: 'text', value: data.tipOffType || '', required: true },
-                    { id: 'location', label: 'አካባቢ', type: 'text', value: data.location || '', required: true },
-                    { id: 'description', label: 'ዝርዝር መረጃ', type: 'textarea', value: data.description || '', required: true },
-                    { id: 'reporterPhone', label: 'ሪፖርት ያደረገው ስልክ', type: 'text', value: data.reporterPhone || '' },
-                    { id: 'resolved', label: 'ተፈቷል?', type: 'select', options: ['false', 'true'], value: String(data.resolved || 'false'), required: true }
-                ];
-            } else if (collectionName === 'communityPosts') {
-                fields = [
-                    { id: 'postTitle', label: 'የልጥፍ ርዕስ', type: 'text', value: data.postTitle || '', required: true },
-                    { id: 'postContent', label: 'የልጥፍ ይዘት', type: 'textarea', value: data.postContent || '', required: true },
-                    { id: 'postedBy', label: 'የለጠፈው', type: 'text', value: data.postedBy || '', required: true },
-                ];
-            } else {
-                dynamicFormFields.innerHTML = '<p>እባክዎ መረጃ ለማስገባት ወይም ለማዘመን አንድ collection ይምረጡ።</p>';
-                submitButton.style.display = 'none';
-                return;
-            }
-
-            submitButton.style.display = 'block';
-
-            fields.forEach(field => {
-                const div = document.createElement('div');
-                div.classList.add('form-group');
-                const label = document.createElement('label');
-                label.setAttribute('for', field.id);
-                label.textContent = field.label;
-                div.appendChild(label);
-
-                if (field.type === 'select') {
-                    const select = document.createElement('select');
-                    select.id = field.id;
-                    if (field.required) select.required = true;
-                    field.options.forEach(optionText => {
-                        const option = document.createElement('option');
-                        option.value = optionText;
-                        option.textContent = optionText;
-                        if (String(optionText) === String(field.value)) { // Ensuring type comparison is robust
-                            option.selected = true;
+                    } else if (field.type === 'textarea') {
+                        inputElement = document.createElement('textarea');
+                        inputElement.rows = 4;
+                    } else if (field.type === 'checkbox') {
+                        inputElement = document.createElement('input');
+                        inputElement.type = 'checkbox';
+                        inputElement.id = field.id; 
+                        // Set initial checked state for checkbox
+                        if (docData[field.id] === true) {
+                            inputElement.checked = true;
                         }
-                        select.appendChild(option);
-                    });
-                    div.appendChild(select);
-                } else if (field.type === 'textarea') {
-                    const textarea = document.createElement('textarea');
-                    textarea.id = field.id;
-                    textarea.value = field.value;
-                    if (field.required) textarea.required = true;
-                    div.appendChild(textarea);
-                } else {
-                    const input = document.createElement('input');
-                    input.type = field.type;
-                    input.id = field.id;
-                    input.value = field.value;
-                    if (field.step) input.step = field.step;
-                    if (field.required) input.required = true;
-                    div.appendChild(input);
-                }
-                dynamicFormFields.appendChild(div);
-            });
-        }
+                    }
+                    else {
+                        inputElement = document.createElement('input');
+                        inputElement.type = field.type;
+                    }
 
-        // መረጃን ለማስተካከል ቅጹን የሚሞላ ተግባር
-        function editData(item) {
-            displayForm(currentCollection, item);
-            window.scrollTo({ top: formSection.offsetTop, behavior: 'smooth' }); // ወደ ቅጹ ወስዶ ያሳያል
-        }
-
-        // መረጃን የሚሰርዝ ተግባር (Manual Deletion)
-        async function deleteData(collectionName, docId) {
-            if (!confirm(`ይህን መረጃ በእርግጥ መሰረዝ ይፈልጋሉ? (${docId})`)) {
-                return;
+                    inputElement.id = field.id;
+                    if (field.required) {
+                        inputElement.required = true;
+                    }
+                    if (field.readonly) {
+                        inputElement.readOnly = true;
+                    }
+                    // Populate with current data, handle checkbox separately
+                    if (field.type !== 'checkbox') {
+                         if (field.type === 'number') {
+                             inputElement.value = docData[field.id] !== undefined ? docData[field.id] : '';
+                         } else {
+                             inputElement.value = docData[field.id] || '';
+                         }
+                    }
+                   
+                    div.appendChild(inputElement);
+                    formFieldsContainer.appendChild(div);
+                });
             }
 
-            try {
-                await deleteDoc(doc(db, collectionName, docId));
-                showMessage("መረጃ በተሳካ ሁኔታ ተሰርዟል!", "success", formMessageDisplay);
-                await fetchData(collectionName); // መረጃውን እንደገና አምጣ
-            } catch (error) {
-                console.error("መረጃ ሲሰርዙ ስህተት ተፈጠረ:", error);
-                showMessage(`መረጃውን መሰረዝ አልተቻለም። ስህተት: ${error.message}`, "error", formMessageDisplay);
-            }
-        }
 
-        // ቅጹ ሲገባ መረጃን የሚያስገባ ወይም የሚያዘምን ተግባር
-        dataEntryForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            formMessageDisplay.style.display = 'none';
+            // Function to handle Edit button click
+            async function handleEdit(event) {
+                const docId = event.target.dataset.id;
+                const collectionName = event.target.dataset.collection;
+                editingDocId = docId; // Set the ID of the document being edited
 
-            const formData = {};
-            let isFormValid = true;
-            // ተለዋዋጭ የመስክ እሴቶችን ሰብስብ
-            dynamicFormFields.querySelectorAll('input, select, textarea').forEach(field => {
-                let value = field.value.trim(); // Trim whitespace
-                if (field.required && value === '') {
-                    isFormValid = false;
+                dataEntryFormSection.style.display = 'block'; // Show the form section
+                formTitle.textContent = `መረጃ አዘምን (${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '')})`; // Dynamic title
+                submitButton.textContent = 'አዘምን';
+                formMessageDisplay.style.display = 'none';
+
+                // Get document data
+                const docRef = doc(db, collectionName, docId);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    showMessage("ሰነዱ አልተገኘም።", "error", formMessageDisplay);
+                    return;
                 }
 
-                if (field.type === 'number') {
-                    value = parseFloat(value);
-                    if (isNaN(value)) value = null;
-                } else if (field.type === 'select' && (value === 'true' || value === 'false')) {
-                    value = (value === 'true');
-                }
-                formData[field.id] = value;
-            });
-
-            if (!isFormValid) {
-                showMessage("እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ!", "error", formMessageDisplay);
-                return;
+                const docData = docSnap.data();
+                generateFormFields(collectionName, docData); // Generate and populate fields
             }
 
-            // ልዩ የ collection-specific ማስተካከያዎች
-            if (currentCollection === 'fueldata' || currentCollection === 'fuelStations') {
-                formData.stationName = formData.stationNameAmh;
-                formData.stationNameEnglish = formData.stationNameEng;
-                delete formData.stationNameAmh;
-                delete formData.stationNameEng;
-            } else if (currentCollection === 'users') {
-                 // last_payment_date ን እንደ Date object ወይም Timestamp ማስቀመጥ ከፈለግን
-                if (formData.last_payment_date) {
+            // Function to handle Delete button click
+            async function handleDelete(event) {
+                const docId = event.target.dataset.id;
+                const collectionName = event.target.dataset.collection;
+
+                if (confirm(`በእርግጥ ይህንን መረጃ ከ${collectionName} ይሰርዙ?`)) {
                     try {
-                        const dateParts = formData.last_payment_date.split('-');
-                        const year = parseInt(dateParts[0]);
-                        const month = parseInt(dateParts[1]) - 1; // Month is 0-indexed
-                        const day = parseInt(dateParts[2]);
-                        formData.last_payment_date = new Date(year, month, day);
-                    } catch (e) {
-                        console.error("Invalid date format for last_payment_date:", formData.last_payment_date);
-                        showMessage("የመጨረሻ የክፍያ ቀን ቅርጸት ትክክል አይደለም (YYYY-MM-DD)", "error", formMessageDisplay);
-                        return; // መረጃ እንዳይላክ
+                        await deleteDoc(doc(db, collectionName, docId));
+                        showMessage("መረጃ በተሳካ ሁኔታ ተሰርዟል!", "success", formMessageDisplay);
+                        await fetchData(collectionName); // Refresh data after deletion
+                    } catch (error) {
+                        console.error("መረጃ ሲሰርዙ ስህተት ተፈጠረ:", error);
+                        showMessage(`መረጃውን መሰረዝ አልተቻለም። ስህተት: ${error.message}`, "error", formMessageDisplay);
                     }
                 }
             }
 
+            // Handle form submission (add/update)
+            async function handleFormSubmit(event) {
+                event.preventDefault();
+                formMessageDisplay.style.display = 'none';
 
-            try {
-                if (editingDocId) {
-                    // Update Existing Document (Automatic Overwrite/Update logic)
-                    if ((currentCollection === 'fueldata' || currentCollection === 'fuelStations') && formData.stationName) {
-                        // የዚህን ስም ማደያ መረጃ እንፈልግ (ከአሁኑ ሰነድ ውጪ)
-                        const q = query(collection(db, currentCollection), where("stationName", "==", formData.stationName));
-                        const querySnapshot = await getDocs(q);
+                const formData = {};
+                const fieldsConfig = collectionFields[currentCollection];
 
-                        let existingDocFound = null;
-                        if (!querySnapshot.empty) {
-                            querySnapshot.forEach(docSnap => {
-                                if (docSnap.id !== editingDocId) { // እየተስተካከለ ያለው ሰነድ ካልሆነ
-                                    existingDocFound = docSnap;
-                                }
-                            });
-                        }
-
-                        if (existingDocFound) {
-                            if (confirm(`የ"${formData.stationName}" መረጃ አለ። ያለውን መረጃ ማዘመን ይፈልጋሉ እና የቆየውን (እያስተካከሉት የነበረውን) መሰረዝ ይፈልጋሉ?`)) {
-                                // ነባሩን ሰነድ አዘምን
-                                await updateDoc(doc(db, currentCollection, existingDocFound.id), {
-                                    ...formData,
-                                    lastUpdated: serverTimestamp()
-                                });
-                                // ያ እየተስተካከለ የነበረውን የድሮ ሰነድ መሰረዝ
-                                await deleteDoc(doc(db, currentCollection, editingDocId));
-                                showMessage(`የ"${formData.stationName}" መረጃ በተሳካ ሁኔታ ታድሷል እና የድሮው ተሰርዟል!`, "success", formMessageDisplay);
-                            } else {
-                                showMessage("መረጃው አልታደሰም፤ ቀዶ ጥገና ተሰርዟል።", "error", formMessageDisplay);
-                                return;
-                            }
+                // Gather data from dynamically generated fields
+                fieldsConfig.forEach(field => {
+                    const inputElement = document.getElementById(field.id);
+                    if (inputElement) {
+                        if (field.type === 'checkbox') {
+                            formData[field.id] = inputElement.checked;
+                        } else if (field.type === 'number') {
+                            formData[field.id] = parseFloat(inputElement.value);
                         } else {
-                             // እየተስተካከለ ያለው ሰነድ ነው ወይም ተመሳሳይ ስም ያለው ሌላ ሰነድ የለም
-                            await updateDoc(doc(db, currentCollection, editingDocId), {
-                                ...formData,
-                                lastUpdated: serverTimestamp() // የዘመነበት ጊዜ
-                            });
-                             showMessage("መረጃ በተሳካ ሁኔታ ታድሷል!", "success", formMessageDisplay);
+                            formData[field.id] = inputElement.value.trim();
                         }
-                    } else {
-                        // ለሌሎች collection ዎች ወይም ልዩ መለያ የሌላቸው ከሆነ update
-                        await updateDoc(doc(db, currentCollection, editingDocId), {
-                            ...formData,
-                            lastUpdated: serverTimestamp() // የዘመነበት ጊዜ
-                        });
-                        showMessage("መረጃ በተሳካ ሁኔታ ታድሷል!", "success", formMessageDisplay);
                     }
+                });
 
-                } else {
-                    // Add New Document
-                    if ((currentCollection === 'fueldata' || currentCollection === 'fuelStations') && formData.stationName) {
-                        // የዚህን ስም ማደያ መረጃ እንፈልግ
-                        const q = query(collection(db, currentCollection), where("stationName", "==", formData.stationName));
-                        const querySnapshot = await getDocs(q);
-
-                        if (!querySnapshot.empty) {
-                            if (confirm(`የ"${formData.stationName}" መረጃ አለ። ያለውን መረጃ ማዘመን ይፈልጋሉ?`)) {
-                                // ያለውን አዘምን
-                                const existingDocId = querySnapshot.docs[0].id;
-                                await updateDoc(doc(db, currentCollection, existingDocId), {
-                                    ...formData,
-                                    lastUpdated: serverTimestamp(),
-                                    timestamp: serverTimestamp()
-                                });
-                                showMessage(`የ"${formData.stationName}" መረጃ በተሳካ ሁኔታ ታድሷል!`, "success", formMessageDisplay);
-                            } else {
-                                showMessage("አዲስ መረጃ አልገባም፤ ተመሳሳይ ስም ያለው ማደያ አለ።", "error", formMessageDisplay);
-                                return;
-                            }
-                        } else {
-                            // አዲስ ሰነድ አስገባ
-                            await addDoc(collection(db, currentCollection), {
-                                ...formData,
-                                lastUpdated: serverTimestamp(),
-                                timestamp: serverTimestamp()
-                            });
-                            showMessage("አዲስ መረጃ በተሳካ ሁኔታ ገብቷል!", "success", formMessageDisplay);
-                        }
+                try {
+                    if (editingDocId) {
+                        // Update existing document
+                        const docRef = doc(db, currentCollection, editingDocId);
+                        await updateDoc(docRef, {
+                            ...formData
+                        });
+                        showMessage("መረጃ በተሳካ ሁኔታ ዘምኗል!", "success", formMessageDisplay);
                     } else {
-                         // አዲስ ሰነድ አስገባ (ID በራስ ሰር ይፈጠራል)
-                        await addDoc(collection(db, currentCollection), {
+                         // Add new document
+                         await addDoc(collection(db, currentCollection), {
                             ...formData,
-                            timestamp: serverTimestamp()
+                            timestamp: serverTimestamp() // Add timestamp for new entries
                         });
                         showMessage("አዲስ መረጃ በተሳካ ሁኔታ ገብቷል!", "success", formMessageDisplay);
                     }
-                }
 
-                dataEntryForm.reset(); // ቅጹን ባዶ አድርግ
-                editingDocId = null; // የማስተካከያ ሁነታን ዝጋ
-                submitButton.textContent = 'መረጃ አስገባ'; // አዝራሩን ወደ "መረጃ አስገባ" መልስ
-                await fetchData(currentCollection); // መረጃውን እንደገና አምጣ
-            } catch (error) {
-                console.error("መረጃ ሲያስገቡ/ሲያዘምኑ ስህተት ተፈጠረ:", error);
-                showMessage(`መረጃውን ማስገባት/ማዘመን አልተቻለም። ስህተት: ${error.message}`, "error", formMessageDisplay);
+                    dataEntryForm.reset(); // Clear the form
+                    editingDocId = null; // Exit editing mode
+                    submitButton.textContent = 'መረጃ አስገባ'; // Reset button text
+                    dataEntryFormSection.style.display = 'none'; // Hide form after submission
+                    await fetchData(currentCollection); // Refresh data
+                } catch (error) {
+                    console.error("መረጃ ሲያስገቡ/ሲያዘምኑ ስህተት ተፈጠረ:", error);
+                    showMessage(`መረጃውን ማስገባት/ማዘመን አልተቻለም። ስህተት: ${error.message}`, "error", formMessageDisplay);
+                }
+            }
+
+            // Message display function
+            function showMessage(message, type, element) {
+                element.textContent = message;
+                element.className = `form-message ${type}`;
+                element.style.display = 'block';
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000); // Hide message after 5 seconds
             }
         });
-
-        // መልዕክት የሚያሳይ ተግባር
-        function showMessage(message, type, element) {
-            element.textContent = message;
-            element.className = `message ${type}`;
-            element.style.display = 'block';
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 5000); // ከ 5 ሰከንድ በኋላ መልዕክቱን ደብቅ
-        }
     </script>
 </body>
 </html>

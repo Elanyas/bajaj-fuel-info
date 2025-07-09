@@ -19,6 +19,10 @@
         <div class="login-section">
             <div class="login-form-card">
                 <h2 class="form-title">እንኳን ደህና መጡ!</h2>
+                <p class="free-trial-info">
+                    <b>አሁን በ15 ቀን የነጻ ምዝገባ ላይ ነን! እስከ ሐምሌ 18!</b>
+                    በዚህ ጊዜ የምትመዘገቡ ከሆነ የክፍያ ማረጋገጫ ሳያስፈልግዎ የዌብሳይቱን አገልግሎት መጠቀም ይችላሉ።
+                </p>
                 <p class="form-subtitle">በስልክ ቁጥርዎ እና በይለፍቃልዎ ይግቡ።</p>
                 
                 <div class="input-group">
@@ -26,13 +30,17 @@
                     <input type="tel" id="phoneNumberInput" placeholder="ስልክ ቁጥር (ለምሳሌ: 0912345678)" required>
                 </div>
                 <div class="input-group">
-                    <label for="licensePlateInput" class="sr-only">የይለፍ ቃል:</label>
-                    <input type="text" id="licensePlateInput" placeholder="የይለፍ ቃል (ለምሳሌ: 1234)" required>
+                    <label for="passwordInput" class="sr-only">የይለፍ ቃል:</label>
+                    <input type="text" id="passwordInput" placeholder="የይለፍ ቃል (ለምሳሌ: 1234)" required>
                 </div>
                 
                 <button id="loginButton">መግቢያ</button>
                 
                 <p id="errorMessage" class="error-message"></p>
+
+                <p class="forgot-password-link" style="display: none;">
+                    የይለፍ ቃልዎን ረሱ? <a href="#" id="forgotPasswordTrigger">እዚህ ይጫኑ</a>
+                </p>
             </div>
         </div>
 
@@ -40,21 +48,21 @@
             <h2 class="info-title">ለሹፌሮች ወሳኝ መረጃ!</h2>
             <p><strong>ውድ የባጃጅ ሹፌሮች፣ ይህ ድረ-ገጽ የዕለት ተዕለት የሹፍርና ስራችሁን ለማቀላጠፍ እና አስፈላጊ መረጃዎችን በፍጥነት እንድታገኙ ታስቦ የተሰራ ነው።</strong> </p>
 
-<p>በእኛ መድረክ የሚከተሉትን ማግኘት ትችላላችሁ: </p>
+            <p>በእኛ መድረክ የሚከተሉትን ማግኘት ትችላላችሁ: </p>
 
-<p><strong>• የነዳጅ ማደያ ወቅታዊ መረጃ: </strong>የነዳጅ መኖር/አለመኖር፣ የነዳጅ አይነት፣ የዋጋ ግምት እና የወረፋ ሁኔታ መረጃ በእጃችሁ ይገኛል። </p>
+            <p><strong>• የነዳጅ ማደያ ወቅታዊ መረጃ: </strong>የነዳጅ መኖር/አለመኖር፣ የነዳጅ አይነት፣ የዋጋ ግምት እና የወረፋ ሁኔታ መረጃ በእጃችሁ ይገኛል። </p>
 
-<p><strong>• የማህበረሰብ ልውውጥ: </strong>ሌሎች የባጃጅ ሹፌሮች እና ባለቤቶች የሚለጥፏቸውን ተሞክሮዎች፣ ጠቃሚ ምክሮች እና ጥያቄዎች ማየትና መሳተፍ ይችላሉ። </p>
+            <p><strong>• የማህበረሰብ ልውውጥ: </strong>ሌሎች የባጃጅ ሹፌሮች እና ባለቤቶች የሚለጥፏቸውን ተሞክሮዎች፣ ጠቃሚ ምክሮች እና ጥያቄዎች ማየትና መሳተፍ ይችላሉ። </p>
 
-<p><strong>• መሰረታዊ የባጃጅ ጥገና ምክሮች:</strong> ባጃጃችሁን በጥሩ ሁኔታ ለመጠበቅ የሚረዱ ጠቃሚ የእንክብካቤ መመሪያዎች። </p>
+            <p><strong>• መሰረታዊ የባጃጅ ጥገና ምክሮች:</strong> ባጃጃችሁን በጥሩ ሁኔታ ለመጠበቅ የሚረዱ ጠቃሚ የእንክብካቤ መመሪያዎች። </p>
 
-<p><strong>• የመንገድ ትራንስፖርት መረጃዎች:</strong> አዳዲስ ህጎች፣ ደንቦች እና አጠቃላይ የትራንስፖርት ዜናዎች። </p>
+            <p><strong>• የመንገድ ትራንስፖርት መረጃዎች:</strong> አዳዲስ ህጎች፣ ደንቦች እና አጠቃላይ የትራንስፖርት ዜናዎች ማግኘት ትችላላችሁ። </p>
 
-<p><strong>• ያገለገሉ የባጃጅ ሽያጭ መረጃዎች: </strong>ባጃጅ ለመግዛትም ሆነ ለመሸጥ የምትፈልጉ ከሆነ ጠቃሚ መረጃዎችን ታገኛላችሁ። </p>
+            <p><strong>• ያገለገሉ የባጃጅ ሽያጭ መረጃዎች: </strong>ባጃጅ ለመግዛትም ሆነ ለመሸጥ የምትፈልጉ ከሆነ ጠቃሚ መረጃዎችን ታገኛላችሁ። </p>
 
-<p>ይግቡና የአገልግሎታችን ተጠቃሚ ይሁኑ!</p>
+            <p>ይግቡና የአገልግሎታችን ተጠቃሚ ይሁኑ!</p>
 
- <h2 class="info-title"></h2>
+            <h2 class="info-title"></h2>
 
             <div class="info-section">
                 <h3 class="section-heading">ይህንን ድረ-ገጽ ለምን መጠቀም አለባችሁ? ዋና ዋና ምክንያቶች:</h3>
@@ -68,12 +76,13 @@
 
             <div class="info-section">
                 <h3 class="section-heading">የአጠቃቀም መመሪያ:</h3>
-                <ol>
-                    <li><p>በመጀመሪያ፣ ወደ ስልክ ቁጥር <strong>0989750238</strong> በE-birr በቀላሉ <strong> ወርሀዊ ክፍያ 50 ብር</strong> ይክፈሉ።</p></li>
-                    <li><p>በመቀጠል፣  የክፍያ ማረጋገጫውን <strong>ስክሪንሾት</strong> ያንሱ። </p></li>
-                    <li><p> ከታች ያለውን በተን በመጫን ወደ <span class="telegram-link-text">ቴሌግራም ቦት</span> ለይ ይሂዱ። የሚጠየቁትን መረጃም ይስጡ።</p></li>
-                    <li><p>በትክክል መክፈልዎ ከተረጋገጠ በኋላ ቦቱ አገልግሎቱን ይሰጥዎታል። <strong>ይህ ማለት ዌብሳይቱን መጠቀም ይችላሉ ማለት ነው።</strong> </p></li>
-                </ol>
+                <p>
+                    <b>አሁን በ15 ቀን የነጻ ምዝገባ ላይ ነን!</b>
+                    በዚህ ጊዜ የምትመዘገብ ከሆነ የክፍያ ማረጋገጫ ሳያስፈልግህ የዌብሳይቱን አገልግሎት መጠቀም ትችላለህ።
+                    ነጻ ምዝገባ ለማድረግ: ወደ ቴሌግራም ቦት ይሂዱ እና ሙሉ ስምዎን፣ የመረጡትን የይለፍ ቃል እና ስልክ ቁጥርዎን ይላኩ።
+                    (ለምሳሌ: አበበ ከበደ, 1234, 0912345678)
+                </p>
+                <p>ከታች ያለውን በተን በመጫን ወደ <span class="telegram-link-text">ቴሌግራም ቦት</span> ላይ ይሂዱ።</p>
                 <div class="telegram-button-container">
                     <a href="https://t.me/elan_payment_bot" target="_blank" class="telegram-button"><strong>ቴሌግራም ቦት</strong></a>
                 </div>
@@ -85,7 +94,7 @@
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
     import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-    import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"; // Added getAuth and signInWithCustomToken
+    import { getAuth, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"; 
 
     const firebaseConfig = {
         apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
@@ -99,12 +108,16 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const auth = getAuth(app); // Initialize Auth
+    const auth = getAuth(app);
 
     const phoneNumberInput = document.getElementById('phoneNumberInput');
-    const licensePlateInput = document.getElementById('licensePlateInput');
+    const passwordInput = document.getElementById('passwordInput');
     const loginButton = document.getElementById('loginButton');
     const errorMessageDisplay = document.getElementById('errorMessage');
+    const forgotPasswordTrigger = document.getElementById('forgotPasswordTrigger');
+    const forgotPasswordLinkContainer = document.querySelector('.forgot-password-link');
+
+    let loginAttemptCount = 0; // To track failed login attempts
 
     function showErrorMessage(message) {
         errorMessageDisplay.textContent = message;
@@ -116,28 +129,31 @@
         errorMessageDisplay.textContent = "";
     }
 
-    // Check for existing error message from data.html
     document.addEventListener('DOMContentLoaded', () => {
         const storedErrorMessage = localStorage.getItem('errorMessageOnLoad');
         if (storedErrorMessage) {
             showErrorMessage(storedErrorMessage);
-            localStorage.removeItem('errorMessageOnLoad'); // Once displayed, remove it
+            localStorage.removeItem('errorMessageOnLoad'); 
         }
     });
-
 
     loginButton.addEventListener('click', async () => {
         hideErrorMessage();
 
         const phoneNumber = phoneNumberInput.value.trim();
-        const licensePlate = licensePlateInput.value.trim(); // የታርጋ ቁጥርን Trim አድርግ
-
-        if (!phoneNumber || !licensePlate) {
+        const password = passwordInput.value.trim();
+        
+        if (!phoneNumber || !password) {
             showErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ!");
             return;
         }
         if ((!phoneNumber.startsWith('09') && !phoneNumber.startsWith('07')) || phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
             showErrorMessage("ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ (ለምሳሌ: 0912345678)");
+            // Increment attempt count only if input is valid but credentials wrong
+            loginAttemptCount++;
+            if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                forgotPasswordLinkContainer.style.display = 'block';
+            }
             return;
         }
 
@@ -145,91 +161,118 @@
         showErrorMessage("እየገቡ ነው... እባክዎ ይጠብቁ።");
 
         try {
-            // Document ID በቦቱ የተቀመጠበትን ፎርማት ተጠቀም
-            const userDocId = `${phoneNumber}-${licensePlate.toUpperCase()}`;
+            const userDocId = `${phoneNumber}-${password.toUpperCase()}`;
             
             const userDocRef = doc(db, "users", userDocId);
             const userSnapshot = await getDoc(userDocRef);
 
             if (!userSnapshot.exists()) {
                 showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም ወይም አልተመዘገቡም።");
+                loginAttemptCount++; // Increment attempt count
+                if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                    forgotPasswordLinkContainer.style.display = 'block';
+                }
                 loginButton.disabled = false;
                 return;
             }
 
             const userData = userSnapshot.data();
-            // registered_status እዚህ ጋር መኖሩን እና true መሆኑን ያረጋግጡ
             if (!userData.registered_status) {
                 showErrorMessage("ለመግባት አልተፈቀደልዎትም። እባክዎ የአድሚን ማረጋገጫ ይጠብቁ።");
+                loginAttemptCount++; // Increment attempt count
+                if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                    forgotPasswordLinkContainer.style.display = 'block';
+                }
                 loginButton.disabled = false;
                 return;
             }
 
-            // የገባው የታርጋ ቁጥር በ Firebase ውስጥ ካለው ጋር መመሳሰሉን ያረጋግጡ
-            // የታርጋ ቁጥሩን ወደ UPPERCASE ቀይረን ማወዳደር ወጥነት ይሰጣል
-            if (userData.license_plate !== licensePlate.toUpperCase()) {
+            if (userData.password !== password.toUpperCase()) {
                  showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም።");
+                 loginAttemptCount++; // Increment attempt count
+                 if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                    forgotPasswordLinkContainer.style.display = 'block';
+                 }
                  loginButton.disabled = false;
                  return;
             }
 
-            // Check subscription expiration here as well
-            const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
-            const lastPaymentDate = userData.last_payment_date ? new Date(userData.last_payment_date.toDate()) : null;
+            // Check subscription expiration here
+            const FREE_TRIAL_DURATION_DAYS = 15; 
+            const PAID_SUBSCRIPTION_DURATION_DAYS = 30; 
 
-            if (!lastPaymentDate) {
-                showErrorMessage("የክፍያ መረጃ የለም። እባክዎ ክፍያ ይፈጽሙ።");
-                loginButton.disabled = false;
-                return;
-            }
+            const createdDate = userData.created_at ? new Date(userData.created_at.toDate()) : null; 
+            const lastPaymentDate = userData.last_payment_date ? new Date(userData.last_payment_date.toDate()) : null; 
 
             const today = new Date();
-            const expirationDate = new Date(lastPaymentDate);
-            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
+            let isAccessGranted = false;
+            let errorMessage = "";
 
-            if (today > expirationDate) {
-                showErrorMessage("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
+            if (createdDate && !lastPaymentDate) {
+                const freeTrialExpirationDate = new Date(createdDate);
+                freeTrialExpirationDate.setDate(freeTrialExpirationDate.getDate() + FREE_TRIAL_DURATION_DAYS);
+                
+                if (today <= freeTrialExpirationDate) {
+                    isAccessGranted = true;
+                } else {
+                    errorMessage = `የነጻ የሙከራ ጊዜዎ አልቋል። አገልግሎቱን ለመቀጠል እባክዎ ክፍያ ይፈጽሙ። የደንበኝነት ምዝገባዎ በ ${freeTrialExpirationDate.toLocaleDateString('am-ET', { year: 'numeric', month: 'long', day: 'numeric' })} አብቅቷል።`;
+                }
+            } else if (lastPaymentDate) {
+                const paidSubscriptionExpirationDate = new Date(lastPaymentDate);
+                paidSubscriptionExpirationDate.setDate(paidSubscriptionExpirationDate.getDate() + PAID_SUBSCRIPTION_DURATION_DAYS);
+
+                if (today <= paidSubscriptionExpirationDate) {
+                    isAccessGranted = true;
+                } else {
+                    errorMessage = `የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ። የደንበኝነት ምዝገባዎ በ ${paidSubscriptionExpirationDate.toLocaleDateString('am-ET', { year: 'numeric', month: 'long', day: 'numeric' })} አብቅቷል።`;
+                }
+            } else {
+                errorMessage = "ምዝገባዎ ሊታወቅ አልቻለም። እባክዎ ክፍያ ይፈጽሙ ወይም አስተዳዳሪን ያግኙ።";
+            }
+
+            if (!isAccessGranted) {
+                showErrorMessage(errorMessage);
+                loginAttemptCount++; // Increment attempt count
+                if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                    forgotPasswordLinkContainer.style.display = 'block';
+                }
                 loginButton.disabled = false;
                 return;
             }
-
-
-            // If all checks pass, sign in to Firebase Auth using a custom token.
-            // **IMPORTANT:** You need a backend (like a Cloud Function or your Python bot)
-            // to generate this custom token securely. For now, we'll simulate it.
-            // In a real app, you'd make an API call to your backend here to get the token.
-            // For simplicity and proof of concept, we'll store user credentials in localStorage
-            // and use them directly for subsequent checks. The Firebase Auth part for signInWithCustomToken
-            // is commented out as it requires a server-side token generation.
-
-            // Since you're not using email/password or phone auth directly from client,
-            // we will stick to Local Storage and Firestore checks for now.
-            // The onAuthStateChanged in data.html will need adjustment.
-
-            localStorage.setItem('isLoggedIn', 'true'); // የመግቢያ ሁኔታን በ Local Storage ውስጥ አስቀምጥ
+            
+            localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('loggedInUserName', userData.full_name || 'ያልታወቀ ተጠቃሚ');
             localStorage.setItem('loggedInUserPhone', phoneNumber); 
-            localStorage.setItem('loggedInUserLicensePlate', licensePlate.toUpperCase()); // Store license plate for data.html check
-            // የጨመርኩት መስመር: የመጨረሻውን የክፍያ ቀን በሎካል ስቶሬጅ ማስቀመጥ
-// Firebase Timestamp object ከሆነ ወደ ISO string እንቀይረዋለን
-if (userData.last_payment_date && typeof userData.last_payment_date.toDate === 'function') {
-    localStorage.setItem('loggedInUserLastPaymentDate', userData.last_payment_date.toDate().toISOString());
-} else if (userData.last_payment_date) {
-    // If it's already a date string or another format, store as is
-    localStorage.setItem('loggedInUserLastPaymentDate', userData.last_payment_date);
-} else {
-    localStorage.removeItem('loggedInUserLastPaymentDate'); // If no date, ensure it's not stored
-}
+            localStorage.setItem('loggedInUserPassword', password.toUpperCase()); 
+            
+            if (userData.last_payment_date && typeof userData.last_payment_date.toDate === 'function') {
+                localStorage.setItem('loggedInUserLastPaymentDate', userData.last_payment_date.toDate().toISOString());
+            } else if (userData.last_payment_date) {
+                localStorage.setItem('loggedInUserLastPaymentDate', userData.last_payment_date);
+            } else {
+                localStorage.removeItem('loggedInUserLastPaymentDate');
+            }
             
             alert("በተሳካ ሁኔታ ገብተዋል!");
-            window.location.href = "data.html"; // ወደ ዋናው ገጽ ምራ
+            window.location.href = "data.html"; 
 
         } catch (error) {
             console.error("Error during login:", error);
             showErrorMessage("በመግባት ላይ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
+            loginAttemptCount++; // Increment attempt count
+            if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                forgotPasswordLinkContainer.style.display = 'block';
+            }
             loginButton.disabled = false;
         }
     });
+
+    // Forgot password functionality
+    forgotPasswordTrigger.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent default link behavior
+        alert("የይለፍ ቃልዎን ለማግኘት ወደ ቴሌግራም ቦት ይሂዱ እና 'ፓስወርድ(Elan)' ብለው ይጻፉ።");
+    });
+
 </script>
 </body>
 </html>

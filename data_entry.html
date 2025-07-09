@@ -16,11 +16,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
     <script>
-    // ከላይ የሰጠሁህ ስክሪፕት እዚህ ጋር ይመጣል
     document.addEventListener('DOMContentLoaded', function() {
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const loggedInUserName = localStorage.getItem('loggedInUserName');
-        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone'); // Add this
         const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
         const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
 
@@ -57,6 +56,21 @@
         if (postAuthorInput) {
             postAuthorInput.value = loggedInUserName;
         }
+
+        // Handle "Other" station name selection
+        const stationNameSelect = document.getElementById('stationName');
+        const otherStationNameInput = document.getElementById('otherStationNameInput');
+        
+        stationNameSelect.addEventListener('change', function() {
+            if (this.value === 'ሌላ') {
+                otherStationNameInput.style.display = 'block';
+                otherStationNameInput.setAttribute('required', 'true');
+            } else {
+                otherStationNameInput.style.display = 'none';
+                otherStationNameInput.removeAttribute('required');
+                otherStationNameInput.value = ''; // Clear input if not "Other"
+            }
+        });
     });
   </script>
 
@@ -97,27 +111,31 @@
         .data-entry-form-card.active {
             display: block; /* 'active' class ያለው ቅጽ ይታያል */
         }
+        #otherStationNameInput {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
     </style>
     </head>
 <body>
     <header class="main-header">
       <div class="ad-marquee-container">
         <p class="ad-marquee-text">
-            ✨ አዲስ ባጃጅ ሞዴሎች በቅርቡ ይመጣሉ! &nbsp; &nbsp; &nbsp; &nbsp;
-            💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ? &nbsp; &nbsp; &nbsp; &nbsp;
-            💰 የነዳጅ ቅናሽ መረጃ በቅርቡ ይፋ ይሆናል! &nbsp; &nbsp; &nbsp; &nbsp;
-            🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ! &nbsp; &nbsp; &nbsp; &nbsp;
+            ✨  እስከ ሐምሌ 18 የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ይህንን እድል ለሌሎች ሹፌር ጓደኞችዎ አሳዎቀዋል? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 ይህንን ሰፊ የመገናኛ መድረክ እና የመረጃ ምንጭ ለሌሎች ጓደኞቾም ያስተዋውቁ! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ የአገልግሎታችን ተጠቃሚ ስለሆኑ እናመሰግናለን! &nbsp; &nbsp; &nbsp; &nbsp;
         </p>
       </div>
         <h1><span class="accent-text">መረጃ</span> አስገባ</h1>
         <p>ለተጠቃሚዎች ጠቃሚ የሆኑ መረጃዎችን ያጋሩ</p>
         <nav class="sub-nav">
             <a href="data.html">ዋናው ገጽ</a>
-            <a href="fuel_stations.html">የማደያ መረጃ</a>
             <a href="news.html">ዜናዎች</a>
             <a href="sales.html">መሸጫ</a>
             <a href="maintenance.html">እንክብካቤ</a>
             <a href="community_data.html">ልውውጥ</a>
+            <a href="fuel_stations.html">የግለሰብ የማደያ መረጃ</a>
             </nav>
     </header>
 
@@ -141,7 +159,21 @@
             <form id="stationInfoForm" class="data-form">
                 <div class="input-group">
                     <label for="stationName">የማደያ ስም/አካባቢ:</label>
-                    <input type="text" id="stationName" placeholder="ለምሳሌ: ራስ ኦላ" required>
+                    <select id="stationName" required>
+                        <option value="">ይምረጡ</option>
+                        <option value="ሞቢል">ሞቢል | Mobil</option>
+                        <option value="ራስ ኦላ">ራስ ኦላ | Ras Ola</option>
+                        <option value="ሼል">ሼል | Shall</option>
+                        <option value="አራተኛ">አራተኛ | Arategna</option>
+                        <option value="አቦከር">አቦከር | Aboker</option>
+                        <option value="ኖክ">ኖክ | Noc</option>
+                        <option value="አፍሪካ">አፍሪካ | African</option>
+                        <option value="ሌላ">ሌላ (እራስዎ ያስገቡ)</option>
+                    </select>
+                </div>
+                <div class="input-group" id="otherStationNameInput">
+                    <label for="customStationName">ሌላ የማደያ ስም:</label>
+                    <input type="text" id="customStationName" placeholder="የማደያውን ስም እዚህ ይጻፉ">
                 </div>
                 <div class="input-group">
                     <label for="fuelType">የነዳጅ አይነት:</label>
@@ -205,7 +237,9 @@
                 </div>
                 <div class="input-group">
                     <label for="postContent">ልጥፍዎ:</label>
-                    <textarea id="postContent" rows="6" placeholder="ሀሳብዎን ወይም ልምድዎን ያጋሩ..." required></textarea>
+                    <textarea id="postContent" rows="6" placeholder="ሀሳብዎን ወይም ልምድዎን ያጋሩ...
+                    የተዘጋ መንገድ ያሳውቁ..."
+                    required></textarea>
                 </div>
                 <button type="submit" class="submit-button">ልጥፍ አስገባ</button>
                 <p id="communityPostMessage" class="form-message"></p>
@@ -222,11 +256,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Retrieve loggedInUserName from localStorage immediately
             const loggedInUserName = localStorage.getItem('loggedInUserName');
+            const loggedInUserPhone = localStorage.getItem('loggedInUserPhone'); // Retrieve phone number too
             console.log("data_entry.html - Logged in user name:", loggedInUserName); // For debugging
+            console.log("data_entry.html - Logged in user phone:", loggedInUserPhone); // For debugging
             
             // Set the author for the community post form
             const postAuthorInput = document.getElementById('postAuthor');
-            if (postAuthorInput && loggedInUserName) {
+            if (postAuthorInput) {
                 postAuthorInput.value = loggedInUserName;
             }
 
@@ -268,31 +304,44 @@
             // Fuel Station Form Submission
             const stationInfoForm = document.getElementById('stationInfoForm');
             const stationMessage = document.getElementById('stationMessage');
+            const stationNameSelect = document.getElementById('stationName'); // Re-get for form submission logic
+            const customStationNameInput = document.getElementById('customStationName'); // New input field
 
             stationInfoForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 stationMessage.textContent = 'መረጃ እየተላከ ነው...';
                 stationMessage.style.color = '#e0e0e0';
 
-                const stationName = document.getElementById('stationName').value.trim();
+                let finalStationName = stationNameSelect.value;
+                if (finalStationName === 'ሌላ') {
+                    finalStationName = customStationNameInput.value.trim();
+                    if (!finalStationName) {
+                        stationMessage.textContent = 'እባክዎ የማደያውን ስም ያስገቡ።';
+                        stationMessage.style.color = '#f44336';
+                        return;
+                    }
+                }
+                
                 const fuelType = document.getElementById('fuelType').value;
                 const fuelStatus = document.getElementById('fuelStatus').value;
                 const queueStatus = document.getElementById('queueStatus').value;
 
                 try {
                     await window.addDoc(window.collection(window.db, "fuelStations"), {
-                        stationName: stationName,
+                        stationName: finalStationName, // Use the selected or custom name
                         fuelType: fuelType,
                         fuelStatus: fuelStatus,
                         queueStatus: queueStatus,
-                        // --- NEW MODIFICATION ---
                         submittedBy: loggedInUserName, // Uses the user's full_name
-                        // --- NEW MODIFICATION END ---
+                        authorPhone: loggedInUserPhone, // Add author's phone number
                         timestamp: window.serverTimestamp()
                     });
                     stationMessage.textContent = 'የማደያ መረጃ በተሳካ ሁኔታ ገብቷል!';
                     stationMessage.style.color = '#4CAF50';
                     stationInfoForm.reset();
+                    // Reset 'Other' input display after form submission
+                    document.getElementById('otherStationNameInput').style.display = 'none';
+                    document.getElementById('customStationName').value = '';
                 } catch (error) {
                     console.error("Error adding fuel station document: ", error);
                     stationMessage.textContent = 'መረጃ ማስገባት አልተቻለም: ' + error.message;
@@ -316,9 +365,7 @@
                     await window.addDoc(window.collection(window.db, "tipOffs"), {
                         location: tipOffLocation,
                         details: tipOffDetails,
-                        // --- NEW MODIFICATION ---
-                        submittedBy: loggedInUserName, // Uses the user's full_name
-                        // --- NEW MODIFICATION END ---
+                        // removed submittedBy and authorPhone for anonymity
                         timestamp: window.serverTimestamp()
                     });
                     tipOffMessage.textContent = 'ጥቆማ በተሳካ ሁኔታ ገብቷል! እናመሰግናለን።';
@@ -341,24 +388,22 @@
                 communityPostMessage.style.color = '#e0e0e0';
 
                 const postTitle = document.getElementById('postTitle').value.trim();
-                const postAuthor = document.getElementById('postAuthor').value.trim();
                 const postContent = document.getElementById('postContent').value.trim();
 
                 try {
                     await window.addDoc(window.collection(window.db, "communityPosts"), {
                         title: postTitle,
-                        author: postAuthor,
+                        authorName: loggedInUserName, // Add the author's full name
+                        author: loggedInUserPhone,   // Keep the phone number for consistency and ban logic
                         content: postContent,
                         timestamp: window.serverTimestamp()
                     });
 
                     communityPostSubmissionForm.reset();
-                    // --- NEW MODIFICATION ---
                     // Re-fill author after reset only if loggedInUserName is available
                     if (loggedInUserName) {
                         document.getElementById('postAuthor').value = loggedInUserName; 
                     }
-                    // --- NEW MODIFICATION END ---
                     communityPostMessage.textContent = 'ልጥፍዎ በተሳካ ሁኔታ ታትሟል!';
                     communityPostMessage.style.color = '#4CAF50';
 

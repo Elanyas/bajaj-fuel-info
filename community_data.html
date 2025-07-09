@@ -16,7 +16,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ለዚህ ገጽ ብቻ ተጨማሪ ስታይሎች */
+        /* General styles from style.css */
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: #2c2c2c; /* Darker background */
+            color: #e0e0e0; /* Light text */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1e1e1e; /* Dark background for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        h2 {
+            color: #00bcd4; /* Accent color */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-filter-section {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 80%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #3a3a3a;
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+
+        /* Styles specific to this page */
         .posts-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -25,135 +66,136 @@
         }
 
         .community-post-card {
-            background-color: #1e1e1e; /* ጥቁር ግራጫ ዳራ */
+            background-color: #2a2a2a; /* Darker card background */
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            padding: 25px;
-            color: #e0e0e0; /* ቀላል ግራጫ ጽሁፍ */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* ይዘቶች እንዲሰራጩ */
+            justify-content: space-between; /* Pushes footer/vote-controls to bottom */
         }
 
-        .community-post-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .community-post-card h3.post-title {
-            color: #ffffff; /* ነጭ ርዕስ */
-            font-size: 1.6em;
+        .community-post-card h3 {
+            color: #00bcd4;
             margin-top: 0;
             margin-bottom: 10px;
-            border-bottom: 2px solid #00bcd4; /* ሰማያዊ ከስር መስመር */
-            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
         }
 
-        .community-post-card .post-meta {
-            font-size: 0.9em;
-            color: #a0a0a0;
-            margin-bottom: 15px;
+        .community-post-card p {
+            margin-bottom: 8px;
         }
 
         .community-post-card .post-content {
-            font-size: 1em;
-            color: #d0d0d0;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1; /* ይዘቱ ያለውን ቦታ እንዲሞላ */
+            flex-grow: 1; /* Allows content to take up available space */
+            margin-bottom: 15px; /* Space before vote controls */
+        }
+
+        .vote-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .vote-controls button {
+            background: none;
+            border: 1px solid #00bcd4;
+            color: #00bcd4;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .vote-controls button:hover {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .vote-controls button.liked {
+            background-color: #00bcd4;
+            color: white;
+        }
+
+        .vote-controls button.disliked {
+            background-color: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .vote-controls span {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e0e0e0;
         }
 
         .loading-message {
             text-align: center;
-            padding: 20px;
-            font-size: 1.2em;
-            color: #00bcd4;
-        }
-        
-        /* Like System Styles */
-        .post-actions {
-            display: flex;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px dashed #444; /* ቀለል ያለ መስመር */
-        }
-
-        .like-button {
-            background: none;
-            border: none;
-            color: #00bcd4; /* Default color for unlike */
-            cursor: pointer;
-            font-size: 1.1em; /* Icon size */
-            transition: color 0.2s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-        }
-
-        .like-button.liked {
-            color: #ffaa00; /* Red for liked */
-            transform: scale(1);
-        }
-
-        .like-button:hover {
-            color: #a0a0a0; /* Accent color on hover */
-            transform: scale(1.1);
-        }
-
-        .like-count {
-            margin-left: 8px;
-            font-size: 1.1em;
-            color: #ffffff; /* Count color */
-            font-weight: bold;
-        }
-
-        .like-button .icon {
-            margin-right: 5px; /* Space between icon and text if any */
+            font-style: italic;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
     <header class="main-header">
-        <h1><span class="accent-text">የባጃጅ ነዳጅ</span> መረጃ</h1>
-        <p>የማህበረሰብ ልውውጥ</p>
+       <div class="ad-marquee-container">
+        <p class="ad-marquee-text">
+            ✨  እስከ ሐምሌ 18 የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ይህንን እድል ለሌሎች ሹፌር ጓደኞችዎ አሳዎቀዋል? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 ይህንን ሰፊ የመገናኛ መድረክ እና የመረጃ ምንጭ ለሌሎች ጓደኞቾም ያስተዋውቁ! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ የአገልግሎታችን ተጠቃሚ ስለሆኑ እናመሰግናለን! &nbsp; &nbsp; &nbsp; &nbsp;
+        </p>
+      </div>
+      
+        <h1>የመረጃ ልውውጥ</h1>
+        <p>ተጠቃሚዎች መረጃ የሚለዋወጡበት መድረክ።</p>
         <nav class="sub-nav">
-            <a href="data.html">ዋና ገጽ</a>
+            <a href="data.html">ዋናው ገጽ</a>
             <a href="news.html">ዜናዎች</a>
             <a href="sales.html">መሸጫ</a>
             <a href="maintenance.html">እንክብካቤ</a>
-            <a href="community_data.html">ልውውጥ</a>
-            <a href="fuel_station_data_entry.html">መረጃ አስገባ</a>
-            <a href="register_fuel_station.html">ማደያ አስመዝግብ</a>
-            <button id="logoutButton" class="nav-button">ውጣ</button>
+            <a href="data_entry.html">መረጃ አስገባ</a>
+            <a href="fuel_stations.html">የግለሰብ የማደያ መረጃ</a>
+            <button id="logoutButton" class="nav-button">መውጫ</button>
         </nav>
     </header>
 
     <main class="container">
-        <div id="postsList" class="posts-container">
-            <p class="loading-message">ልጥፎች እየተጫኑ ነው...</p>
-        </div>
+        <section class="search-filter-section">
+            <input type="text" id="searchInput" placeholder="ፖስቶችን ፈልግ...">
+        </section>
+
+        <section class="community-posts-display">
+            <h2>የቅርብ ጊዜ ማህበረሰብ ልጥፎች</h2>
+            <div id="postsContainer" class="posts-container">
+                <p class="loading-message">ልጥፎች እየተጫኑ ነው...</p>
+            </div>
+        </section>
     </main>
 
     <footer class="main-footer">
-        <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
-        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+        <p>&copy; 2024 ባጃጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-        // getDoc ከአንድ document ለማምጣት ነው (getDocs ለ query ነው)
-        import { getFirestore, collection, getDocs, orderBy, query, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-
-        // Firebase Configuration (ይህ በትክክል መቀመጡን አረጋግጥ)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit, doc, updateDoc, deleteDoc, addDoc, where, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
             authDomain: "elanyas-info.firebaseapp.com",
             projectId: "elanyas-info",
             storageBucket: "elanyas-info.firebasestorage.app",
             messagingSenderId: "769306910360",
-            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            appId: "1:769306910360:web:70988eed5b1da5ffa0faed",
             measurementId: "G-2XX2B3RSGP"
         };
 
@@ -161,166 +203,289 @@
         const db = getFirestore(app);
 
         document.addEventListener('DOMContentLoaded', function() {
-            const postsList = document.getElementById('postsList');
             const logoutButton = document.getElementById('logoutButton');
+            const postsContainer = document.getElementById('postsContainer');
+            const searchInput = document.getElementById('searchInput');
 
-            // የተጠቃሚ መረጃ ከ Local Storage
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             const loggedInUserName = localStorage.getItem('loggedInUserName');
             const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
             const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
-            const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
+            const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
 
-            // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
+            // Check if user is logged in and has all required info
             if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate) {
-                alert("ለመቀጠል እባክዎ ይግቡ።");
-                window.location.href = "login.html"; // ወደ መግቢያ ገጽ ይምራ
-                return; // ኮዱ እዚህ ጋር ይቁም
+                alert("ይህንን ገጽ ለመጠቀም መግባት አለብዎት።");
+                localStorage.clear(); 
+                window.location.href = 'login.html'; 
+                return;
             }
 
-            // የመውጫው በተን ተግባር
+            // Check if subscription is active (within 30 days from last payment)
+            const today = new Date();
+            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+
+            if (lastPaymentDate < thirtyDaysAgo) {
+                alert("የደንበኝነት ምዝገባዎ ጊዜው አልፎበታል። እባክዎ ያድሱ።");
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('loggedInUserName');
+                localStorage.removeItem('loggedInUserPhone');
+                localStorage.removeItem('loggedInUserLicensePlate');
+                localStorage.removeItem('loggedInUserLastPaymentDate');
+                window.location.href = 'login.html'; 
+                return;
+            }
+
+
             if (logoutButton) {
                 logoutButton.addEventListener('click', () => {
-                    localStorage.removeItem('isLoggedIn'); // የመግቢያ ሁኔታን አጥፋ
+                    localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('loggedInUserName');
                     localStorage.removeItem('loggedInUserPhone');
                     localStorage.removeItem('loggedInUserLicensePlate');
                     localStorage.removeItem('loggedInUserLastPaymentDate');
                     alert("በተሳካ ሁኔታ ወጥተዋል!");
-                    window.location.href = "login.html"; // ወደ መግቢያ ገጽ ምራ
+                    window.location.href = "login.html"; 
                 });
             }
 
-            // ልጥፎችን ከ Firebase የሚያመጣ ተግባር
-            async function fetchCommunityPosts() {
-                postsList.innerHTML = '<p class="loading-message">ልጥፎች እየተጫኑ ነው...</p>';
+            let allCommunityPosts = []; // To store all fetched posts for search functionality
+
+            // Function to fetch and display posts
+            async function fetchAllCommunityPosts() {
                 try {
-                    const q = query(collection(db, "communityPosts"), orderBy("timestamp", "desc"));
+                    const q = query(collection(db, "communityPosts"), orderBy("timestamp", "desc"), limit(20));
                     const querySnapshot = await getDocs(q);
+                    allCommunityPosts = []; // Clear previous posts for fresh load or search
+                    postsContainer.innerHTML = ''; // Clear display area
 
                     if (querySnapshot.empty) {
-                        postsList.innerHTML = '<p class="loading-message" style="color: #a0a0a0;">ምንም የልውውጥ ልጥፎች የሉም።</p>';
+                        postsContainer.innerHTML = '<p class="loading-message">ምንም ልጥፎች አልተገኙም።</p>';
                         return;
                     }
 
-                    postsList.innerHTML = ''; // የመጫኛ መልዕክቱን አስወግድ
-                    querySnapshot.forEach((docSnap) => {
-                        const post = docSnap.data();
-                        const postId = docSnap.id; // የልጥፉን ID ያዝ
+                    querySnapshot.forEach((doc) => {
+                        const post = doc.data();
+                        const postId = doc.id;
+                        // Ensure likes and dislikes are arrays
+                        const likes = post.likes || [];
+                        const dislikes = post.dislikes || [];
+                        
+                        // የለጣፊውን ስም (authorName) ብቻ ለማሳየት
+                        const displayAuthorName = post.authorName || 'ያልታወቀ'; // authorName ተጠቀም
+                        // የስልክ ቁጥሩን ከማሳያ ላይ አስወግድ
+                        // const displayAuthorPhone = post.author ? ` (${post.author})` : ''; 
 
-                        let postDate = 'አልታወቀም';
-                        if (post.timestamp) {
-                            try {
-                                // For Firestore Timestamp objects
-                                if (typeof post.timestamp.toDate === 'function') {
-                                    postDate = post.timestamp.toDate().toLocaleString('am-ET', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    });
-                                } else { // For string timestamps if any
-                                    postDate = new Date(post.timestamp).toLocaleString('am-ET', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    });
-                                }
-                            } catch (e) {
-                                console.warn("Invalid timestamp format for post:", post.timestamp, e);
-                            }
-                        }
-
-                        // የልጥፉ ላይክ ሁኔታን አረጋግጥ
-                        // likes field ከሌለ ባዶ array እንጠቀም
-                        const likesArray = post.likes || []; 
-                        const isLiked = likesArray.includes(loggedInUserName); // ተጠቃሚው ላይክ አድርጎ እንደሆነ
-
-                        const postCard = `
-                            <div class="community-post-card">
-                                <h3 class="post-title">${post.title}</h3>
-                                <p class="post-meta">በ <strong>${post.author || 'ያልታወቀ'}</strong> - ${postDate}</p>
-                                <p class="post-content">${post.content}</p>
-                                <div class="post-actions">
-                                    <button class="like-button ${isLiked ? 'liked' : ''}" data-post-id="${postId}">
-                                        <span class="icon">👍 Like</span> 
-                                    </button>
-                                    <span class="like-count">${likesArray.length}</span>
-                                </div>
+                        const postCard = document.createElement('div');
+                        postCard.className = 'community-post-card';
+                        postCard.innerHTML = `
+                            <h3>${post.title}</h3>
+                            <p><strong>የለጠፈው:</strong> ${displayAuthorName}</p>
+                            <p class="post-content">${post.content}</p>
+                            <p><strong>የተለጠፈበት ቀን:</strong> ${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString('am-ET') : 'ያልታወቀ'}</p>
+                            
+                            <div class="vote-controls">
+                                <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${postId}">👍 <span class="like-count">${likes.length}</span></button>
+                                <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${postId}">👎 <span class="dislike-count">${dislikes.length}</span></button>
                             </div>
                         `;
-                        postsList.insertAdjacentHTML('beforeend', postCard);
+                        postsContainer.appendChild(postCard);
+                        allCommunityPosts.push({ id: postId, ...post });
                     });
 
-                    // የላይክ በተኖችን ክሊክ event አታች አድርግ
+                    // Attach event listeners after all cards are added
                     document.querySelectorAll('.like-button').forEach(button => {
-                        button.addEventListener('click', handleLikeClick);
+                        button.addEventListener('click', (e) => handleVote(e, 'like'));
+                    });
+                    document.querySelectorAll('.dislike-button').forEach(button => {
+                        button.addEventListener('click', (e) => handleVote(e, 'dislike'));
                     });
 
                 } catch (error) {
-                    console.error("Error fetching community posts: ", error);
-                    postsList.innerHTML = '<p class="loading-message" style="color: #f44336;">ልጥፎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
+                    console.error("Error fetching community posts:", error);
+                    postsContainer.innerHTML = '<p class="loading-message" style="color: #f44336;">ልጥፎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
                 }
             }
 
-            // ላይክ በተን ሲጫን የሚሰራ ተግባር
-            async function handleLikeClick(event) {
-                if (!loggedInUserName) {
-                    alert("ልጥፎችን ለመውደድ መግባት አለብዎት።");
+            // Function to handle like/dislike votes
+            async function handleVote(event, type) {
+                const button = event.currentTarget;
+                const postId = button.dataset.id;
+                const postRef = doc(db, "communityPosts", postId);
+
+                if (!loggedInUserPhone) {
+                    alert("ለድምፅ መስጠት መግባት አለብዎት።");
                     return;
                 }
 
-                const button = event.currentTarget;
-                const postId = button.dataset.postId;
-                const likeCountSpan = button.nextElementSibling; // የላይክ ቆጣሪው ስፓን
-
-                const postRef = doc(db, "communityPosts", postId); // የልጥፉን DocumentReference ያዝ
-
                 try {
-                    // የልጥፉን ወቅታዊ መረጃ አምጣ
                     const docSnap = await getDoc(postRef); 
-                    
                     if (!docSnap.exists()) {
-                        console.error("Post not found:", postId);
-                        alert("የተፈለገው ልጥፍ አልተገኘም።");
+                        console.error("No such document!");
+                        alert("ልጥፉ አልተገኘም።");
                         return;
                     }
-                    
-                    // የ likes array ን አምጣ (ከሌለ ባዶ array ይሁን)
+
                     const currentLikes = docSnap.data().likes || [];
-                    
-                    let newLikes = [];
-                    // የተጠቃሚው ስም ቀደም ሲል ላይክ ካደረገው፣ ያስወግዱት (unlike)
-                    if (currentLikes.includes(loggedInUserName)) {
-                        newLikes = currentLikes.filter(name => name !== loggedInUserName);
-                        button.classList.remove('liked');
-                    } else {
-                        // ላይክ ካልተደረገ፣ ስሙን ጨምሩ (like)
-                        newLikes = [...currentLikes, loggedInUserName];
-                        button.classList.add('liked');
+                    const currentDislikes = docSnap.data().dislikes || [];
+                    const postAuthorPhone = docSnap.data().author; // authorን እንደ ስልክ ቁጥር ተጠቀም
+
+                    let newLikes = [...currentLikes];
+                    let newDislikes = [...currentDislikes];
+
+                    const isAlreadyLiked = newLikes.includes(loggedInUserPhone);
+                    const isAlreadyDisliked = newDislikes.includes(loggedInUserPhone);
+
+                    if (type === 'like') {
+                        if (isAlreadyLiked) {
+                            newLikes = newLikes.filter(phone => phone !== loggedInUserPhone);
+                            button.classList.remove('liked');
+                        } else {
+                            newLikes.push(loggedInUserPhone);
+                            button.classList.add('liked');
+                            if (isAlreadyDisliked) {
+                                newDislikes = newDislikes.filter(phone => phone !== loggedInUserPhone);
+                                document.querySelector(`.dislike-button[data-id="${postId}"]`).classList.remove('disliked');
+                            }
+                        }
+                    } else if (type === 'dislike') {
+                        if (isAlreadyDisliked) {
+                            newDislikes = newDislikes.filter(phone => phone !== loggedInUserPhone);
+                            button.classList.remove('disliked');
+                        } else {
+                            newDislikes.push(loggedInUserPhone);
+                            button.classList.add('disliked');
+                            if (isAlreadyLiked) {
+                                newLikes = newLikes.filter(phone => phone !== loggedInUserPhone);
+                                document.querySelector(`.like-button[data-id="${postId}"]`).classList.remove('liked');
+                            }
+                        }
                     }
 
-                    // Firebase ላይ ያለውን document አዘምን
                     await updateDoc(postRef, {
-                        likes: newLikes
+                        likes: newLikes,
+                        dislikes: newDislikes
                     });
 
-                    // በገጹ ላይ የላይክ ቆጣሪውን አዘምን
-                    likeCountSpan.textContent = newLikes.length; 
+                    // Update counts on the page directly
+                    document.querySelector(`.like-button[data-id="${postId}"] .like-count`).textContent = newLikes.length;
+                    document.querySelector(`.dislike-button[data-id="${postId}"] .dislike-count`).textContent = newDislikes.length;
+
+                    // Automated Deletion and Ban Logic
+                    if (type === 'dislike' && newDislikes.length >= 5) {
+                        if (!(newLikes.length >= 15 && newDislikes.length >= 10)) {
+                            await deleteDoc(postRef); 
+                            console.log(`Post ${postId} deleted due to excessive dislikes.`);
+                            alert("ልጥፉ በተደጋጋሚ ዲስላይክ በመደረጉ ተሰርዟል።");
+
+                            if (postAuthorPhone) {
+                                await addDoc(collection(db, "falspost"), {
+                                    phoneNumber: postAuthorPhone,
+                                    reason: "Community Post Deleted due to excessive dislikes",
+                                    timestamp: new Date()
+                                });
+                                console.log(`Author ${postAuthorPhone} added to falspost.`);
+                                await checkAndBanUser(postAuthorPhone);
+                            }
+                            fetchAllCommunityPosts(); // Refresh list after deletion
+                        }
+                    }
 
                 } catch (error) {
-                    console.error("Like operation failed:", error);
-                    alert("ላይክ ለማድረግ አልተቻለም። እባክዎ እንደገና ይሞክሩ።");
+                    console.error("Vote operation failed:", error);
+                    alert("ድምፅ ለመስጠት አልተቻለም። እባክዎ እንደገና ይሞክሩ። " + error.message);
                 }
             }
 
-            // Fetch posts when the page loads
-            fetchCommunityPosts();
+            async function checkAndBanUser(phoneNumber) {
+                try {
+                    const falspostQuery = query(collection(db, "falspost"), where("phoneNumber", "==", phoneNumber));
+                    const falspostSnapshot = await getDocs(falspostQuery);
 
-            console.log("Community Data display page loaded and post fetching is set up with like system.");
+                    if (falspostSnapshot.size >= 3) {
+                        const banusersRef = collection(db, "banusers");
+                        const banQuery = query(banusersRef, where("phoneNumber", "==", phoneNumber));
+                        const banSnapshot = await getDocs(banQuery);
+
+                        if (banSnapshot.empty) {
+                            await addDoc(banusersRef, {
+                                phoneNumber: phoneNumber,
+                                bannedAt: new Date()
+                            });
+                            console.log(`User ${phoneNumber} has been banned.`);
+                            alert(`ተጠቃሚ ${phoneNumber} በተደጋጋሚ የተሳሳተ መረጃ በመለጠፉ ተገድቧል።`);
+                        } else {
+                            console.log(`User ${phoneNumber} is already banned.`);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error checking or banning user:", error);
+                }
+            }
+
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                const filteredPosts = allCommunityPosts.filter(post => {
+                    // search by authorName, title, or content
+                    const authorName = (post.authorName || '').toLowerCase(); 
+                    const title = (post.title || '').toLowerCase();
+                    const content = (post.content || '').toLowerCase();
+                    
+                    return authorName.includes(searchTerm) || 
+                           title.includes(searchTerm) || 
+                           content.includes(searchTerm);
+                });
+                displayPosts(filteredPosts);
+            });
+
+            // Display filtered posts (re-use logic from initial fetch, but only render)
+            function displayPosts(postsToDisplay) {
+                postsContainer.innerHTML = ''; // Clear existing posts
+                if (postsToDisplay.length === 0) {
+                    postsContainer.innerHTML = '<p class="loading-message">ምንም የሚዛመዱ ልጥፎች አልተገኙም።</p>';
+                    return;
+                }
+                postsToDisplay.forEach((post) => {
+                    const postId = post.id;
+                    const likes = post.likes || [];
+                    const dislikes = post.dislikes || [];
+
+                    const displayAuthorName = post.authorName || 'ያልታወቀ';
+                    // የስልክ ቁጥሩን ከማሳያ ላይ አስወግድ
+                    // const displayAuthorPhone = post.author ? ` (${post.author})` : '';
+
+                    const postCard = document.createElement('div');
+                    postCard.className = 'community-post-card';
+                    postCard.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p><strong>የለጠፈው:</strong> ${displayAuthorName}</p>
+                        <p class="post-content">${post.content}</p>
+                        <p><strong>የተለጠፈበት ቀን:</strong> ${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString('am-ET') : 'ያልታወቀ'}</p>
+                        
+                        <div class="vote-controls">
+                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${postId}">👍 <span class="like-count">${likes.length}</span></button>
+                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${postId}">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                        </div>
+                    `;
+                    postsContainer.appendChild(postCard);
+                });
+
+                // Re-attach event listeners to newly rendered cards
+                document.querySelectorAll('.like-button').forEach(button => {
+                    button.addEventListener('click', (e) => handleVote(e, 'like'));
+                });
+                document.querySelectorAll('.dislike-button').forEach(button => {
+                    button.addEventListener('click', (e) => handleVote(e, 'dislike'));
+                });
+            }
+
+            // Fetch posts when the page loads
+            fetchAllCommunityPosts();
+
+            console.log("Community Data display page loaded with voting and ban system.");
         });
     </script>
 </body>

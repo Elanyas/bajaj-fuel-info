@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የባጃጅ ነዳጅ መረጃ - የማደያ መረጃ አስገባ</title>
+    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GW2Y1BE243"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GW2Y1BE243');
+    </script>
+    <style>
+        /* ለዚህ ገጽ ብቻ የሚያገለግሉ ተጨማሪ ስታይሎች */
+        .auth-container, .form-container {
+            background-color: #1e1e1e; /* ጥቁር ግራጫ ዳራ */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* ጠቆር ያለ ጥላ */
+            max-width: 500px;
+            margin: 30px auto;
+            color: #e0e0e0; /* ቀላል ግራጫ ጽሁፍ */
+        }
+        .auth-container h2, .form-container h2 {
+            text-align: center;
+            color: #ffffff; /* ነጭ ርዕስ */
+            margin-bottom: 25px;
+        }
+        .auth-container label, .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ffffff; /* ነጭ label */
+        }
+        .auth-container input[type="password"],
+        .form-container input[type="text"],
+        .form-container input[type="number"],
+        .form-container select,
+        .form-container textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #555; /* ጠቆር ያለ ድንበር */
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background-color: #333; /* ጠቆር ያለ የ input ዳራ */
+            color: #e0e0e0; /* የ input ጽሁፍ ቀለም */
+        }
+        .auth-container input[type="password"]:focus,
+        .form-container input[type="text"]:focus,
+        .form-container input[type="number"]:focus,
+        .form-container select:focus,
+        .form-container textarea:focus {
+            outline: none;
+            border-color: #00bcd4; /* ሲነካ ሰማያዊ ድንበር */
+            box-shadow: 0 0 5px rgba(0, 188, 212, 0.5);
+        }
+        .auth-container button, .form-container button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        .auth-container button:hover, .form-container button:hover {
+            background-color: #0097a7;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .form-container {
+            display: none; /* መጀመሪያ ቅጹን ደብቅ */
+        }
+        textarea {
+            resize: vertical; /* ተጠቃሚው የጽሁፍ ቦታውን እንዲያሰፋ/እንዲያጠብ ይፈቅዳል */
+            min-height: 80px; /* ዝቅተኛ ቁመት */
+            max-height: 200px; /* ከፍተኛ ቁመት */
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1><span class="accent-text">የባጃጅ ነዳጅ</span> መረጃ</h1>
+        <p>የነዳጅ ማደያ መረጃ አስገባ</p>
+        <nav class="sub-nav">
+            <a href="data.html">ዋና ገጽ</a>
+            </nav>
+    </header>
+
+    <main class="container">
+        <div class="auth-container" id="authContainer">
+            <h2>የማደያ መግቢያ</h2>
+            <form id="authForm">
+                <label for="stationPassword">የማደያ ፓስወርድ (6 ዲጂት ቁጥር):</label>
+                <input type="password" id="stationPassword" maxlength="6" pattern="\d{6}" title="እባክዎ 6 ዲጂት ቁጥር ያስገቡ" required>
+                <button type="submit">ግባ</button>
+            </form>
+            <div id="authMessage" class="message" style="display: none;"></div>
+        </div>
+
+        <div class="form-container" id="dataEntryContainer">
+            <h2>የነዳጅ ማደያ መረጃ አስገባ</h2>
+            <form id="fuelDataEntryForm">
+                <label for="stationNameAmh">የማደያ ስም (አማርኛ):</label>
+                <input type="text" id="stationNameAmh" readonly required> <label for="stationNameEng">የማደያ ስም (እንግሊዝኛ):</label>
+                <input type="text" id="stationNameEng" readonly> <h3>ቤንዚን መረጃ:</h3>
+                <label for="petrolStatus">የቤንዚን ሁኔታ:</label>
+                <select id="petrolStatus" required>
+                    <option value="አለ">አለ</option>
+                    <option value="የለም">የለም</option>
+                    <option value="አልታወቀም">አልታወቀም</option>
+                </select>
+
+                <label for="petrolPrice">የቤንዚን ዋጋ (ብር/ሊትር):</label>
+                <input type="number" id="petrolPrice" step="0.01" placeholder="ለምሳሌ: 49.90">
+
+                <label for="petrolQueue">የቤንዚን ወረፋ ሁኔታ:</label>
+                <select id="petrolQueue" required>
+                    <option value="ወረፋ የለም">ወረፋ የለም</option>
+                    <option value="አጭር ወረፋ (ከ5 ባጃጅ በታች)">አጭር ወረፋ (ከ5 ባጃጅ በታች)</option>
+                    <option value="(5-10 ባጃጅ)">(5-10 ባጃጅ)</option>
+                    <option value="(10-20 ባጃጅ)">(10-20 ባጃጅ)</option>
+                    <option value="(ከ20 ባጃጅ በላይ)">(ከ20 ባጃጅ በላይ)</option>
+                    <option value="አልታወቀም">አልታወቀም</option>
+                </select>
+
+                <h3>ናፍጣ መረጃ:</h3>
+                <label for="dieselStatus">የናፍጣ ሁኔታ:</label>
+                <select id="dieselStatus" required>
+                    <option value="አለ">አለ</option>
+                    <option value="የለም">የለም</option>
+                    <option value="አልታወቀም">አልታወቀም</option>
+                </select>
+
+                <label for="dieselPrice">የናፍጣ ዋጋ (ብር/ሊትር):</label>
+                <input type="number" id="dieselPrice" step="0.01" placeholder="ለምሳሌ: 49.90">
+
+                <label for="dieselQueue">የናፍጣ ወረፋ ሁኔታ:</label>
+                <select id="dieselQueue" required>
+                    <option value="ወረፋ የለም">ወረፋ የለም</option>
+                    <option value="አጭር ወረፋ (ከ5 ባጃጅ በታች)">አጭር ወረፋ (ከ5 ባጃጅ በታች)</option>
+                    <option value="(5-10 ባጃጅ)">(5-10 ባጃጅ)</option>
+                    <option value="(10-20 ባጃጅ)">(10-20 ባጃጅ)</option>
+                    <option value="(ከ20 ባጃጅ በላይ)">(ከ20 ባጃጅ በላይ)</option>
+                    <option value="አልታወቀም">አልታወቀም</option>
+                </select>
+                
+                <label for="additionalNotes">ተጨማሪ ማብራሪያ (ከ250 ፊደላት የማይበልጥ):</label>
+                <textarea id="additionalNotes" maxlength="250" placeholder="ሌላ ማሳወቅ የሚፈልጉት ነገር ካለ ይጻፉ..."></textarea>
+
+                <input type="hidden" id="stationDocId" value=""> <button type="submit">መረጃ አስገባ/አዘምን</button>
+            </form>
+            <div id="dataEntryMessage" class="message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // Firebase Configuration (ከ data.html እና data_entry2.html የተወሰደ)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Firebase App ን አስጀምር
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // የ HTML Elements ዎችን ያዝ
+        const authContainer = document.getElementById('authContainer');
+        const dataEntryContainer = document.getElementById('dataEntryContainer');
+        const authForm = document.getElementById('authForm');
+        const stationPasswordInput = document.getElementById('stationPassword');
+        const authMessage = document.getElementById('authMessage');
+        const fuelDataEntryForm = document.getElementById('fuelDataEntryForm');
+        const stationNameAmhInput = document.getElementById('stationNameAmh');
+        const stationNameEngInput = document.getElementById('stationNameEng');
+        const petrolStatusSelect = document.getElementById('petrolStatus');
+        const petrolPriceInput = document.getElementById('petrolPrice');
+        const petrolQueueSelect = document.getElementById('petrolQueue');
+        const dieselStatusSelect = document.getElementById('dieselStatus');
+        const dieselPriceInput = document.getElementById('dieselPrice');
+        const dieselQueueSelect = document.getElementById('dieselQueue');
+        const additionalNotesTextarea = document.getElementById('additionalNotes');
+        const stationDocIdInput = document.getElementById('stationDocId');
+        const dataEntryMessage = document.getElementById('dataEntryMessage');
+
+        // ገጹ ሲጫን የሚሰራ ተግባር
+        document.addEventListener('DOMContentLoaded', async () => {
+            // የመግቢያ ሁኔታን ከ Local Storage አረጋግጥ
+            const storedPassword = localStorage.getItem('stationPassword');
+            const storedStationNameAmh = localStorage.getItem('stationNameAmh');
+            const storedStationNameEng = localStorage.getItem('stationNameEng');
+            const storedStationDocId = localStorage.getItem('stationDocId');
+
+            if (storedPassword && storedStationNameAmh && storedStationDocId) {
+                // መረጃ ካለ ወዲያውኑ የመረጃ ማስገቢያ ቅጹን አሳይ
+                authContainer.style.display = 'none';
+                dataEntryContainer.style.display = 'block';
+                stationNameAmhInput.value = storedStationNameAmh;
+                stationNameEngInput.value = storedStationNameEng;
+                stationDocIdInput.value = storedStationDocId;
+                await loadExistingStationData(storedStationDocId); // ያለውን መረጃ ጫን
+            } else {
+                // መረጃ ከሌለ የመግቢያ ቅጹን አሳይ
+                authContainer.style.display = 'block';
+                dataEntryContainer.style.display = 'none';
+            }
+        });
+
+        // የመግቢያ ቅጽ ሲላክ የሚሰራ ተግባር
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = stationPasswordInput.value.trim();
+            authMessage.style.display = 'none'; // ቀደም ሲል ያለውን መልዕክት ደብቅ
+
+            if (password.length !== 6 || !/^\d+$/.test(password)) {
+                showMessage(authMessage, "እባክዎ ባለ 6 ዲጂት ቁጥር ፓስወርድ ያስገቡ።", "error");
+                return;
+            }
+
+            try {
+                // ፓስወርዱን በ fuelowners collection ውስጥ ፈልግ
+                const q = query(collection(db, "fuelowners"), where("password", "==", password));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const stationData = querySnapshot.docs[0].data();
+                    const stationDocId = querySnapshot.docs[0].id; // የማደያውን Document ID ያዝ
+
+                    // መግቢያ ከተሳካ መረጃውን በ Local Storage አስቀምጥ
+                    localStorage.setItem('stationPassword', password);
+                    localStorage.setItem('stationNameAmh', stationData.stationNameAmh);
+                    localStorage.setItem('stationNameEng', stationData.stationNameEng || '');
+                    localStorage.setItem('stationDocId', stationDocId);
+
+                    // የመግቢያ ክፍሉን ደብቅ የመረጃ ማስገቢያውን አሳይ
+                    authContainer.style.display = 'none';
+                    dataEntryContainer.style.display = 'block';
+
+                    // የማደያውን ስም በቅጹ ላይ ሙላ (readonly ስለሆነ መቀየር አይቻልም)
+                    stationNameAmhInput.value = stationData.stationNameAmh;
+                    stationNameEngInput.value = stationData.stationNameEng || '';
+                    stationDocIdInput.value = stationDocId; // Document ID ን አስገባ
+
+                    // የማደያውን ነባር መረጃ ከ fueldata collection ውስጥ ፈልጎ መሙላት
+                    await loadExistingStationData(stationDocId);
+
+                    showMessage(authMessage, "በተሳካ ሁኔታ ገብተዋል!", "success");
+                } else {
+                    showMessage(authMessage, "የተሳሳተ ፓስወርድ። እባክዎ እንደገና ይሞክሩ።", "error");
+                }
+            } catch (error) {
+                console.error("በመግባት ላይ ስህተት ተፈጠረ:", error);
+                showMessage(authMessage, "በመግባት ላይ ስህተት ተፈጠረ። እባክዎ እንደገና ይሞክሩ።", "error");
+            }
+        });
+
+        // ያለውን የማደያ መረጃ ከ fueldata collection ፈልጎ የሚሞላ ተግባር
+        async function loadExistingStationData(stationId) {
+            try {
+                const q = query(collection(db, "fueldata"), where("stationDocId", "==", stationId));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    const existingData = querySnapshot.docs[0].data();
+                    // ቅጹን ባለው መረጃ ሙላ
+                    petrolStatusSelect.value = existingData.petrolStatus || 'አልታወቀም';
+                    petrolPriceInput.value = existingData.petrolPrice || '';
+                    petrolQueueSelect.value = existingData.petrolQueue || 'አልታወቀም';
+                    dieselStatusSelect.value = existingData.dieselStatus || 'አልታወቀም';
+                    dieselPriceInput.value = existingData.dieselPrice || '';
+                    dieselQueueSelect.value = existingData.dieselQueue || 'አልታወቀም';
+                    additionalNotesTextarea.value = existingData.additionalNotes || '';
+                    // የ Document ID ን አስገባ - ይህ ለመዘመን ያገለግላል
+                    stationDocIdInput.value = querySnapshot.docs[0].id; // የ fueldata document id
+                } else {
+                    // አዲስ መረጃ ለመፍጠር ቅጹን ባዶ አድርግ
+                    fuelDataEntryForm.reset();
+                    // ፓስወርዱ ልክ ሲሆን የመጣውን የማደያ ስም እንዳይጠፋ ማረጋገጥ
+                    const storedStationNameAmh = localStorage.getItem('stationNameAmh');
+                    const storedStationNameEng = localStorage.getItem('stationNameEng');
+                    stationNameAmhInput.value = storedStationNameAmh;
+                    stationNameEngInput.value = storedStationNameEng;
+                    stationDocIdInput.value = localStorage.getItem('stationDocId'); // የማደያውን fuelowners Document ID መልስ
+                    console.log("ምንም ነባር መረጃ አልተገኘም። አዲስ መረጃ ይፈጠራል።");
+                }
+            } catch (error) {
+                console.error("ነባር መረጃ ሲጫን ስህተት ተፈጠረ:", error);
+                showMessage(dataEntryMessage, "ነባር መረጃዎችን መጫን አልተቻለም።", "error");
+            }
+        }
+
+        // የመረጃ ማስገቢያ ቅጽ ሲላክ የሚሰራ ተግባር
+        fuelDataEntryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            dataEntryMessage.style.display = 'none';
+
+            const stationAmh = stationNameAmhInput.value.trim();
+            const stationEng = stationNameEngInput.value.trim();
+            const petrolStatus = petrolStatusSelect.value;
+            const petrolPrice = parseFloat(petrolPriceInput.value);
+            const petrolQueue = petrolQueueSelect.value;
+            const dieselStatus = dieselStatusSelect.value;
+            const dieselPrice = parseFloat(dieselPriceInput.value);
+            const dieselQueue = dieselQueueSelect.value;
+            const additionalNotes = additionalNotesTextarea.value.trim();
+            const stationOwnersDocId = localStorage.getItem('stationDocId'); // ከ Local Storage የወጣው የማደያ Document ID
+
+            if (!stationAmh || !petrolStatus || !petrolQueue || !dieselStatus || !dieselQueue) {
+                showMessage(dataEntryMessage, "እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ!", "error");
+                return;
+            }
+
+            // የመረጃው Object
+            const fuelData = {
+                stationName: stationAmh,
+                stationNameEnglish: stationEng,
+                petrolStatus: petrolStatus,
+                petrolPrice: isNaN(petrolPrice) ? null : petrolPrice,
+                petrolQueue: petrolQueue,
+                dieselStatus: dieselStatus,
+                dieselPrice: isNaN(dieselPrice) ? null : dieselPrice,
+                dieselQueue: dieselQueue,
+                additionalNotes: additionalNotes,
+                lastUpdated: serverTimestamp(), // የቅርብ ጊዜ ዝመና
+                stationDocId: stationOwnersDocId // መረጃውን ያስገባው የማደያ ልዩ መታወቂያ
+            };
+
+            try {
+                // መረጃው በዚህ ማደያ ከዚህ በፊት ተመዝግቦ እንደሆነ አረጋግጥ
+                const q = query(collection(db, "fueldata"), where("stationDocId", "==", stationOwnersDocId));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    // መረጃው ካለ አዘምን
+                    const existingDocRef = doc(db, "fueldata", querySnapshot.docs[0].id);
+                    await updateDoc(existingDocRef, fuelData);
+                    showMessage(dataEntryMessage, "መረጃ በተሳካ ሁኔታ ዘምኗል!", "success");
+                } else {
+                    // መረጃው ከሌለ አዲስ ፍጠር
+                    await addDoc(collection(db, "fueldata"), {
+                        ...fuelData,
+                        postedBy: stationAmh, // ለመጀመሪያ ጊዜ ሲለጠፍ የማደያውን ስም እንደለጠፈው ሰው አስገባ
+                        createdAt: serverTimestamp() // ለመጀመሪያ ጊዜ ሲፈጠር
+                    });
+                    showMessage(dataEntryMessage, "መረጃ በተሳካ ሁኔታ ገብቷል!", "success");
+                }
+            } catch (error) {
+                console.error("መረጃ ሲያስገቡ/ሲያዘምኑ ስህተት ተፈጠረ:", error);
+                showMessage(dataEntryMessage, "መረጃውን ማስገባት/ማዘመን አልተቻለም። እባክዎ እንደገና ይሞክሩ።", "error");
+            }
+        });
+
+        // የመልዕክት ማሳያ ተግባር
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
