@@ -197,6 +197,7 @@
             <a href="news.html">ዜናዎች</a>
             <a href="sales.html">መሸጫ</a>
             <a href="maintenance.html">እንክብካቤ</a>
+            <a href="data_entry.html">መረጃ ማስገቢያ</a>
             <a href="community_data.html">ልውውጥ</a>
             <button id="logoutButton" class="nav-button">መውጫ</button> 
           <a href="fuel_stations.html">የግለሰብ የማደያ መረጃ</a>
@@ -261,7 +262,7 @@
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    fuelStationList.innerHTML = '<p style="text-align: center; color: #a0a0a0;">ምንም የነዳጅ ማደያ መረጃ የለም።</p>';
+                    fuelStationList.innerHTML = '<p style="text-align: center; color: #a0a0a0;">ምንም የነዳጅ ማደያ መረጃ የለም። በቅርቡ ማደያዎች መረጃዎቻቸውን በዚ ፔጅ ለይ ማሳወቅ ይጀምራሉ።</p>';
                     loadingMessage.style.display = 'none';
                     return;
                 }
