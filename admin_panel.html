@@ -227,7 +227,7 @@
             <a href="sales.html">መሸጫ</a>
             <a href="maintenance.html">እንክብካቤ</a>
             <a href="community_data.html">ልውውጥ</a>
-            <a href="fuel_stations.html">የግለሰብ የማደያ መረጃ</a>
+            <a href="fuel_stations.html">በተጠቃሚ የተረጋገጠ የማደያ መረጃ</a>
             <a href="data_entry.html">መረጃ ማስገቢያ(የቀድሞ)</a>
             
             <button id="logoutButton" class="nav-button">መውጫ</button>
@@ -244,7 +244,7 @@
                 <option value="fuelowners">የማደያ ባለቤቶች (fuelowners)</option>
                 <option value="tipOffs">የጥቁር ገበያ ጥቆማዎች (tipOffs)</option>
                 <option value="users">ተጠቃሚዎች (users)</option>
-                </select>
+                <option value="banusers">የታገዱ ተጠቃሚዎች (banusers)</option> <option value="falsepost">የተሳሳቱ ልጥፎች (falsepost)</option> </select>
             <button id="addUserButton" class="add-button" style="display: none;">አዲስ ተጠቃሚ ጨምር</button>
         </section>
 
@@ -307,9 +307,9 @@
         let editingDocId = null; // To keep track of the document being edited
 
         // Define which collections are editable (update, view, delete) and which can also have new items added via the form
-        // I've added 'fueldata' to editableCollections as per your request.
-        const editableCollections = ['fueldata', 'fuelowners', 'users', 'communityPosts', 'fuelStations', 'tipOffs'];
-        const addableCollections = ['fueldata', 'fuelowners', 'users', 'communityPosts', 'fuelStations', 'tipOffs']; // Collections where you can 'add new' via form
+        // 'fueldata' is now fully editable.
+        const editableCollections = ['fueldata', 'fuelowners', 'users', 'communityPosts', 'fuelStations', 'tipOffs', 'banusers', 'falsepost']; // Added new collections
+        const addableCollections = ['fueldata', 'fuelowners', 'users', 'communityPosts', 'fuelStations', 'tipOffs', 'banusers', 'falsepost']; // Added new collections
 
 
         // Define the specific fields for each editable collection for form generation
@@ -353,6 +353,18 @@
                 { id: 'location', label: 'ቦታ', type: 'text', required: true },
                 { id: 'details', label: 'ዝርዝር', type: 'textarea', required: true },
                 { id: 'submittedBy', label: 'የላከው', type: 'text', required: true, readonly: true }
+            ],
+            // New Collections Added
+            'banusers': [
+                { id: 'phoneNumber', label: 'ስልክ ቁጥር', type: 'text', required: true },
+                { id: 'reason', label: 'ምክንያት', type: 'textarea', required: true },
+                { id: 'bannedBy', label: 'ያገደው', type: 'text', required: false, readonly: true }
+            ],
+            'falsepost': [
+                { id: 'originalPostId', label: 'የመጀመሪያው ልጥፍ ID', type: 'text', required: true },
+                { id: 'reportedBy', label: 'ያመለከተው', type: 'text', required: true, readonly: true },
+                { id: 'reason', label: 'ምክንያት', type: 'textarea', required: true },
+                { id: 'status', label: 'ሁኔታ', type: 'select', options: ['ክፍት', 'በሂደት ላይ', 'ተዘግቷል'], required: true }
             ]
         };
 
@@ -393,7 +405,7 @@
             addUserButton.addEventListener('click', () => {
                 editingDocId = null; // Ensure we are in "add new" mode
                 dataEntryForm.reset(); // Clear any previous form data
-                formTitle.textContent = `አዲስ ${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '')} አስገባ`; // Dynamically change title
+                formTitle.textContent = `አዲስ ${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '').replace('መረጃ', '').trim()} አስገባ`; // Dynamically change title
                 submitButton.textContent = 'መረጃ አስገባ';
                 formMessageDisplay.style.display = 'none';
                 dataEntryFormSection.style.display = 'block'; // Show the form
@@ -402,10 +414,12 @@
 
             // Function to control the visibility of the "Add New User" button
             function toggleAddButtonVisibility() {
-                if (currentCollection === 'users' || addableCollections.includes(currentCollection)) {
+                if (addableCollections.includes(currentCollection)) { // Check if current collection is addable
                     addUserButton.style.display = 'inline-block'; // Show the button
                     // Change text dynamically based on selected collection
-                    addUserButton.textContent = `አዲስ ${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '').replace('መረጃ', '')} ጨምር`;
+                    let collectionText = collectionSelect.options[collectionSelect.selectedIndex].text;
+                    let buttonText = `አዲስ ${collectionText.replace('ዎች', '').replace('መረጃ', '').trim()} ጨምር`;
+                    addUserButton.textContent = buttonText;
                 } else {
                     addUserButton.style.display = 'none'; // Hide the button
                 }
@@ -469,7 +483,7 @@
                         tableHtml += `<td class="action-buttons">`;
                         
                         // Check if collection is editable or only view/delete
-                        if (editableCollections.includes(collectionName)) { // Now includes 'fueldata'
+                        if (editableCollections.includes(collectionName)) { 
                             tableHtml += `<button class="edit-btn" data-id="${row.id}" data-collection="${collectionName}">አርትዕ</button>`;
                         }
                         tableHtml += `<button class="delete-btn" data-id="${row.id}" data-collection="${collectionName}">ሰርዝ</button>`;
@@ -566,7 +580,7 @@
                 editingDocId = docId; // Set the ID of the document being edited
 
                 dataEntryFormSection.style.display = 'block'; // Show the form section
-                formTitle.textContent = `መረጃ አዘምን (${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '')})`; // Dynamic title
+                formTitle.textContent = `መረጃ አዘምን (${collectionSelect.options[collectionSelect.selectedIndex].text.replace('ዎች', '').trim()})`; // Dynamic title
                 submitButton.textContent = 'አዘምን';
                 formMessageDisplay.style.display = 'none';
 
@@ -590,9 +604,9 @@
 
                 if (confirm(`በእርግጥ ይህንን መረጃ ከ${collectionName} ይሰርዙ?`)) {
                     try {
-                        await deleteDoc(doc(db, collectionName, docId));
+                        await deleteDoc(doc(db, currentCollection, docId)); // Use currentCollection for deletion
                         showMessage("መረጃ በተሳካ ሁኔታ ተሰርዟል!", "success", formMessageDisplay);
-                        await fetchData(collectionName); // Refresh data after deletion
+                        await fetchData(currentCollection); // Refresh data after deletion
                     } catch (error) {
                         console.error("መረጃ ሲሰርዙ ስህተት ተፈጠረ:", error);
                         showMessage(`መረጃውን መሰረዝ አልተቻለም። ስህተት: ${error.message}`, "error", formMessageDisplay);
