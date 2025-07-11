@@ -136,6 +136,7 @@
             <a href="maintenance.html">እንክብካቤ</a>
             <a href="community_data.html">ልውውጥ</a>
             <a href="fuel_stations.html">በተጠቃሚ የተረጋገጠ የማደያ መረጃ</a>
+            <a href="stations_fuel_data.html">የማጀያ የነዳጅ መረጃ</a>
             </nav>
     </header>
 
@@ -147,7 +148,7 @@
                 <label for="selectFuelStation">የማደያ መረጃ ማስገቢያ</label>
 
                 <input type="radio" id="selectTipOff" name="formType" value="tipOffForm">
-                <label for="selectTipOff">የጥቁር ገበያ ጥቆማ</label>
+                <label for="selectTipOff">ሀሳብ አስተያየትዎን ለመስጠት</label>
 
                 <input type="radio" id="selectCommunityPost" name="formType" value="communityPostForm">
                 <label for="selectCommunityPost">የማህበረሰብ ልጥፍ</label>
@@ -209,17 +210,17 @@
         </section>
 
         <section id="tipOffForm" class="data-entry-form-card">
-            <h2>የጥቁር ገበያ ጥቆማ</h2>
+            <h2>ሀሳብ አስተያየትዎን ለመስጠት</h2>
             <form id="tipOffSubmissionForm" class="data-form">
                 <div class="input-group">
-                    <label for="tipOffLocation">የጥቆማ ቦታ:</label>
-                    <input type="text" id="tipOffLocation" placeholder="ለምሳሌ: ኖክ ነርሲንግ አካባቢ" required>
+                    <label for="tipOffLocation">ርእስ:</label>
+                    <input type="text" id="tipOffLocation" placeholder="ለምሳሌ: ዌብሳይት፣ ቦት" required>
                 </div>
                 <div class="input-group">
-                    <label for="tipOffDetails">ዝርዝር መረጃ:</label>
-                    <textarea id="tipOffDetails" rows="4" placeholder="ዝርዝር ሁኔታውን ይግለጹ (ለምሳሌ: የነዳጅ አይነት, ግምታዊ ዋጋ, ሰዓት)" required></textarea>
+                    <label for="tipOffDetails">ዝርዝር:</label>
+                    <textarea id="tipOffDetails" rows="4" placeholder="ለምሳሌ፦ ዌብሳይቱ በጣም ጥሩ ነው። የብዙዎችን ህይወት በማቅለል ጥሩ አገሎገሎት ይሰጣል።" required></textarea>
                 </div>
-                <button type="submit" class="submit-button">ጥቆማ አስገባ</button>
+                <button type="submit" class="submit-button">አስገባ</button>
                 <p id="tipOffMessage" class="form-message"></p>
             </form>
         </section>

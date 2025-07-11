@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GW2Y1BE243"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GW2Y1BE243');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የባጃጅ ነዳጅ መረጃ - ዋናው ገጽ</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const loggedInUserName = localStorage.getItem('loggedInUserName');
+        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+        const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
+
+        // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
+        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
+            alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+            localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
+            window.location.href = 'login.html';
+            return; // ከዚህ በላይ እንዳይቀጥል
+        }
+
+        // የክፍያ ቀን ማረጋገጥ
+        try {
+            const SUBSCRIPTION_DURATION_DAYS = 30; // የደንበኝነት ምዝገባው የሚቆይበት ጊዜ በ ቀናት
+            const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+            const today = new Date();
+            const expirationDate = new Date(lastPaymentDate);
+            expirationDate.setDate(expirationDate.getDate() + SUBSCRIPTION_DURATION_DAYS);
+
+            // የክፍያ ጊዜው አልፎ ከሆነ ወደ login.html ይመልስ
+            if (today > expirationDate) {
+                alert("የደንበኝነት ምዝገባ ጊዜዎ አልቋል። እባክዎ ያድሱ።");
+                localStorage.clear(); // ጊዜው ካለፈ ሁሉንም ያጥፋ
+                window.location.href = 'login.html';
+                return; // ከዚህ በላይ እንዳይቀጥል
+            }
+        } catch (error) {
+            console.error("የክፍያ ቀን ሲረጋገጥ ስህተት ተፈጠረ:", error);
+            alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም። እባክዎ እንደገና ይግቡ።");
+            localStorage.clear();
+            window.location.href = 'login.html';
+            return;
+        }
+
+        // መረጃው ሙሉ ከሆነ እና ጊዜው ካላለፈ, postAuthor input ካለ ይሙላው
+        const postAuthorInput = document.getElementById('postAuthor');
+        if (postAuthorInput) {
+            postAuthorInput.value = loggedInUserName;
+        }
+    });
+</script>
+    <style>
+        /* ተጨማሪ የ CSS ስታይሎች ለተሻለ አቀማመጥ - ከዋናው data.html ኮፒ የተደረጉ */
+        .fuel-type-details {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        .fuel-type-details p {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fuel-type-details h3 {
+            color: #00bcd4; /* Accent color for headings */
+            margin-bottom: 10px;
+        }
+        .fuel-status strong {
+            font-size: 1.1em;
+            color: #00bcd4; /* Status color */
+        }
+        .fuel-status.unavailable strong {
+            color: #f44336; /* Red for unavailable */
+        }
+        .fuel-station-card {
+            background-color: #1e1e1e; /* ጥቁር ግራጫ ዳራ */
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+            padding: 25px;
+            color: #e0e0e0; /* ቀላል ግራጫ ጽሁፍ */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .fuel-station-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .fuel-station-card h2 {
+            color: #ffffff; /* ነጭ ርዕስ */
+            font-size: 1.8em;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #00bcd4; /* ሰማያዊ ከስር መስመር */
+            padding-bottom: 10px;
+        }
+
+        .station-name-english {
+            font-size: 0.9em;
+            color: #a0a0a0;
+            margin-top: -5px;
+            margin-bottom: 15px;
+        }
+
+        .last-updated {
+            font-size: 0.95em;
+            color: #888;
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .filter-buttons button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 8px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-buttons button:hover {
+            background-color: #0097a7;
+        }
+
+        .message {
+            text-align: center;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            max-width: 600px;
+            background-color: #ffe0b2;
+            color: #e65100;
+        }
+
+        .loading-message {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #00bcd4;
+        }
+
+        /* ተጨማሪ መግለጫ ስታይል */
+        .additional-notes {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #444; /* ቀለል ያለ መስመር */
+            font-style: italic;
+            color: #a0a0a0; /* ለጽሁፍ መግለጫ ቀለል ያለ ቀለም */
+            font-size: 0.95em;
+        }
+
+        /* መረጃውን የለጠፈው ስታይል */
+        .posted-by {
+            font-size: 0.95em;
+            color: #888;
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+      <div class="ad-marquee-container">
+        <p class="ad-marquee-text">
+            ✨  እስከ ሐምሌ 9 የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ይህንን እድል ለሌሎች ሹፌር ጓደኞችዎ አሳዎቀዋል? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 ይህንን ሰፊ የመገናኛ መድረክ እና የመረጃ ምንጭ ለሌሎች ጓደኞቾም ያስተዋውቁ! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ የአገልግሎታችን ተጠቃሚ ስለሆኑ እናመሰግናለን! &nbsp; &nbsp; &nbsp; &nbsp;
+        </p>
+      </div>
+        <h1><span class="accent-text">የማደያዎች የነዳጅ</span> መረጃ</h1>
+        <p>ወቅታዊ የነዳጅ ዋጋና ወረፋ መረጃዎች</p>
+        <nav class="sub-nav">
+          <a href="data.html">ዋናው ገጽ</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="data_entry.html">መረጃ ማስገቢያ</a>
+            <a href="community_data.html">ልውውጥ</a>
+            <button id="logoutButton" class="nav-button">መውጫ</button> 
+          <a href="fuel_stations.html">በተጠቃሚ የተረጋገጠ የማደያ መረጃ</a>
+          </nav>
+    </header>
+
+    <main class="container">
+      
+      <section class="search-filter-section">
+            <input type="text" id="searchInput" placeholder="የማደያ ስም፣ 'አለ' ወይም 'የለም' ፈልግ...">
+        </section>
+
+        <div id="loadingMessage" class="loading-message">መረጃዎች እየተጫኑ ነው...</div>
+        <div id="errorMessageDisplay" class="message error" style="display: none;"></div>
+        <div id="fuelStationList">
+            </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // Firebase Configuration (ይህ ከዚህ በፊት በ data_entry2.html ውስጥ የነበረው ተመሳሳይ ነው)
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Firebase App ን አስጀምር
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const fuelStationList = document.getElementById('fuelStationList');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessageDisplay = document.getElementById('errorMessageDisplay');
+        const searchInput = document.getElementById('searchInput'); // የፍለጋ input
+
+        let allFuelStations = []; // ሁሉንም የነዳጅ ማደያዎች ውሂብ ለማስቀመጥ
+
+        // ገጹ ሲጫን መረጃዎችን የሚጭን ተግባር
+        document.addEventListener('DOMContentLoaded', fetchFuelStationData);
+
+        // መረጃዎችን ከFirebase የሚያመጣ ተግባር
+        async function fetchFuelStationData() {
+            loadingMessage.style.display = 'block'; // የመጫኛ መልዕክቱን አሳይ
+            errorMessageDisplay.style.display = 'none'; // የስህተት መልዕክቱን ደብቅ
+            fuelStationList.innerHTML = ''; // ያለውን መረጃ አጽዳ
+
+            try {
+                // መረጃዎችን በቅርብ ጊዜ ዝመና (lastUpdated) መሰረት ከአዲስ ወደ አሮጌ ደርድር
+                const q = query(collection(db, "fueldata"), orderBy("lastUpdated", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    fuelStationList.innerHTML = '<p style="text-align: center; color: #a0a0a0;">ምንም የነዳጅ ማደያ መረጃ የለም። በቅርቡ ማደያዎች መረጃዎቻቸውን በዚ ፔጅ ለይ ማሳወቅ ይጀምራሉ።</p>';
+                    loadingMessage.style.display = 'none';
+                    return;
+                }
+                
+                allFuelStations = []; // አዲስ ውሂብ ከመጫንዎ በፊት አጽዳ
+                querySnapshot.forEach((doc) => {
+                    allFuelStations.push(doc.data());
+                });
+
+                displayFuelStations(allFuelStations); // ሁሉንም ማደያዎች መጀመሪያ ላይ አሳይ
+
+            } catch (error) {
+                console.error("መረጃዎችን ከFirebase ሲያመጡ ስህተት ተፈጠረ:", error);
+                loadingMessage.style.display = 'none';
+                errorMessageDisplay.textContent = "መረጃዎችን ማምጣት አልተቻለም። እባክዎ እንደገና ይሞክሩ።";
+                errorMessageDisplay.style.display = 'block';
+            } finally {
+                loadingMessage.style.display = 'none'; // የመጫኛ መልዕክቱን አስወግድ
+            }
+        }
+
+        // የነዳጅ ማደያዎችን ወደ DOM የሚጨምር ተግባር
+        function displayFuelStations(stationsToDisplay) {
+            fuelStationList.innerHTML = ''; // ያለውን መረጃ አጽዳ
+            if (stationsToDisplay.length === 0) {
+                fuelStationList.innerHTML = '<p style="text-align: center; color: #a0a0a0;">የተፈለገው መረጃ የለም።</p>';
+                return;
+            }
+
+            stationsToDisplay.forEach((data) => {
+                let lastUpdated = 'አልታወቀም';
+                if (data.lastUpdated && data.lastUpdated.toDate) {
+                    lastUpdated = data.lastUpdated.toDate().toLocaleString('am-ET', {
+                        year: 'numeric', month: 'short', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    });
+                }
+
+                const cardHtml = `
+                    <div class="fuel-station-card">
+                        <h2 class="station-name">${data.stationName || 'ያልታወቀ ማደያ'}</h2>
+                        ${data.stationNameEnglish ? `<p class="station-name-english">${data.stationNameEnglish}</p>` : ''}
+                        <div class="fuel-type-details petrol">
+                            <h3>ቤንዚን:</h3>
+                            <p class="fuel-status">ሁኔታ: <strong>${data.petrolStatus || 'አልታወቀም'}</strong></p>
+                            <p>ዋጋ: <strong>${data.petrolPrice ? `${data.petrolPrice.toFixed(2)} ብር/ሊትር` : 'አልታወቀም'}</strong></p>
+                            <p class="fuel-status">የወረፋ ሁኔታ: <strong>${data.petrolQueue || 'አልታወቀም'}</strong></p>
+                        </div>
+                        <div class="fuel-type-details diesel">
+                            <h3>ናፍጣ:</h3>
+                            <p class="fuel-status">ሁኔታ: <strong>${data.dieselStatus || 'አልታወቀም'}</strong></p>
+                            <p>ዋጋ: <strong>${data.dieselPrice ? `${data.dieselPrice.toFixed(2)} ብር/ሊትር` : 'አልታወቀም'}</strong></p>
+                            <p class="fuel-status">የወረፋ ሁኔታ: <strong>${data.dieselQueue || 'አልታወቀም'}</strong></p>
+                        </div>
+                        ${data.additionalNotes ? `<p class="additional-notes">ማብራሪያ: ${data.additionalNotes}</p>` : ''}
+                        <p class="posted-by">የተለጠፈው በ: <strong>${data.postedBy || 'ያልታወቀ'}</strong></p>
+                        <p class="last-updated">የመጨረሻ ዝመና: ${lastUpdated}</p>
+                    </div>
+                `;
+                fuelStationList.innerHTML += cardHtml;
+            });
+        }
+
+
+        // የመውጫው በተን ተግባር
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('stationPassword'); // የማደያውን ፓስወርድ ከሎካል ስቶሬጅ አጥፋ
+                localStorage.removeItem('stationNameAmh');
+                localStorage.removeItem('stationNameEng');
+                localStorage.removeItem('stationDocId');
+                alert("በተሳካ ሁኔታ ወጥተዋል!");
+                // ወደ መግቢያ ገጽ ምራ (ወደ fuel_station_data_entry.html ሊሆን ይችላል)
+                window.location.href = "login.html"; 
+            });
+        }
+                    // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredStations = allFuelStations.filter(station => {
+                    const stationName = (station.stationName || '').toLowerCase();
+                    const petrolStatus = (station.petrolStatus || '').toLowerCase();
+                    const dieselStatus = (station.dieselStatus || '').toLowerCase();
+
+                    // የማደያ ስም ወይም የነዳጅ ሁኔታዎችን ይፈልግ
+                    return stationName.includes(searchTerm) || 
+                           petrolStatus.includes(searchTerm) || 
+                           dieselStatus.includes(searchTerm);
+                });
+                displayFuelStations(filteredStations);
+            });
+
+
+    </script>
+</body>
+</html>
