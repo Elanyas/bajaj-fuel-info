@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XX2B3RSGP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2XX2B3RSGP');
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የመለዋወጫ መረጃ - ባጃጅ ሲስተም</title>
+    <link rel="stylesheet" href="style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General styling from style.css should apply */
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .post-form-section {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .post-form-section h2 {
+            color: #00bcd4;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #c0c0c0;
+        }
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background-color: #333;
+            color: #e0e0e0;
+            font-size: 1em;
+            box-sizing: border-box; /* Ensures padding doesn't affect total width */
+        }
+        .form-group textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 80px;
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #888;
+        }
+        .submit-button {
+            background-color: #00bcd4;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+        .submit-button:hover {
+            background-color: #0097a7;
+        }
+        .post-message {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .parts-info-display {
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .parts-info-display h2 {
+            color: #00bcd4;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .info-card {
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .info-card h3 {
+            color: #e0e0e0;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        .info-card p {
+            font-size: 1.05em;
+            color: #c0c0c0;
+            line-height: 1.5;
+        }
+        .info-card .meta-info {
+            font-size: 0.9em;
+            color: #888;
+            text-align: right;
+            margin-top: 15px;
+            border-top: 1px solid #444;
+            padding-top: 10px;
+        }
+        .info-card .meta-info strong {
+            color: #b0b0b0;
+        }
+
+        /* Logout button styling */
+        #logoutButton {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        #logoutButton:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <h1>የመለዋወጫ መረጃ</h1>
+        <p>የሚፈልጉትን መለዋወጫ ያግኙ ወይም ያለዎትን መረጃ ያጋሩ!</p>
+        <nav class="sub-nav">
+            <a href="fuel_stations.html">የማደያ መረጃ</a>
+            <a href="news.html">ዜናዎች</a>
+            <a href="sales.html">መሸጫ</a>
+            <a href="maintenance.html">እንክብካቤ</a>
+            <a href="data_entry.html">የማደያ መረጃ አስገባ</a>
+            <a href="community_data.html">የመረጃ ልውውጥ</a>
+            <a href="request_station_info.html">ማደያዎችን ያናግሩ</a>
+             <a href="#" id="logoutButton">መውጫ</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="post-form-section">
+            <h2>የመለዋወጫ መረጃ ያስገቡ</h2>
+            <form id="sparePartsInfoForm">
+                <div class="form-group">
+                    <label for="partName">የመለዋወጫ ስም:</label>
+                    <input type="text" id="partName" placeholder="ለምሳሌ: ባጃጅ ዲስክ ብሬክ" required>
+                </div>
+                <div class="form-group">
+                    <label for="partLocation">የት እንደሚያገኙት/የፈለጉት (ሱቅ ወይም አካባቢ):</label>
+                    <input type="text" id="partLocation" placeholder="ለምሳሌ: የሐረር ገበያ አካባቢ, አደሬ ገበያ" required>
+                </div>
+                 <div class="form-group">
+                    <label for="partPrice">ዋጋ (አማራጭ):</label>
+                    <input type="text" id="partPrice" placeholder="ለምሳሌ: 500 ብር (አማራጭ)">
+                </div>
+                <div class="form-group">
+                    <label for="additionalInfo">ተጨማሪ ማብራሪያ:</label>
+                    <textarea id="additionalInfo" placeholder="ስለ መለዋወጫው ተጨማሪ መረጃ (ለምሳሌ: አዲስ ነው ወይስ ያገለገለ? ኦሪጅናል ነው?) ወይም ጥያቄዎን ያስገቡ።" required></textarea>
+                </div>
+                <button type="submit" class="submit-button">መረጃ አስገባ</button>
+                <p id="formMessage" class="post-message"></p>
+            </form>
+        </section>
+
+        <section class="parts-info-display">
+            <h2>የቅርብ ጊዜ የመለዋወጫ መረጃዎች</h2>
+            <div id="partsInfoList">
+                <p class="loading-message">የመለዋወጫ መረጃዎችን በመጫን ላይ...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 የባጃጅ ሲስተም. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+    </footer>
+
+    <script type="module">
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // Your Firebase configuration - make sure this matches your project's config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP" // If you have one
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+            const loggedInUserName = localStorage.getItem('loggedInUserName'); // Assuming you store user's name
+
+            if (!isLoggedIn || !loggedInUserPhone) {
+                alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Logout Button functionality
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('loggedInUserName');
+                    localStorage.removeItem('loggedInUserPhone');
+                    localStorage.removeItem('loggedInUserPassword');
+                    localStorage.removeItem('loggedInUserLastPaymentDate');
+                    alert("በተሳካ ሁኔታ ወጥተዋል!");
+                    window.location.href = "login.html";
+                });
+            }
+
+            const sparePartsInfoForm = document.getElementById('sparePartsInfoForm');
+            const formMessage = document.getElementById('formMessage');
+            const partsInfoList = document.getElementById('partsInfoList');
+
+            // Handle form submission
+            sparePartsInfoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                formMessage.textContent = 'መረጃዎን በማስገባት ላይ...';
+                formMessage.style.color = '#00bcd4';
+
+                const partName = document.getElementById('partName').value.trim();
+                const partLocation = document.getElementById('partLocation').value.trim();
+                const partPrice = document.getElementById('partPrice').value.trim();
+                const additionalInfo = document.getElementById('additionalInfo').value.trim();
+
+                try {
+                    await addDoc(collection(db, "sparePartsInfo"), {
+                        partName: partName,
+                        partLocation: partLocation,
+                        partPrice: partPrice,
+                        additionalInfo: additionalInfo,
+                        submittedBy: loggedInUserName || 'ያልታወቀ ተጠቃሚ', // Use logged-in user's name
+                        submittedByPhone: loggedInUserPhone, // Store phone for traceability
+                        timestamp: serverTimestamp() // Use Firebase server timestamp
+                    });
+
+                    sparePartsInfoForm.reset();
+                    formMessage.textContent = 'የመለዋወጫ መረጃዎ በተሳካ ሁኔታ ገብቷል!';
+                    formMessage.style.color = '#4CAF50';
+                    fetchSparePartsInfo(); // Refresh the displayed list
+
+                } catch (error) {
+                    console.error("Error adding spare parts info: ", error);
+                    formMessage.textContent = 'መረጃውን በመላክ ላይ ስህተት ተፈጥሯል: ' + error.message;
+                    formMessage.style.color = '#f44336';
+                }
+            });
+
+            // Function to fetch and display spare parts information
+            async function fetchSparePartsInfo() {
+                partsInfoList.innerHTML = '<p class="loading-message">የመለዋወጫ መረጃዎችን በመጫን ላይ...</p>';
+                try {
+                    const q = query(collection(db, "sparePartsInfo"), orderBy("timestamp", "desc"));
+                    const querySnapshot = await getDocs(q);
+                    
+                    if (querySnapshot.empty) {
+                        partsInfoList.innerHTML = '<p class="loading-message" style="color: #c0c0c0;">እስካሁን ምንም የመለዋወጫ መረጃ የለም። እርስዎ የመጀመሪያው ይሁኑ!</p>';
+                        return;
+                    }
+
+                    partsInfoList.innerHTML = ''; // Clear previous data
+                    querySnapshot.forEach((doc) => {
+                        const info = doc.data();
+                        let displayDate = '';
+                        if (info.timestamp && typeof info.timestamp.toDate === 'function') {
+                            try {
+                                displayDate = info.timestamp.toDate().toLocaleString('am-ET', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            } catch (e) {
+                                console.warn("Invalid timestamp format for info:", info.timestamp, e);
+                                displayDate = 'ያልታወቀ ቀን';
+                            }
+                        } else if (typeof info.timestamp === 'string') {
+                            try {
+                                displayDate = new Date(info.timestamp).toLocaleString('am-ET', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                });
+                            } catch (e) {
+                                console.warn("Invalid timestamp string format for info:", info.timestamp, e);
+                                displayDate = 'ያልታወቀ ቀን';
+                            }
+                        }
+
+                        const infoCard = `
+                            <div class="info-card">
+                                <h3>${info.partName}</h3>
+                                <p><strong>የሚገኝበት/የሚፈለግበት:</strong> ${info.partLocation}</p>
+                                ${info.partPrice ? `<p><strong>ግምታዊ ዋጋ:</strong> ${info.partPrice}</p>` : ''}
+                                <p>${info.additionalInfo}</p>
+                                <p class="meta-info">በ <strong>${info.submittedBy || 'ያልታወቀ'}</strong> - ${displayDate}</p>
+                            </div>
+                        `;
+                        partsInfoList.insertAdjacentHTML('beforeend', infoCard);
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching spare parts info: ", error);
+                    partsInfoList.innerHTML = '<p class="loading-message" style="color: #f44336;">የመለዋወጫ መረጃዎችን በመጫን ላይ ስህተት ተፈጥሯል: ' + error.message + '</p>';
+                }
+            }
+
+            // Fetch info when the page loads
+            fetchSparePartsInfo();
+            console.log("Spare Parts Information page loaded and data fetching is set up.");
+        });
+    </script>
+</body>
+</html>

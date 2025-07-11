@@ -20,10 +20,10 @@
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const loggedInUserName = localStorage.getItem('loggedInUserName');
         const loggedInUserPhone = localStorage.getItem('loggedInUserPhone'); // Add this
-        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+        const loggedInUserPassword = localStorage.getItem('loggedInUserPassword');
         const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
 
-        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
+        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserPassword || !loggedInUserLastPaymentDate) {
             alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
             localStorage.clear();
             window.location.href = 'login.html';

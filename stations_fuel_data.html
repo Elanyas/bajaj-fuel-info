@@ -18,11 +18,11 @@
         const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const loggedInUserName = localStorage.getItem('loggedInUserName');
         const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
-        const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+        const loggedInUserPassword = localStorage.getItem('loggedInUserPassword'); // እዚህ ላይ የይለፍ ቃሉን መኖሩን ያረጋግጣል
         const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
 
-        // አስፈላጊ የሆኑትን 4 መረጃዎች መኖራቸውን ያረጋግጡ
-        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate || !loggedInUserLastPaymentDate) {
+        // አስፈላጊ የሆኑትን 4 መረጃዎች (Passwordን ጨምሮ) መኖራቸውን ያረጋግጡ
+        if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserPassword || !loggedInUserLastPaymentDate) {
             alert("ለመግባት ፍቃድ የለዎትም። እባክዎ እንደገና ይግቡ።");
             localStorage.clear(); // ያልተሟላ መረጃ ካለ ሁሉንም ያጥፋ
             window.location.href = 'login.html';

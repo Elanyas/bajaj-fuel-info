@@ -211,11 +211,11 @@
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             const loggedInUserName = localStorage.getItem('loggedInUserName');
             const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
-            const loggedInUserLicensePlate = localStorage.getItem('loggedInUserLicensePlate');
+            const loggedInUserPassword = localStorage.getItem('loggedInUserPassword');
             const loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate'); // ISO string format
 
             // Check if user is logged in and has all required info
-            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserLicensePlate) {
+            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserPassword) {
                 alert("ይህንን ገጽ ለመጠቀም መግባት አለብዎት።");
                 localStorage.clear(); 
                 window.location.href = 'login.html'; 
@@ -233,7 +233,7 @@
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('loggedInUserName');
                 localStorage.removeItem('loggedInUserPhone');
-                localStorage.removeItem('loggedInUserLicensePlate');
+                localStorage.removeItem('loggedInUserPassword');
                 localStorage.removeItem('loggedInUserLastPaymentDate');
                 window.location.href = 'login.html'; 
                 return;
@@ -245,7 +245,7 @@
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('loggedInUserName');
                     localStorage.removeItem('loggedInUserPhone');
-                    localStorage.removeItem('loggedInUserLicensePlate');
+                    localStorage.removeItem('loggedInUserPassword');
                     localStorage.removeItem('loggedInUserLastPaymentDate');
                     alert("በተሳካ ሁኔታ ወጥተዋል!");
                     window.location.href = "login.html"; 
