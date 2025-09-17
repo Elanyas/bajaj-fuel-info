@@ -1217,7 +1217,7 @@ body {
 }
 
 .ad-marquee-text::after {
-    content: " ✨ አዲስ ባጃጅ ሞዴሎች በቅርቡ ይመጣሉ!     💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ?       💰 የነዳጅ ቅናሽ መረጃ በቅርቡ ይፋ ይሆናል!       🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ!    ";
+    content: " እርስዎ የሚያስገቡት ትክክለኛ መረጃ ለሌሎች ሹፌሮች ጊዜና ገንዘብ ይቆጥባል!      💡 ለትራንስፖርት አገልግሎት ባጃጅ ይፈልጋሉ?       💡 መረጃ በማስገባት ለባጃጅ ማህበረሰብ የበኩሎትን ያበርክቱ!       🛠️ አዲስ የጥገና ምክሮችን ይመልከቱ!    ";
     display: inline-block;
     white-space: nowrap;
     padding-left: 60px; /* በዋናው እና በተደጋገመው ጽሁፍ መካከል ክፍተት */
@@ -1976,13 +1976,16 @@ details[open] summary::after {
 }
 
 /* የፍለጋ መስኩ እና ማጣሪያዎች ክፍል */
+
+/* ለሞባይል እና ለሁሉም ስክሪኖች የሚሆን መሰረታዊ ስታይል */
 .search-filter-section {
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* ለትንሽ ስክሪን ርቀቱን ትንሽ ቀንሰናል */
+    padding: 0 15px; /* ከስክሪኑ ጠርዝ ርቀት ለመፍጠር */
     text-align: center;
 }
 
 #searchInput {
-    width: 80%;
+    width: 100%; /* በሞባይል ስክሪን ሙሉውን ስፋት እንዲሸፍን */
     max-width: 500px;
     padding: 12px 20px;
     border: 1px solid #444;
@@ -1992,17 +1995,30 @@ details[open] summary::after {
     font-size: 1.1em;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
+    box-sizing: border-box; /* padding እና border በ width ውስጥ እንዲካተቱ */
 }
 
 #searchInput::placeholder {
     color: #aaa;
-    opacity: 0.8; /* ትንሽ ግልጽ እንዲሆን */
+    opacity: 0.8;
 }
 
 #searchInput:focus {
     border-color: #00bcd4;
     box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.4), inset 0 2px 5px rgba(0, 0, 0, 0.5);
     outline: none;
+}
+
+
+/* ለትላልቅ ስክሪኖች (ለምሳሌ ከ 768px በላይ) የሚሆን ማስተካከያ */
+@media (min-width: 768px) {
+    .search-filter-section {
+        margin-bottom: 30px; /* በትልቅ ስክሪን ላይ ርቀቱን ጨምረናል */
+    }
+
+    #searchInput {
+        width: 80%; /* በትልቅ ስክሪን ላይ ስፋቱን ወደ 80% መለስነው */
+    }
 }
 
 
@@ -2528,4 +2544,4 @@ details[open] summary::after {
     text-align: center;
 }
 
-
+:root { --primary-color: #0d0d0d; --accent-color: #00bcd4; --text-color: #e0e0e0; --link-hover-color: #ffffff; } body { font-family: 'Noto Sans Ethiopic', sans-serif; background-color: var(--primary-color); color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; } .main-header { background-color: rgba(18, 18, 18, 0.95); padding: 10px 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); position: relative; z-index: 1000; } .menu-btn { font-size: 24px; cursor: pointer; background-color: transparent; color: var(--text-color); padding: 15px 20px; border: none; display: block; } .dropdown-content { background-color: rgba(18, 18, 18, 0.95); overflow: hidden; max-height: 0; /* መጀመሪያ ላይ እንዲደበቅ */ transition: max-height 0.5s ease-in-out; box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5); } .dropdown-content.open { max-height: 500px; /* ሲከፈት እንዲታይ */ } .dropdown-content a { color: var(--text-color); padding: 12px 16px; text-decoration: none; display: block; font-size: 16px; transition: background-color 0.3s ease; } .dropdown-content a:hover { background-color: rgba(255, 255, 255, 0.1); } /* ለላፕቶፕ እና ለትላልቅ ስክሪኖች */ @media (min-width: 768px) { .main-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 40px; } .menu-btn { display: none; /* ቁልፉን ይደብቃል */ } .dropdown-content { display: flex; /* ሜኑውን ጎን ለጎን ያደርጋል */ max-height: none; overflow: visible; box-shadow: none; background-color: transparent; padding: 0; } .dropdown-content a { padding: 10px 15px; } }

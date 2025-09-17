@@ -88,18 +88,11 @@
 </head>
 <body>
     <header class="main-header">
-        <h1><span class="accent-text">የባጃጅ ነዳጅ</span> መረጃ</h1>
+      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a> <a href="stations_fuel_data.html">የተረጋገጠ የማደያዎች መረጃ</a> 
+      <a href="news.html">ዜናዎች</a> <a href="sales.html">መሸጫ</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="community_data.html">ልውውጥ</a> <a href="fuel_stations.html">የተጠቃሚዎች የማደያ መረጃ</a> </nav> </div>
+        <h1><span class="accent-text">የነዳጅ ማደያ </span>ማስመዝገቢያ</h1>
         <p>የነዳጅ ማደያ አስመዝግብ</p>
-        <nav class="sub-nav">
-            <a href="data.html">ዋና ገጽ</a>
-            <a href="news.html">ዜናዎች</a>
-            <a href="sales.html">መሸጫ</a>
-            <a href="maintenance.html">እንክብካቤ</a>
-            <a href="fuel_station_data_entry.html">መረጃ ማስገቢያ</a> 
-            <a href="community_data.html">ልውውጥ</a>
-            <a href="fuel_stations.html">በተጠቃሚ የተረጋገጠ የማደያ መረጃ</a>
-            <a href="stations_fuel_data.html">የማጀያ የነዳጅ መረጃ</a>
-            </nav>
+        
     </header>
 
     <main class="container">
@@ -231,5 +224,6 @@
             element.style.display = 'block';
         }
     </script>
+    <script src="main.js"></script>
 </body>
 </html>

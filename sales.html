@@ -14,12 +14,77 @@
     <title>ባጃጅ መረጃ - መሸጫ</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ለትላልቅ ስክሪኖች አዲስ ስታይል */
+        @media (min-width: 768px) {
+            .sales-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                gap: 20px;
+                padding: 20px;
+                max-width: 1200px;
+                margin: auto;
+            }
+
+            .bajaj-card {
+                display: flex;
+                flex-direction: row;
+                background-color: #1e1e1e;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+            }
+
+            .bajaj-card .image-gallery {
+                width: 50%;
+                flex-shrink: 0;
+            }
+            
+            .bajaj-card .image-gallery img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .bajaj-details {
+                padding: 20px;
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            
+            /* የማስታወቂያ ባነር አቀማመጥ */
+            .banner-ad {
+                grid-column: 1 / -1; /* ባነሩ ሁሉንም ዓምዶች እንዲይዝ */
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 20px;
+                padding: 20px;
+                background-color: #2a2a2a;
+                border-radius: 8px;
+            }
+            
+            .banner-ad .banner-image {
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+            
+            .banner-ad .banner-text {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
+      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a> <a href="stations_fuel_data.html">የተረጋገጠ የማደያዎች መረጃ</a> <a href="news.html">ዜናዎች</a> <a href="sales.html">መሸጫ</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="community_data.html">ልውውጥ</a> <a href="fuel_stations.html">የተጠቃሚዎች የማደያ መረጃ</a> </nav> </div>
       <div class="ad-marquee-container">
         <p class="ad-marquee-text">
-             ✨  እስከ ሐምሌ 9 የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
+             ✨  የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
             💡 ይህንን እድል ለሌሎች ሹፌር ጓደኞችዎ አሳዎቀዋል? &nbsp; &nbsp; &nbsp; &nbsp;
             💰 ይህንን ሰፊ የመገናኛ መድረክ እና የመረጃ ምንጭ ለሌሎች ጓደኞቾም ያስተዋውቁ! &nbsp; &nbsp; &nbsp; &nbsp;
             🛠️ የአገልግሎታችን ተጠቃሚ ስለሆኑ እናመሰግናለን! &nbsp; &nbsp; &nbsp; &nbsp;
@@ -27,15 +92,7 @@
       </div>
         <h1><span class="accent-text">የባጃጅ</span> መሸጫ</h1>
         <p>ጥራት ያላቸው ያገለገሉ ባጃጆችን በተመጣጣኝ ዋጋ ያግኙ!</p>
-        <nav class="sub-nav">
-            <a href="data.html">ዋናው ገጽ</a>
-            <a href="news.html">ዜናዎች</a>
-            <a href="maintenance.html">እንክብካቤ</a>
-            <a href="community_data.html">ልውውጥ</a>
-            <a href="data_entry.html">መረጃ ማስገቢያ</a>
-            <a href="fuel_stations.html">በተጠቃሚ የተረጋገጠ የማደያ መረጃ</a>
-            <a href="stations_fuel_data.html">የማጀያ የነዳጅ መረጃ</a>
-        </nav>
+        
     </header>
 
     <main class="container sales-container">
@@ -80,7 +137,7 @@
                     <p class="seller-contact">ሻጭ: <strong>አቶ ሀምዲ(0905780479)</strong></p>
                     <a href="https://t.me/your_seller_telegram_link_2" target="_blank" class="telegram-link">በቴሌግራም ያግኙ</a>
                 </div>
-            </div>
+                </div>
             
              <div class="banner-ad professional-look">
             <img src="https://via.placeholder.com/400x300?text=Fuel+Info+Ad" alt="Ad Banner" class="banner-image">
@@ -218,5 +275,6 @@
             });
         });
     </script>
+    <script src="main.js"></script>
 </body>
 </html>
