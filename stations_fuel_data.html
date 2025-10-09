@@ -295,6 +295,49 @@
         let allFuelStations = [];
 
         document.addEventListener('DOMContentLoaded', fetchFuelStationData);
+        
+// ******************************************************************
+// 🚨 አዲስ የተጨመረ ኮድ፡ Time Ago ተግባር 🚨
+// ******************************************************************
+
+// ይህ ተግባር በDate object ከተሰጠው ጊዜ ጀምሮ ያለፈውን ጊዜ ያሰላል
+function timeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    
+    // በሰከንድ ውስጥ ያሉ የጊዜ ክፍተቶች
+    let interval = seconds / 31536000; // አመት (Year)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ዓመት" : "ዓመታት") + " በፊት";
+    }
+    interval = seconds / 2592000; // ወር (Month)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ወር" : "ወራት") + " በፊት";
+    }
+    interval = seconds / 86400; // ቀን (Day)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ቀን" : "ቀናት") + " በፊት";
+    }
+    interval = seconds / 3600; // ሰዓት (Hour)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ሰዓት" : "ሰዓታት") + " በፊት";
+    }
+    interval = seconds / 60; // ደቂቃ (Minute)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ደቂቃ" : "ደቂቃዎች") + " በፊት";
+    }
+    
+    // ከ 60 ሰከንድ በታች ከሆነ
+    return "ከጥቂት ሰከንዶች በፊት";
+}
+
+// ******************************************************************
+// 🚨 አዲስ የተጨመረ ኮድ ማብቂያ 🚨
+// ******************************************************************
 
         async function fetchFuelStationData() {
             loadingMessage.style.display = 'block';
@@ -336,13 +379,16 @@
             }
 
             stationsToDisplay.forEach((data) => {
+// ------------------------------------
+// 🚨 የመተኪያ ኮድ 🚨
+// ------------------------------------
                 let lastUpdated = 'አልታወቀም';
                 if (data.lastUpdated && data.lastUpdated.toDate) {
-                    lastUpdated = data.lastUpdated.toDate().toLocaleString('am-ET', {
-                        year: 'numeric', month: 'short', day: 'numeric',
-                        hour: '2-digit', minute: '2-digit'
-                    });
+                    // አዲስ የፈጠርነውን timeAgo ተግባር በመጠቀም
+                    const dateObject = data.lastUpdated.toDate();
+                    lastUpdated = timeAgo(dateObject); 
                 }
+// ------------------------------------
 
                 const cardHtml = `
                     <div class="fuel-station-card">

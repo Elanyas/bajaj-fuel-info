@@ -195,6 +195,50 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        
+
+// ******************************************************************
+// ✅ አዲስ የሚጨመረው ኮድ፡ timeAgo ተግባር
+// ******************************************************************
+
+// ይህ ተግባር በDate object ከተሰጠው ጊዜ ጀምሮ ያለፈውን ጊዜ ያሰላል
+function timeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    
+    // በሰከንድ ውስጥ ያሉ የጊዜ ክፍተቶች
+    let interval = seconds / 31536000; // አመት (Year)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ዓመት" : "ዓመታት") + " በፊት";
+    }
+    interval = seconds / 2592000; // ወር (Month)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ወር" : "ወራት") + " በፊት";
+    }
+    interval = seconds / 86400; // ቀን (Day)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ቀን" : "ቀናት") + " በፊት";
+    }
+    interval = seconds / 3600; // ሰዓት (Hour)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ሰዓት" : "ሰዓታት") + " በፊት";
+    }
+    interval = seconds / 60; // ደቂቃ (Minute)
+    if (interval > 1) {
+        const value = Math.floor(interval);
+        return value + " " + (value === 1 ? "ደቂቃ" : "ደቂቃዎች") + " በፊት";
+    }
+    
+    // ከ 60 ሰከንድ በታች ከሆነ
+    return "ከጥቂት ሰከንዶች በፊት";
+}
+
+// ******************************************************************
+// ✅ አዲስ የሚጨመረው ኮድ ማብቂያ
+// ******************************************************************
 
         document.addEventListener('DOMContentLoaded', function() {
             const logoutButton = document.getElementById('logoutButton');
@@ -271,6 +315,7 @@
                         const displayAuthorName = post.authorName || 'ያልታወቀ'; // authorName ተጠቀም
                         // የስልክ ቁጥሩን ከማሳያ ላይ አስወግድ
                         // const displayAuthorPhone = post.author ? ` (${post.author})` : ''; 
+                       const postedTime = post.timestamp ? timeAgo(post.timestamp.toDate()) : 'ያልታወቀ';
 
                         const postCard = document.createElement('div');
                         postCard.className = 'community-post-card';
@@ -278,7 +323,7 @@
                             <h3>${post.title}</h3>
                             <p><strong>የለጠፈው:</strong> ${displayAuthorName}</p>
                             <p class="post-content">${post.content}</p>
-                            <p><strong>የተለጠፈበት ቀን:</strong> ${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString('am-ET') : 'ያልታወቀ'}</p>
+                           <p><strong>የተለጠፈበት ቀን:</strong> ${postedTime}</p>
                             
                             <div class="vote-controls">
                                 <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${postId}">👍 <span class="like-count">${likes.length}</span></button>
@@ -450,14 +495,14 @@
                     const displayAuthorName = post.authorName || 'ያልታወቀ';
                     // የስልክ ቁጥሩን ከማሳያ ላይ አስወግድ
                     // const displayAuthorPhone = post.author ? ` (${post.author})` : '';
-
+                    const postedTime = post.timestamp ? timeAgo(post.timestamp.toDate()) : 'ያልታወቀ';
                     const postCard = document.createElement('div');
                     postCard.className = 'community-post-card';
                     postCard.innerHTML = `
                         <h3>${post.title}</h3>
                         <p><strong>የለጠፈው:</strong> ${displayAuthorName}</p>
                         <p class="post-content">${post.content}</p>
-                        <p><strong>የተለጠፈበት ቀን:</strong> ${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString('am-ET') : 'ያልታወቀ'}</p>
+                        <p><strong>የተለጠፈበት ቀን:</strong> ${postedTime}</p>
                         
                         <div class="vote-controls">
                             <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${postId}">👍 <span class="like-count">${likes.length}</span></button>
