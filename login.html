@@ -162,15 +162,16 @@
         showErrorMessage("እየገቡ ነው... እባክዎ ይጠብቁ።");
 
         try {
-            const userDocId = `${phoneNumber}-${password.toUpperCase()}`;
+            // ✅ ለውጥ 1: የዶክመንት መለያ (Document ID) ማስተካከል - ስልክ ቁጥሩን ብቻ መጠቀም
+            const userDocId = phoneNumber; 
             
             const userDocRef = doc(db, "users", userDocId);
             const userSnapshot = await getDoc(userDocRef);
 
             if (!userSnapshot.exists()) {
                 showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም ወይም አልተመዘገቡም።");
-                loginAttemptCount++; // Increment attempt count
-                if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                loginAttemptCount++; 
+                if (loginAttemptCount >= 1) { 
                     forgotPasswordLinkContainer.style.display = 'block';
                 }
                 loginButton.disabled = false;
@@ -178,20 +179,23 @@
             }
 
             const userData = userSnapshot.data();
-            if (!userData.registered_status) {
+            
+            // ✅ ለውጥ 2: የሁኔታ መለያ (Status Field) ማስተካከል - 'is_active' የሚለውን መጠቀም
+            if (!userData.is_active) { 
                 showErrorMessage("ለመግባት አልተፈቀደልዎትም። እባክዎ የአድሚን ማረጋገጫ ይጠብቁ።");
-                loginAttemptCount++; // Increment attempt count
-                if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                loginAttemptCount++; 
+                if (loginAttemptCount >= 1) { 
                     forgotPasswordLinkContainer.style.display = 'block';
                 }
                 loginButton.disabled = false;
                 return;
             }
 
+            // ✅ ለውጥ 3: የይለፍ ቃል ንጽጽር - Plain Text እና UpperCase መሆኑን ማረጋገጥ
             if (userData.password !== password.toUpperCase()) {
                  showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም።");
-                 loginAttemptCount++; // Increment attempt count
-                 if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                 loginAttemptCount++; 
+                 if (loginAttemptCount >= 1) { 
                     forgotPasswordLinkContainer.style.display = 'block';
                  }
                  loginButton.disabled = false;
@@ -202,15 +206,17 @@
             const FREE_TRIAL_DURATION_DAYS = 15; 
             const PAID_SUBSCRIPTION_DURATION_DAYS = 30; 
 
-            const createdDate = userData.created_at ? new Date(userData.created_at.toDate()) : null; 
+            // ✅ ለውጥ 4: 'created_at'ን ወደ ትክክለኛው የፋየርቤዝ መስክ 'registered_at' መቀየር
+            const registeredDate = userData.registered_at ? new Date(userData.registered_at.toDate()) : null; 
+            
             const lastPaymentDate = userData.last_payment_date ? new Date(userData.last_payment_date.toDate()) : null; 
 
             const today = new Date();
             let isAccessGranted = false;
             let errorMessage = "";
 
-            if (createdDate && !lastPaymentDate) {
-                const freeTrialExpirationDate = new Date(createdDate);
+            if (registeredDate && !lastPaymentDate) {
+                const freeTrialExpirationDate = new Date(registeredDate);
                 freeTrialExpirationDate.setDate(freeTrialExpirationDate.getDate() + FREE_TRIAL_DURATION_DAYS);
                 
                 if (today <= freeTrialExpirationDate) {
@@ -233,14 +239,15 @@
 
             if (!isAccessGranted) {
                 showErrorMessage(errorMessage);
-                loginAttemptCount++; // Increment attempt count
-                if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+                loginAttemptCount++; 
+                if (loginAttemptCount >= 1) { 
                     forgotPasswordLinkContainer.style.display = 'block';
                 }
                 loginButton.disabled = false;
                 return;
             }
             
+            // On successful login
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('loggedInUserName', userData.full_name || 'ያልታወቀ ተጠቃሚ');
             localStorage.setItem('loggedInUserPhone', phoneNumber); 
@@ -260,8 +267,8 @@
         } catch (error) {
             console.error("Error during login:", error);
             showErrorMessage("በመግባት ላይ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
-            loginAttemptCount++; // Increment attempt count
-            if (loginAttemptCount >= 1) { // Show after 1st failed attempt
+            loginAttemptCount++; 
+            if (loginAttemptCount >= 1) { 
                 forgotPasswordLinkContainer.style.display = 'block';
             }
             loginButton.disabled = false;
