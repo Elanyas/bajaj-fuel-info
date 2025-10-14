@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የባጃጅ ገበያ - እቃዎች ይግዙ</title>
+    <link rel="stylesheet" href="buyers_style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <h1>ባጃጅ ሲስተም ገበያ</h1>
+    </header>
+
+    <div class="marketplace-container">
+        
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="የእቃውን ስም (ለምሳሌ፡ TVS) ይፈልጉ...">
+            <button onclick="filterItems()">ፈልግ</button>
+        </div>
+
+        <section class="category-selection-area" id="mainCategoryArea">
+            <h2 class="section-title" onclick="toggleSection('mainCategoryArea')">
+                <span>ዋና የእቃ ዘርፍ ይምረጡ</span>
+                <i class="fas fa-chevron-down chevron-icon"></i>
+            </h2>
+            <div class="main-categories-grid" id="mainCategoryGrid">
+                </div>
+        </section>
+
+        <section class="subcategory-selection-area collapsed" id="subCategoryArea">
+            <h4 class="section-title" onclick="toggleSection('subCategoryArea')">
+                <span>ንዑስ ዘርፍ ይምረጡ</span>
+                <i class="fas fa-chevron-down chevron-icon"></i>
+            </h4>
+            <div class="sub-categories-list" id="subCategoryList">
+                </div>
+        </section>
+
+        <section class="items-display-area">
+            <h2 class="section-title">የቅርብ ጊዜ ማስታወቂያዎች</h2>
+            <div class="items-grid" id="itemsGrid">
+                <p id="loadingMessage" style="text-align: center; color: var(--accent-color);">እቃዎቹ እየተጫኑ ነው...</p>
+                <p id="noListingsFound" style="display: none; text-align: center; color: var(--sub-text-color);">በተመረጠው ማጣሪያ ምንም እቃ አልተገኘም።</p>
+            </div>
+        </section>
+        
+        <div id="imageModal" class="modal">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+    </div>
+
+    <script type="module">
+        // የFirebase Config ከሌሎች ፋይሎች የተወሰደ
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        // ወሳኝ የFirebase ሞዱሎችን ማስመጣት
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs,
+            orderBy,
+            Timestamp // ✅ Timestamp ከ Firestore SDK በትክክል ማስመጣት
+        } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // ✅ Firebase አገልግሎቶችን ማስጀመር: app እና db
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const mainCategoryGrid = document.getElementById('mainCategoryGrid');
+        const subCategoryList = document.getElementById('subCategoryList');
+        const itemsGrid = document.getElementById('itemsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const noListingsFound = document.getElementById('noListingsFound');
+        
+        // የአሁኑ ሁኔታ መረጃ
+        let currentFilter = {
+            category: null,
+            subcategory: null,
+            searchTerm: null
+        };
+        
+        // የምድብ መዋቅር (ከ seller_dashboard.html የተወሰደ)
+        const categories = {
+            vehicle: ["ባጃጅ", "ሞተርሳይክል", "መኪና"],
+            spare_part: ["ጎማ", "ሞተር ክፍሎች", "ዘይት/ቅባት", "መብራት/ባትሪ", "ሌሎች መለዋወጫዎች"],
+            service: ["አጠቃላይ ጥገና", "ኤሌክትሪክ ስራ", "መበየድ/ቆርቆሮ ስራ"],
+            other: ["ሌላ እቃዎች", "ኪራይ/ሊዝ"]
+        };
+
+        // ----------------------------------------------------------------------
+        // 1. ምድቦችን ማሳየት (Render Categories)
+        // ----------------------------------------------------------------------
+        function renderMainCategories() {
+            mainCategoryGrid.innerHTML = '';
+            
+            // የዋና ምድቦች ቁልፎችን መፍጠር
+            Object.keys(categories).forEach(catKey => {
+                const categoryName = catKey.charAt(0).toUpperCase() + catKey.slice(1).replace('_', ' '); // ለጊዜው ቀላል ስም አሰጣጥ
+
+                const button = document.createElement('button');
+                button.className = 'category-btn';
+                button.textContent = categoryName;
+                button.setAttribute('data-category', catKey);
+                button.onclick = () => selectMainCategory(catKey);
+                mainCategoryGrid.appendChild(button);
+            });
+
+            // ሁሉንም የሚያሳይ ቁልፍ (Default)
+            const allButton = document.createElement('button');
+            allButton.className = 'category-btn active';
+            allButton.textContent = "ሁሉም";
+            allButton.onclick = () => selectMainCategory(null);
+            mainCategoryGrid.prepend(allButton);
+        }
+
+        function selectMainCategory(categoryKey) {
+            // ንዑስ ምድቦች የሚታዩበትን ሁኔታ ማዘጋጀት
+            const subCategoryArea = document.getElementById('subCategoryArea');
+            subCategoryList.innerHTML = ''; // ንዑስ ምድቦችን ማጽዳት
+            
+            // የActive class ማስተዳደር
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            if (categoryKey) {
+                document.querySelector(`.category-btn[data-category="${categoryKey}"]`).classList.add('active');
+            } else {
+                document.querySelector('.category-btn:first-child').classList.add('active');
+            }
+
+            currentFilter.category = categoryKey;
+            currentFilter.subcategory = null; // ዋና ምድብ ሲመረጥ ንዑስ ምድብን ማጽዳት
+
+            if (categoryKey && categories[categoryKey]) {
+                // ንዑስ ምድቦችን መሙላት
+                categories[categoryKey].forEach(sub => {
+                    const subBtn = document.createElement('button');
+                    subBtn.className = 'sub-category-btn';
+                    subBtn.textContent = sub;
+                    subBtn.setAttribute('data-subcategory', sub);
+                    subBtn.onclick = () => selectSubCategory(sub);
+                    subCategoryList.appendChild(subBtn);
+                });
+                subCategoryArea.classList.remove('collapsed');
+            } else {
+                // ዋና ምድብ ካልተመረጠ ወይም "ሁሉም" ከተመረጠ መደበቅ
+                subCategoryArea.classList.add('collapsed');
+            }
+
+            filterItems(); // በአዲሱ ማጣሪያ እቃዎችን ማሳየት
+        }
+
+        function selectSubCategory(subCategoryName) {
+            document.querySelectorAll('.sub-category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.sub-category-btn[data-subcategory="${subCategoryName}"]`).classList.add('active');
+
+            currentFilter.subcategory = subCategoryName;
+            filterItems(); // በአዲሱ ማጣሪያ እቃዎችን ማሳየት
+        }
+
+        // ----------------------------------------------------------------------
+        // 2. እቃዎችን ከፋየርቤዝ ማምጣት እና ማጣራት (Filter & Fetch)
+        // ----------------------------------------------------------------------
+        async function filterItems() {
+            itemsGrid.innerHTML = ''; // መጀመሪያ ማጽዳት
+            loadingMessage.style.display = 'block';
+            noListingsFound.style.display = 'none';
+
+            // የማጣሪያ ዋጋዎችን ከinput እና currentFilter ማግኘት
+            currentFilter.searchTerm = searchInput.value.toLowerCase().trim();
+           //const now = Timestamp.fromDate(new Date()); // የአሁኑን ጊዜ እንደ Firebase Timestamp መጠቀም
+
+            // የ Firestore Query መገንባት
+            let listingsQuery = query(
+                collection(db, "listings"),
+                where("is_active", "==", true), // ንቁ የሆኑትን ብቻ
+               // orderBy("posted_at", "desc") // የሚቀድመውን ቀድሞ ለማሳየት (ወይም 'posted_at' desc)
+               where("expires_at", ">", new Date()),
+              // where("expires_at", ">", now), // ጊዜው ያላለፈባቸውን ብቻ
+                
+            );
+            
+            // የዋና ምድብ ማጣሪያ መጨመር
+            if (currentFilter.category) {
+                listingsQuery = query(listingsQuery, where("mainCategory", "==", currentFilter.category));
+            }
+
+            // የንዑስ ምድብ ማጣሪያ መጨመር
+            if (currentFilter.subcategory) {
+                listingsQuery = query(listingsQuery, where("subCategory", "==", currentFilter.subcategory));
+            }
+            
+            try {
+                const querySnapshot = await getDocs(listingsQuery);
+                const allListings = [];
+                
+                querySnapshot.forEach((doc) => {
+                    allListings.push({...doc.data(), id: doc.id});
+                });
+
+                // የጽሁፍ ፍለጋ ማጣሪያ (በ Firestore በኩል ለማጣራት አስቸጋሪ ስለሆነ በClient Side እንፈጽማለን)
+                const finalFilteredList = allListings.filter(listing => {
+                    if (currentFilter.searchTerm) {
+                        return listing.itemTitle.toLowerCase().includes(currentFilter.searchTerm) ||
+                               listing.itemDescription.toLowerCase().includes(currentFilter.searchTerm);
+                    }
+                    return true;
+                });
+                
+                loadingMessage.style.display = 'none'; // Loading መልዕክትን መደበቅ
+                
+                if (finalFilteredList.length === 0) {
+                    noListingsFound.style.display = 'block';
+                } else {
+                    renderListings(finalFilteredList); // የተጣሩትን እቃዎች ማሳየት
+                }
+
+            } catch (error) {
+                console.error("Error fetching listings:", error);
+                loadingMessage.style.display = 'none';
+                itemsGrid.innerHTML = `<p class="error-message">ማስታወቂያዎችን በመጫን ላይ ያልተጠበቀ ችግር ተፈጥሯል።</p>`;
+            }
+        }
+        
+        // ----------------------------------------------------------------------
+        // 3. እቃዎችን በገጹ ላይ ማሳየት (Render Listings)
+        // ----------------------------------------------------------------------
+        function renderListings(listings) {
+            itemsGrid.innerHTML = ''; // ማጽዳት
+
+            listings.forEach(listing => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+
+                // ስልክ ቁጥሩን እና ቴሌግራምን ከሻጩ መረጃ እናገኛለን (ገዢው በቀጥታ እንዲያገኝ)
+                // እነዚህን መረጃዎች በlisting ስብስብ ውስጥ አስቀምጠናል (seller_phone)
+                const phone = listing.seller_phone || 'N/A';
+                const telegram = listing.seller_name || ''; // ቴሌግራም username በስም ሊያዝ ይችላል
+
+                card.innerHTML = `
+                    <div class="item-image-container" onclick="openModal('${listing.image_url}')">
+                        <img src="${listing.image_url}" alt="${listing.itemTitle}" class="item-image" onerror="this.onerror=null;this.src='images/default_fallback.jpg';" />
+                    </div>
+                    <div class="item-info">
+                        <h3 class="item-title">${listing.itemTitle}</h3>
+                        <p class="item-price">ETB ${listing.itemPrice ? listing.itemPrice.toLocaleString('en-US') : 'ያልተገለጸ'}</p>
+                        <p class="item-meta">
+                            ምድብ: ${listing.mainCategory} / ${listing.subCategory || 'አጠቃላይ'}
+                        </p>
+                        <div class="contact-buttons-group">
+                            <button class="contact-button call-btn" onclick="callSeller('${phone}')">
+                                <i class="fas fa-phone"></i> ስልክ
+                            </button>
+                            <button class="contact-button telegram-btn" onclick="contactTelegram('${telegram}', '${phone}')">
+                                <i class="fab fa-telegram-plane"></i> ቴሌግራም
+                            </button>
+                        </div>
+                    </div>
+                `;
+                itemsGrid.appendChild(card);
+            });
+        }
+        
+        // ----------------------------------------------------------------------
+        // 4. የተጠቃሚ በይነገጽ (UI) ተግባራት
+        // ----------------------------------------------------------------------
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('collapsed');
+        }
+        window.toggleSection = toggleSection; // በ HTML ላይ ስለተጠራ በ window ላይ መያዝ አለበት
+
+        function callSeller(phone) {
+            if (phone && phone !== 'N/A') {
+                window.location.href = `tel:${phone}`;
+            } else {
+                alert('የሻጭ ስልክ ቁጥር የለም።');
+            }
+        }
+        window.callSeller = callSeller;
+
+        function contactTelegram(sellerName, phone) {
+            // በቴሌግራም ቦት በኩል ለማገናኘት
+            if (sellerName) {
+                alert(`ሻጩን በቴሌግራም ስም: ${sellerName} ይፈልጉ።`);
+                // እንደአስፈላጊነቱ ወደ ቴሌግራም ዩአርኤል ሊቀየር ይችላል
+                // window.open(`https://t.me/${sellerName}`, '_blank');
+            } else if (phone && phone !== 'N/A') {
+                 alert(`ሻጩን በስልክ ቁጥር: ${phone} በቴሌግራም ይፈልጉ።`);
+            } else {
+                alert('የሻጭ መረጃ የለም።');
+            }
+        }
+        window.contactTelegram = contactTelegram;
+        
+        function openModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageUrl;
+            modal.style.display = "block";
+        }
+        window.openModal = openModal;
+        
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
+        window.closeModal = closeModal;
+
+        // ----------------------------------------------------------------------
+        // 5. ገጹ ሲጫን መጀመሪያ የሚሰሩ ተግባራት
+        // ----------------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMainCategories();
+            filterItems(); // ሁሉንም እቃዎች ከፋየርቤዝ መጀመሪያ ያመጣል
+            
+            // የፍለጋ አዝራርን ማስተናገድ
+            document.querySelector('.search-bar button').addEventListener('click', filterItems);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    filterItems();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

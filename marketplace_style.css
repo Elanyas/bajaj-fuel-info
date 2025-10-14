@@ -1,0 +1,520 @@
+/* marketplace_style.css - ሱፐር ፕሮፌሽናል ዲዛይን (ቢጫ ቀለም ተወግዷል) */
+
+
+:root {
+    --primary-color: #0d0d0d; /* ጥቁር ዳራ */
+    --secondary-color: #1a1a1a; /* ለዋና ፓነል (Dashboard Main Content) */
+    --card-background: #242424; /* ለካርዶች እና Sidebar */
+    --accent-color: #00bcd4; /* ዋናው የሲስተም ቀለም (Cyan/Turquoise) */
+    --text-color: #f0f0f0; /* ዋናው ጽሁፍ */
+    --sub-text-color: #b0b0b0; /* ለንዑስ ጽሁፎች */
+    --success-color: #4caf50; 
+    --danger-color: #f44336;
+    --info-color: #2196f3; 
+    --thin-border-color: #383838; 
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+body {
+    font-family: 'Noto Sans Ethiopic', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    /* የጎን እንቅስቃሴ እንዳይኖር ማስተካከል */
+    overflow-x: hidden; 
+}
+
+/* ========================================= */
+/* 1. ዋና ርዕስ (Header) - አዲስ ዲዛይን */
+/* ========================================= */
+.main-header {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    padding: 15px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 15px;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: 10px;
+    width: 100%; /* ስፋቱን መቆጣጠር */
+    box-sizing: border-box; /* padding በስፋቱ ውስጥ እንዲገባ */
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    padding: 5px 0;
+}
+
+
+/* አዲስ የፕሮፋይል/ኮይን ፓነል */
+.header-coin-display-v2 {
+    background-color: #333;
+    padding: 8px 15px;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* የተጨመረ ማስተካከያ: በትንሽ ስክሪን እንዳይወጣ */
+    min-width: 0; 
+    flex-shrink: 1; 
+}
+
+.user-info-panel {
+    text-align: left;
+    line-height: 1.2;
+}
+.user-name-text {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+}
+.user-phone-text {
+    font-size: 0.75em;
+    color: var(--sub-text-color);
+    margin: 0;
+}
+
+.separator-line {
+    width: 2px;
+    height: 40px;
+    background-color: var(--thin-border-color);
+    border-radius: 1px;
+}
+
+.coin-display-panel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.coin-icon {
+    width: 49px; 
+    height: 49px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px var(--primary-color)); 
+}
+
+.coin-balance-area {
+    text-align: right;
+    line-height: 1;
+}
+.balance-label-v2 {
+    font-size: 0.9em;
+    color: var(--sub-text-color);
+    margin: 0 0 2px 0;
+    text-transform: uppercase;
+}
+.balance-display-v2 {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+}
+.balance-amount-v2 {
+    font-size: 1.2em; 
+    font-weight: bold;
+    color: var(--text-color); 
+    margin: 0;
+}
+.balance-unit-v2 {
+    font-size: 0.6em;
+    font-weight: 500;
+    color: var(--sub-text-color);
+    margin: 0 0 1px 0;
+}
+
+.coin-add-btn {
+    background-color: var(--success-color);
+    color: #000;
+    padding: 8px 10px; 
+    font-size: 0.9em;
+    width: 20px; 
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30%; /* ክብ እንዲሆን */
+    margin-left: 5px;
+}
+
+.dashboard-container {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    /* የጎን እንቅስቃሴ እንዳይኖር ማስተካከል */
+    overflow-x: hidden; 
+    box-sizing: border-box; 
+}
+
+
+/* ========================================= */
+/* 3. ዋና ይዘት እና አዲስ አሰሳ በተኖች (New Nav Buttons V2) */
+/* ========================================= */
+.dashboard-main-content {
+    flex-grow: 1;
+    background-color: var(--secondary-color);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-light);
+    width: 100%;
+    box-sizing: border-box; /* padding በስፋቱ ውስጥ እንዲገባ */
+}
+
+/* አዲስ አሰሳ በተኖች - በጥቁር (Black) እና በጎን ለጎን */
+.main-nav-buttons-v2 {
+    display: flex;
+    gap: 10px; /* ክፍተቱን ቀንሻለሁ */
+    margin-bottom: 30px;
+    flex-wrap: nowrap; /* እንዳይሰበር */
+    justify-content: space-between; 
+}
+
+.nav-btn-v2 {
+    flex-grow: 1;
+    flex-basis: 0; /* እኩል ቦታ እንዲካፈሉ */
+    min-width: 0; /* በትናንሽ ስክሪኖች ላይ እንዳይሰፋ */
+    background-color: #000000; /* ጥቁር ዳራ */
+    color: var(--text-color);
+    padding: 12px 10px;
+    border: 3px solid #000000; /* መነሻ ላይ ጥቁር ፍሬም */
+    border-radius: 6px;
+    transition: all 0.3s;
+    font-size: 1em;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap; /* ጽሁፉ እንዳይሰበር */
+}
+
+.nav-btn-v2:hover {
+    border-color: var(--sub-text-color);
+}
+.nav-btn-v2.active {
+    border-color: var(--accent-color); /* ሲነካ ሲያን ፍሬም */
+    background-color: #0d0d0d; /* ትንሽ የጨለመ ጥቁር */
+    color: var(--text-color);
+}
+.nav-btn-v2 i {
+    margin-right: 5px; /* ከ 8px ወደ 5px ቀንሷል */
+    color: var(--accent-color);
+}
+.nav-btn-v2.primary-btn-v2 {
+    background-color: var(--success-color); 
+    color: #000;
+    border-color: var(--success-color);
+}
+.nav-btn-v2.primary-btn-v2 i {
+    color: #000; 
+}
+.nav-btn-v2.primary-btn-v2:hover {
+    background-color: #38763a;
+    border-color: #38763a;
+}
+
+.dashboard-section h2 {
+    color: var(--accent-color);
+    border-bottom: 1px solid var(--thin-border-color);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+    font-size: 1.6em;
+    /* የ Fade-in/out ሽግግር እንዲኖረው */
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* ቅጽ */
+#newListingForm {
+    display: none; 
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    border-top: 3px solid var(--success-color);
+}
+#newListingForm.active {
+    display: flex;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+.form-row .form-group {
+    flex: 1;
+    min-width: 45%; 
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: var(--sub-text-color);
+    font-size: 0.9em;
+    display: block; 
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #333;
+    color: var(--text-color);
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 0.9em;
+    transition: border-color 0.3s;
+}
+.form-group textarea { min-height: 90px; }
+
+
+/* የምስል ቅድመ እይታ */
+.image-upload-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    width: 100%;
+}
+
+.image-preview-container {
+    width: 120px;
+    height: 120px;
+    border: 2px dashed var(--sub-text-color); 
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-top: 10px;
+}
+#imagePreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+.image-placeholder {
+    color: var(--sub-text-color);
+    font-size: 0.8em;
+    text-align: center;
+    padding: 5px;
+}
+
+.listing-fee-info {
+    width: 100%;
+    color: var(--text-color); 
+    font-weight: 500;
+    background-color: #1e3a24; 
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1em;
+    text-align: center;
+    border: 1px solid var(--success-color);
+}
+
+.action-button {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    font-size: 0.9em;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1em;
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+}
+.submit-btn:hover {
+    background-color: #008fa0;
+}
+
+
+/* ========================================= */
+/* 4. የእቃ ካርዶች (Active Listings) - ቁመት በ20% ቀንሷል */
+/* ========================================= */
+.listings-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.listing-card {
+    background-color: var(--card-background);
+    padding: 12px; 
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    border-left: 4px solid var(--sub-text-color); 
+    
+    display: flex;
+    gap: 12px; 
+    align-items: flex-start;
+    transition: border-color 0.3s;
+}
+
+.listing-card:hover {
+    border-left-color: var(--accent-color);
+}
+
+.listing-image-container-v2 {
+    width: 80px; 
+    height: 80px; 
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+.listing-image-container-v2 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.listing-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-title {
+    color: var(--text-color);
+    margin: 0 0 4px 0;
+    font-size: 1em; 
+    line-height: 1.3;
+}
+
+.card-meta {
+    font-size: 0.8em; 
+    color: var(--sub-text-color);
+    margin-bottom: 4px;
+}
+
+.days-left-info {
+    font-weight: 500;
+    color: var(--sub-text-color); 
+    font-size: 0.8em;
+    padding-top: 5px;
+    border-top: 1px dashed #333;
+}
+
+.card-actions {
+    margin-top: 8px; 
+    border-top: 1px solid #333;
+    padding-top: 8px;
+    display: flex;
+    gap: 6px; 
+}
+
+.card-actions button {
+    flex-grow: 1;
+    padding: 6px 4px; 
+    font-size: 0.75em; 
+    background-color: #000 !important; 
+    color: #ffffff !important; 
+    border-radius: 4px;
+    text-align: center;
+    white-space: nowrap; 
+}
+
+
+/* ========================================= */
+/* 5. ለስልኮች ማስተካከያ (Responsive) */
+/* ========================================= */
+@media (max-width: 800px) {
+    .dashboard-container {
+        flex-direction: column;
+        padding: 0 10px; /* ጠርዞችን ለትንሽ ክፍተት */
+        max-width: 100%; /* ስፋቱን መቆጣጠር */
+    }
+    
+    /* ዋና ርዕስ */
+    .main-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 10px; /* ከጫፍ ጫፍ ጋር መጣበቅ */
+    }
+    
+    /* የተስተካከለ: 100% ስፋት እንዲይዝ እና እንዲስተካከል */
+    .header-coin-display-v2 {
+        width: 90%;
+        margin-top: 10px;
+        justify-content: space-between;
+    }
+    .main-header h1 {
+        font-size: 1.4em;
+    }
+    
+    /* አዲስ አሰሳ በተኖች */
+    .main-nav-buttons-v2 {
+        gap: 5px;
+        flex-wrap: wrap; /* በትናንሽ ስክሪኖች እንዲሰበሩ አድርጌያለሁ */
+    }
+    .nav-btn-v2 {
+        flex-basis: calc(33.33% - 4px); /* እኩል ክፍፍል እንዲኖረው */
+        min-width: 0;
+        font-size: 0.8em; /* ጽሁፉ እንዲያንስ */
+        padding: 8px 5px;
+    }
+    .nav-btn-v2 i {
+        display: block; /* icon ከጽሁፉ በላይ እንዲሆን */
+        margin: 0 auto 3px auto;
+    }
+
+    
+    /* ቅጽ */
+    .dashboard-main-content {
+        padding: 15px; 
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    /* የእቃ ካርዶች */
+    .listing-card {
+        padding: 8px;
+        gap: 8px;
+    }
+    .listing-image-container-v2 {
+        width: 60px; 
+        height: 60px; 
+    }
+    .card-actions {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .card-actions button {
+        flex-basis: calc(50% - 4px);
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 450px) {
+    /* ለትንሽ ስልኮች: በተኖቹ እንዳይሰበሩ */
+    .nav-btn-v2 {
+        flex-basis: calc(100% / 3 - 4px); /* በሶስት እኩል ይከፈሉ */
+        padding: 8px 2px;
+        font-size: 0.7em;
+    }
+    .nav-btn-v2 i {
+        display: block; 
+        margin: 0 auto 2px auto;
+        font-size: 1.1em;
+    }
+}

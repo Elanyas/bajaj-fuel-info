@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የሻጭ ማዕከል | የባጃጅ ገበያ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="marketplace_style.css">
+</head>
+<body>
+    
+    <header class="main-header">
+        <h1><i class="fas fa-store"></i> የሻጭ ማዕከል</h1>
+        
+        <div class="header-coin-display-v2">
+            <div class="user-info-panel">
+                <p class="user-name-text" id="userNameDisplay">...</p>
+                <p class="user-phone-text" id="userPhoneDisplay">...</p>
+            </div>
+
+            <div class="separator-line"></div>
+            
+            <div class="coin-display-panel">
+                <img src="images/ela7.png" alt="BS" class="coin-icon">
+                <div class="coin-balance-area">
+                    <p class="balance-label-v2">BS Coin</p>
+                    <div class="balance-display-v2">
+                        <p class="balance-amount-v2" id="coinBalanceDisplay">0</p>
+                        <p class="balance-unit-v2">BS</p>
+                    </div>
+                </div>
+                <a href="https://t.me/elan_payment_bot" target="_blank" class="coin-add-btn"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <main class="dashboard-main-content">
+            
+            <div class="main-nav-buttons-v2">
+                <button class="nav-btn-v2 primary-btn-v2" id="postNewListingBtn">
+                    <i class="fas fa-plus-circle"></i> አዲስ ማስታወቂያ ይለጥፉ
+                </button>
+                <button class="nav-btn-v2 active" id="viewActiveListingsBtn">
+                    <i class="fas fa-list-check"></i> ንቁ ማስታወቂያዎች
+                </button>
+                <button class="nav-btn-v2" id="viewExpiredListingsBtn">
+                    <i class="fas fa-history"></i> ያበቁ ማስታወቂያዎች
+                </button>
+            </div>
+
+            <section class="dashboard-section" id="newListingSection">
+                <h2><i class="fas fa-bullhorn"></i> አዲስ ማስታወቂያ መለጠፍ</h2>
+                
+                <form id="newListingForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemTitle">የእቃው ርዕስ (ለምሳሌ: አዲስ የፑልሳር ሞተር)</label>
+                            <input type="text" id="itemTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="itemPrice">ዋጋ በብር (ETB)</label>
+                            <input type="number" id="itemPrice" min="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mainCategory">ዋና ምድብ</label>
+                            <select id="mainCategory" required>
+                                <option value="">ምድብ ይምረጡ</option>
+                                <option value="vehicle">ባጃጅ / ሞተርሳይክል</option>
+                                <option value="spare_part">መለዋወጫ</option>
+                                <option value="service">አገልግሎት (ጥገና, ቅባት)</option>
+                                <option value="other">ሌላ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="subCategory">ንዑስ ምድብ</label>
+                            <select id="subCategory" required disabled>
+                                <option value="">መጀመሪያ ዋና ምድብ ይምረጡ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="daysDuration">ለስንት ቀን ይለጠፍ? (የኮይን መጠን ይወስናል)</label>
+                            <select id="daysDuration" required>
+                                <option value="7">7 ቀናት</option>
+                                <option value="14">14 ቀናት</option>
+                                <option value="30">30 ቀናት</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                             <div class="listing-fee-info">
+                                ለመለጠፍ የሚያስፈልገው ኮይን: <span id="coinCostDisplay">5</span> BS Coins
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1 1 100%;">
+                            <label for="itemDescription">የእቃው ዝርዝር መግለጫ (ሁኔታ፣ አካባቢ፣ ሞዴል)</label>
+                            <textarea id="itemDescription" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row" style="align-items: center;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="itemImage">የእቃውን ምስል ይምረጡ</label>
+                            <input type="file" id="itemImage" accept="image/*" required>
+                        </div>
+                        <div class="form-group" style="flex: 0 0 150px;">
+                            <div class="image-preview-container">
+                                <img id="imagePreview" alt="ምስል ቅድመ እይታ">
+                                <span class="image-placeholder" id="imagePlaceholder">ምስል የለም</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="action-button submit-btn"><i class="fas fa-upload"></i> ማስታወቂያውን ይለጥፉ</button>
+                    <p id="listingMessage" class="error-message" style="margin-top: 10px;"></p>
+                </form>
+            </section>
+
+            <section class="dashboard-section active" id="activeListingsSection">
+                <h2><i class="fas fa-boxes"></i> ንቁ ማስታወቂያዎቼ</h2>
+                <div class="listings-grid" id="activeListingsGrid">
+                    <p id="noActiveListings">ገና ምንም ንቁ ማስታወቂያ አልለጠፉም።</p>
+                </div>
+            </section>
+
+            <section class="dashboard-section" id="expiredListingsSection" style="display: none;">
+                <h2><i class="fas fa-archive"></i> ያበቁ ማስታወቂያዎቼ</h2>
+                <div class="listings-grid" id="expiredListingsGrid">
+                    <p>ያበቁ ማስታወቂያዎች እዚህ ይታያሉ።</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module">
+        // የFirebase Config ከሎጊን ገጽ የተወሰደ
+const firebaseConfig = {
+    apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+    authDomain: "elanyas-info.firebaseapp.com",
+    projectId: "elanyas-info",
+    storageBucket: "elanyas-info.firebasestorage.app",
+    messagingSenderId: "769306910360",
+    appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+    measurementId: "G-2XX2B3RSGP"
+};
+
+// ወሳኝ የFirebase ሞዱሎችን ማስመጣት
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    query, 
+    where, 
+    getDocs, 
+    doc, 
+    updateDoc,
+    deleteDoc, // ✅ የተጨመረው: ሰነድን ለመሰረዝ
+    serverTimestamp,
+    getDoc 
+} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+// Firebase App እና Firestore Database ማስጀመር
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app); 
+
+// አዲሱ የCloudinary Config 
+const CLOUDINARY_CLOUD_NAME = "dddyppnhp"; 
+const CLOUDINARY_UPLOAD_PRESET = "bajaj_upload_preset"; 
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+// DOM Elements
+const coinBalanceDisplay = document.getElementById('coinBalanceDisplay');
+const userNameDisplay = document.getElementById('userNameDisplay');
+const userPhoneDisplay = document.getElementById('userPhoneDisplay');
+const newListingForm = document.getElementById('newListingForm');
+const mainCategorySelect = document.getElementById('mainCategory');
+const subCategorySelect = document.getElementById('subCategory');
+const daysDurationSelect = document.getElementById('daysDuration');
+const coinCostDisplay = document.getElementById('coinCostDisplay');
+const itemImageInput = document.getElementById('itemImage');
+const imagePreview = document.getElementById('imagePreview');
+const imagePlaceholder = document.getElementById('imagePlaceholder');
+const listingMessage = document.getElementById('listingMessage');
+const activeListingsGrid = document.getElementById('activeListingsGrid');
+const noActiveListings = document.getElementById('noActiveListings');
+
+// ወሳኝ የLocal Storage Variables
+let loggedInUserName;
+let loggedInUserPhone;
+let loggedInUserPassword;
+let sellerDocumentId; 
+
+// ----------------------------------------------------------------------
+// 1. የደህንነት እና የሎጊን ማረጋገጫ (Security Check)
+// ----------------------------------------------------------------------
+function checkUserAuthentication() {
+    loggedInUserName = localStorage.getItem('loggedInUserName');
+    loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+    loggedInUserPassword = localStorage.getItem('loggedInUserPassword'); 
+
+    if (!loggedInUserName || !loggedInUserPhone) {
+        localStorage.setItem('errorMessageOnLoad', "እባክዎ ዳሽቦርዱን ለመጠቀም ይግቡ!");
+        window.location.href = "login.html"; 
+        return false;
+    }
+    
+    sellerDocumentId = loggedInUserPhone;
+    return true;
+}
+
+// ----------------------------------------------------------------------
+// 2. የተጠቃሚ መረጃዎችን መጫን (Load User Info)
+// ----------------------------------------------------------------------
+async function loadUserInfo() {
+    userNameDisplay.textContent = loggedInUserName;
+    userPhoneDisplay.textContent = loggedInUserPhone;
+
+    try {
+        const userDocRef = doc(db, "users", sellerDocumentId);
+        const userSnapshot = await getDoc(userDocRef); 
+
+        if (userSnapshot.exists() && userSnapshot.data().bs_coin_balance !== undefined) {
+            coinBalanceDisplay.textContent = userSnapshot.data().bs_coin_balance;
+        } else {
+            coinBalanceDisplay.textContent = '0';
+            console.warn("BS Coin balance not found in user document. Defaulting to 0.");
+        }
+    } catch (error) {
+        console.error("Error loading coin balance:", error);
+        coinBalanceDisplay.textContent = '??';
+    }
+}
+
+// ----------------------------------------------------------------------
+// 3. የማስታወቂያ ምድቦችን መሙላት (Category Logic)
+// ----------------------------------------------------------------------
+const categories = {
+    vehicle: ["ባጃጅ", "ሞተርሳይክል", "መኪና"],
+    spare_part: ["ጎማ", "ሞተር ክፍሎች", "ዘይት/ቅባት", "መብራት/ባትሪ", "ሌሎች መለዋወጫዎች"],
+    service: ["አጠቃላይ ጥገና", "ኤሌክትሪክ ስራ", "መበየድ/ቆርቆሮ ስራ"],
+    other: ["ሌላ እቃዎች", "ኪራይ/ሊዝ"]
+};
+
+function populateSubCategories() {
+    subCategorySelect.innerHTML = '<option value="">ንዑስ ምድብ ይምረጡ</option>';
+    const selectedCategory = mainCategorySelect.value;
+
+    if (selectedCategory && categories[selectedCategory]) {
+        categories[selectedCategory].forEach(sub => {
+            const option = document.createElement('option');
+            option.value = sub;
+            option.textContent = sub;
+            subCategorySelect.appendChild(option);
+        });
+        subCategorySelect.disabled = false;
+    } else {
+        subCategorySelect.disabled = true;
+    }
+}
+mainCategorySelect.addEventListener('change', populateSubCategories);
+
+// ----------------------------------------------------------------------
+// 4. የኮይን ዋጋ ስሌት (Coin Cost Calculation)
+// ----------------------------------------------------------------------
+const coinPrices = {
+    '7': 5,
+    '14': 8,
+    '30': 15 
+};
+
+function calculateCoinCost() {
+    const days = daysDurationSelect.value;
+    const cost = coinPrices[days] || 5; 
+    coinCostDisplay.textContent = cost;
+}
+
+daysDurationSelect.addEventListener('change', calculateCoinCost);
+
+// የምስል ቅድመ እይታ
+itemImageInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+            imagePlaceholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imagePreview.style.display = 'none';
+        imagePlaceholder.style.display = 'block';
+    }
+});
+
+// ----------------------------------------------------------------------
+// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing)
+// ----------------------------------------------------------------------
+async function postNewListing(event) {
+    event.preventDefault();
+    listingMessage.style.color = '#2196f3';
+    listingMessage.textContent = "ማስታወቂያው እየተለጠፈ ነው... እባክዎ ይጠብቁ።";
+
+    const coinCost = parseInt(coinCostDisplay.textContent);
+    const currentBalance = parseInt(coinBalanceDisplay.textContent);
+
+    if (currentBalance < coinCost) {
+        listingMessage.style.color = '#f44336';
+        listingMessage.textContent = `ቂንትሮስ የ BS Coin ባላንስ የለዎትም። ${coinCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ።`;
+        return;
+    }
+
+    const imageFile = itemImageInput.files[0];
+    if (!imageFile) {
+        listingMessage.style.color = '#f44336';
+        listingMessage.textContent = "እባክዎ የእቃውን ምስል ይምረጡ!";
+        return;
+    }
+
+    try {
+        // 1. ምስሉን ወደ Cloudinary መስቀል (Upload Image)
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', 'bajaj_listings'); 
+
+        const response = await fetch(CLOUDINARY_UPLOAD_URL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error("Cloudinary upload failed: " + response.statusText);
+        }
+
+        const data = await response.json();
+        const imageUrl = data.secure_url; 
+
+        // 2. ማስታወቂያውን ወደ Firestore ማስቀመጥ
+        const itemData = {
+            seller_id: sellerDocumentId,
+            seller_name: loggedInUserName,
+            seller_phone: loggedInUserPhone,
+            itemTitle: document.getElementById('itemTitle').value,
+            mainCategory: mainCategorySelect.value,
+            subCategory: subCategorySelect.value,
+            itemPrice: parseFloat(document.getElementById('itemPrice').value),
+            itemDescription: document.getElementById('itemDescription').value,
+            days_duration: parseInt(daysDurationSelect.value),
+            coin_cost: coinCost,
+            image_url: imageUrl, 
+            posted_at: serverTimestamp(), 
+            expires_at: new Date(Date.now() + parseInt(daysDurationSelect.value) * 24 * 60 * 60 * 1000), 
+            is_active: true,
+            is_featured: false 
+        };
+
+        await addDoc(collection(db, "listings"), itemData); 
+
+        // 3. የሻጩን የኮይን ባላንስ መቀነስ (Update)
+        const userDocRef = doc(db, "users", sellerDocumentId); 
+        const newBalance = currentBalance - coinCost;
+        await updateDoc(userDocRef, {
+            bs_coin_balance: newBalance
+        });
+
+        // ስኬታማ ከሆነ
+        listingMessage.style.color = '#4caf50';
+        listingMessage.textContent = "ማስታወቂያዎ በተሳካ ሁኔታ ተለጥፏል! የኮይን ሂሳብዎ ተቀንሷል።";
+        newListingForm.reset(); 
+        imagePreview.style.display = 'none';
+        imagePlaceholder.style.display = 'block';
+        loadUserInfo(); 
+        renderActiveListings(); 
+    } catch (error) {
+        console.error("Error posting listing or updating balance:", error);
+        listingMessage.style.color = '#f44336';
+        listingMessage.textContent = "ማስታወቂያ በመለጠፍ ላይ ያልተጠበቀ ችግር ተፈጥሯል: " + error.message;
+    }
+}
+
+newListingForm.addEventListener('submit', postNewListing);
+
+// ----------------------------------------------------------------------
+// 6.1. የካርድ ድርጊቶች ተግባራት (Card Action Functions) - ✅ አዲስ የተጨመሩ
+// ----------------------------------------------------------------------
+
+// ማስታወቂያውን ለማዘመን የሚያስፈልገው ተግባር (Edit)
+function handleEditListing(listingId) {
+    // TODO: ለምሳሌ የሞዳል (Modal) መስኮት በመክፈት የማስታወቂያውን መረጃ ይዘው ማሳየት ይችላሉ።
+    alert(`የማስታወቂያ መታወቂያ (ID): ${listingId} ለማዘመን (Edit) ተመርጧል!`);
+    console.log("Edit request for listing ID:", listingId);
+}
+
+// ማስታወቂያውን ለመክፈል/ለማደስ የሚያስፈልገው ተግባር (Pay/Renew)
+// ማስታወቂያውን ለመክፈል/ለማደስ የሚያስፈልገው ተግባር (Pay/Renew) - ✅ የኮይን ቅነሳ ታክሏል
+async function handleRepostListing(listingId) {
+    const renewDays = 7; // ለ 7 ቀን ማደስ
+    const renewCost = coinPrices['7']; // 5 ኮይን
+    
+    // 1. የኮይን ባላንስን ማረጋገጥ
+    const currentBalanceText = coinBalanceDisplay.textContent;
+    const currentBalance = parseInt(currentBalanceText);
+
+    if (isNaN(currentBalance)) {
+        alert("የኮይን ባላንስ መጫን አልተቻለም። እባክዎ ገጹን ያድሱ።");
+        return;
+    }
+
+    if (currentBalance < renewCost) {
+        alert(`ቂንትሮስ የ BS Coin ባላንስ የለዎትም (${currentBalance} ኮይን)። ማስታወቂያውን ለማደስ ${renewCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ።`);
+        return;
+    }
+    
+    if (!confirm(`የማስታወቂያ መታወቂያ: ${listingId} ለተጨማሪ ${renewDays} ቀናት ለማደስ ${renewCost} ኮይን ይፈልጋል። ይቀጥሉ?`)) {
+        return;
+    }
+
+    try {
+        // 2. የማስታወቂያውን መረጃ ማምጣት
+        const listingDocRef = doc(db, "listings", listingId);
+        const listingSnapshot = await getDoc(listingDocRef);
+
+        if (!listingSnapshot.exists()) {
+            alert("ማስታወቂያው አልተገኘም።");
+            return;
+        }
+
+        const listingData = listingSnapshot.data();
+
+        // 3. አዲሱን የማለቂያ ቀን ማስላት
+        const currentExpiresAt = listingData.expires_at ? listingData.expires_at.toDate() : new Date();
+        
+        // ጊዜው ካለፈ፣ ከአሁኑ ጊዜ እንጀምራለን። ካላለፈ፣ ካለፈው የማለቂያ ጊዜ እንጀምራለን።
+        const baseTime = currentExpiresAt.getTime() > Date.now() ? currentExpiresAt.getTime() : Date.now();
+        const newExpiryDate = new Date(baseTime + renewDays * 24 * 60 * 60 * 1000);
+
+        // 4. የማስታወቂያውን የማለቂያ ጊዜ ማራዘም
+        await updateDoc(listingDocRef, {
+            expires_at: newExpiryDate,
+            is_active: true // ማስታወቂያውን ማግበር
+        });
+        
+        // 5. የሻጩን ኮይን ባላንስ መቀነስ
+        const userDocRef = doc(db, "users", sellerDocumentId);
+        const newBalance = currentBalance - renewCost;
+        
+        await updateDoc(userDocRef, {
+            bs_coin_balance: newBalance
+        });
+
+        alert(`ማስታወቂያው በተሳካ ሁኔታ ታድሷል! የኮይን ሂሳብዎ ${renewCost} ኮይን ተቀንሷል። አዲስ ባላንስ: ${newBalance}`);
+        
+        // UI እና ዝርዝሩን ማደስ
+        loadUserInfo(); 
+        renderActiveListings(); 
+
+    } catch (error) {
+        console.error("Error renewing listing or updating balance:", error);
+        alert("ማስታወቂያውን ማደስ ወይም ኮይን መቀነስ አልተቻለም: " + error.message);
+    }
+}
+
+// ማስታወቂያውን ለመሰረዝ የሚያስፈልገው ተግባር (Delete) - ✅ ሙሉ በሙሉ እንዲሰርዝ ተደርጓል
+async function handleDeleteListing(listingId) {
+    if (!confirm("ይህንን ማስታወቂያ በእርግጥ መሰረዝ ይፈልጋሉ? ከ Firestore ላይ ሙሉ በሙሉ ይወገዳል!")) {
+        return;
+    }
+    
+    try {
+        const listingDocRef = doc(db, "listings", listingId); 
+        await deleteDoc(listingDocRef); // ✅ ሰነዱን ሙሉ በሙሉ ይሰርዘዋል!
+
+        alert("ማስታወቂያው በተሳካ ሁኔታ ተሰርዟል! (ከ Firestore ተወግዷል)");
+        renderActiveListings(); // ዝርዝሩን ማደስ
+    } catch (error) {
+        console.error("Error deleting listing:", error);
+        alert("ማስታወቂያውን መሰረዝ አልተቻለም: " + error.message);
+    }
+}
+
+// ----------------------------------------------------------------------
+// 6. ንቁ ማስታወቂያዎችን ማሳየት (Render Active Listings)
+// ----------------------------------------------------------------------
+async function renderActiveListings() {
+    activeListingsGrid.innerHTML = ''; 
+    noActiveListings.style.display = 'none';
+
+    try {
+        const q = query(
+            collection(db, "listings"), 
+            where("seller_id", "==", sellerDocumentId)
+            // ✅ ጊዜው ያለፈበትን እዚህ አናጣራም፣ የ is_active ማጣሪያ በጊዜው ሊታደስ ይችላል
+        );
+        
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            noActiveListings.style.display = 'block';
+            return;
+        }
+        
+        querySnapshot.forEach((doc) => {
+            const listing = doc.data();
+            const listingId = doc.id;
+            
+            // የማለቂያ ቀንን ማስላት
+            const expiresAt = listing.expires_at ? listing.expires_at.toDate() : new Date();
+            const daysLeft = Math.ceil((expiresAt - new Date()) / (1000 * 60 * 60 * 24));
+            const daysLeftText = daysLeft > 0 ? `${daysLeft} ቀን ቀርቷል` : "ጊዜው አብቅቷል";
+            const daysLeftStyle = daysLeft <= 3 ? 'style="color: #f44336;"' : ''; 
+
+            const card = `
+                <div class="listing-card" data-id="${listingId}">
+                    <div class="listing-image-container-v2">
+                        <img src="${listing.image_url}" alt="${listing.itemTitle}">
+                    </div>
+                    <div class="listing-info">
+                        <div>
+                            <h3 class="card-title">${listing.itemTitle}</h3>
+                            <p class="card-meta">ምድብ: ${listing.mainCategory} / ${listing.subCategory}</p>
+                            <p class="card-meta">ዋጋ: ${listing.itemPrice.toLocaleString()} ብር</p>
+                        </div>
+                        <div class="days-left-info" ${daysLeftStyle}>
+                            <i class="fas fa-clock"></i> ${daysLeftText}
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-button edit-btn" data-id="${listingId}" style="background-color: #00bcd4;"><i class="fas fa-edit"></i> አድስ</button>
+                            <button class="action-button repost-btn" data-id="${listingId}" style="background-color: #4caf50;"><i class="fas fa-redo"></i> ይክፈሉ/አድሱ</button>
+                            <button class="action-button delete-btn" data-id="${listingId}" style="background-color: #f44336;"><i class="fas fa-trash-alt"></i> አስወግድ</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            activeListingsGrid.insertAdjacentHTML('beforeend', card);
+        });
+        
+    } catch (error) {
+        console.error("Error rendering active listings:", error);
+        activeListingsGrid.innerHTML = `<p class="error-message">ማስታወቂያዎችዎን በመጫን ላይ ችግር ተፈጥሯል።</p>`;
+    }
+}
+
+// ----------------------------------------------------------------------
+// 7. የአሰሳ ተግባር (Navigation Logic)
+// ----------------------------------------------------------------------
+function setupNavigation() {
+    const sections = {
+        'postNewListingBtn': document.getElementById('newListingSection'),
+        'viewActiveListingsBtn': document.getElementById('activeListingsSection'),
+        'viewExpiredListingsBtn': document.getElementById('expiredListingsSection')
+    };
+
+    const buttons = document.querySelectorAll('.main-nav-buttons-v2 button');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetSection = sections[button.id];
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active'); 
+
+            for (const key in sections) {
+                sections[key].style.display = 'none';
+            }
+            
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                if (button.id === 'viewActiveListingsBtn') {
+                    renderActiveListings(); 
+                }
+            }
+
+            if (button.id === 'postNewListingBtn') {
+                newListingForm.classList.add('active');
+            } else {
+                newListingForm.classList.remove('active');
+            }
+        });
+    });
+
+    document.getElementById('newListingSection').style.display = 'none';
+    document.getElementById('expiredListingsSection').style.display = 'none';
+    document.getElementById('activeListingsSection').style.display = 'block';
+    document.getElementById('viewActiveListingsBtn').classList.add('active');
+    newListingForm.classList.remove('active'); 
+}
+
+
+// ----------------------------------------------------------------------
+// 8. የንቁ ማስታወቂያ በተን ክሊኮችን ማስተናገድ (Handle Active Listing Button Clicks) - ✅ አዲስ የተጨመረ
+// ----------------------------------------------------------------------
+function setupListingActionListeners() {
+    activeListingsGrid.addEventListener('click', (event) => {
+        const button = event.target.closest('.action-button');
+        if (!button) return; 
+
+        const listingId = button.getAttribute('data-id');
+
+        if (button.classList.contains('edit-btn')) {
+            handleEditListing(listingId);
+        } else if (button.classList.contains('repost-btn')) {
+            handleRepostListing(listingId);
+        } else if (button.classList.contains('delete-btn')) {
+            handleDeleteListing(listingId);
+        }
+    });
+}
+
+
+// ----------------------------------------------------------------------
+// 9. ገጹ ሲጫን መጀመሪያ የሚሰሩ ተግባራት (Initial Load)
+// ----------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    if (checkUserAuthentication()) {
+        loadUserInfo(); 
+        populateSubCategories();
+        calculateCoinCost();
+        renderActiveListings(); 
+        setupNavigation(); 
+        setupListingActionListeners(); // ✅ አዲሱ ተግባር
+    }
+});
+    </script>
+</body>
+</html>

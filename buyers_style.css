@@ -1,0 +1,436 @@
+/* buyers_style.css - የተሻሻለ */
+
+:root {
+    --primary-color: #121212; 
+    --secondary-color: #1e1e1e; 
+    --accent-color: #00bcd4; /* ሲያን */
+    --text-color: #e0e0e0; 
+    --highlight-color: #ffeb3b; 
+    --card-hover: #2a2a2a; 
+    --call-color: #38c172; /* አረንጓዴ */
+    --telegram-color: #0088cc; /* ሰማያዊ */
+    --thin-border-color: #383838; /* ለካርዶች መለያያ ቀጭን ቀለም */
+}
+
+body {
+    font-family: 'Noto Sans Ethiopic', sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.main-header {
+    background-color: var(--secondary-color);
+    padding: 15px 10px; 
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 5px; 
+}
+
+.marketplace-container {
+    max-width: 1400px; 
+    margin: 0 auto;
+    padding: 0 8px; 
+}
+
+/* ======================================= */
+/* 1. የዘርፍ መደበቂያ (Collapsible Categories) */
+/* ======================================= */
+
+.section-title {
+    color: var(--accent-color);
+    font-size: 1em; 
+    font-weight: 500;
+    padding-bottom: 3px; 
+    margin-top: 10px; 
+    margin-bottom: 5px; 
+    cursor: pointer; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #333; 
+}
+
+.chevron-icon {
+    transition: transform 0.3s ease;
+    font-size: 1.1em; 
+    margin-left: 5px;
+}
+
+#mainCategoryArea:not(.collapsed) .chevron-icon {
+    transform: rotate(180deg);
+}
+#subCategoryArea:not(.collapsed) .chevron-icon {
+    transform: rotate(180deg); 
+}
+.category-selection-area.collapsed .chevron-icon,
+.subcategory-selection-area.collapsed .chevron-icon {
+    transform: rotate(0deg); 
+}
+
+.main-categories-grid, .sub-categories-grid {
+    max-height: 500px; 
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(65px, 1fr)); 
+    gap: 5px; 
+    margin-bottom: 10px; 
+}
+.subcategory-selection-area .sub-categories-grid {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); 
+}
+
+
+.category-selection-area.collapsed .main-categories-grid,
+.subcategory-selection-area.collapsed .sub-categories-grid {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+}
+
+.category-card {
+    background-color: var(--secondary-color);
+    padding: 2px; 
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.2s;
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    background-color: #2a2a2a;
+    transform: translateY(-2px);
+}
+
+.category-card.selected {
+    border-color: var(--accent-color);
+    background-color: #2a2a2a;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.7); 
+    transform: scale(0.98);
+}
+.category-icon {
+    width: 25px; 
+    height: 25px;
+    background-color: #444; 
+    border-radius: 30%;
+    display: block;
+    margin: 0 auto 0; 
+}
+.card-name {
+    font-size: 0.75em; 
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+
+/* ======================================= */
+/* 2. የፍለጋ ሳጥን ዲዛይን (Search Bar Design) */
+/* ======================================= */
+.search-bar {
+    display: flex;
+    gap: 5px; 
+    margin-bottom: 10px; 
+    padding: 6px; 
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.search-bar input {
+    flex-grow: 1;
+    padding: 8px 10px; 
+    border: none; 
+    border-radius: 6px;
+    background-color: #333;
+    color: var(--text-color);
+    font-size: 0.9em;
+}
+.search-bar button {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 8px 12px; 
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.search-bar button:hover { background-color: #008c9e; }
+
+/* ======================================= */
+/* 4. የእቃዎች ዝርዝር እና አስተካካይ */
+/* ======================================= */
+
+.items-main-content .section-title {
+    cursor: default; 
+    color: #ccc; 
+    font-size: 0.85em; 
+    font-weight: 400;
+    margin-top: 8px; 
+    margin-bottom: 3px; 
+}
+
+.sort-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px; 
+    align-items: center; 
+    font-size: 0.9em;
+}
+.sort-controls label {
+    margin-right: 5px;
+    color: #aaa;
+}
+.sort-controls select {
+    padding: 5px 8px;
+    border-radius: 4px;
+    background-color: #333;
+    color: var(--text-color);
+    border: 1px solid #555;
+    font-size: 0.9em;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 0px; 
+}
+
+/* 4.1. የእቃ ካርድ (Item Card) - አዲስ አግድም አቀማመጥ */
+.item-card {
+    background-color: var(--secondary-color);
+    border-radius: 0px; 
+    overflow: hidden; 
+    box-shadow: none; 
+    transition: background-color 0.2s;
+    border: none; 
+    
+    display: flex;
+    padding: 8px 0; 
+    cursor: pointer; 
+    
+    /* ************* አዲስ ለውጥ ************* */
+    /* በእቃ ካርዶች መካከል ቀጭን መስመር (ታችኛው ጠርዝ) */
+    border-bottom: 1px solid var(--thin-border-color); 
+}
+
+/* የመጨረሻው ካርድ መስመር እንዳይኖረው */
+.items-grid .item-card:last-child {
+    border-bottom: none;
+}
+
+.item-card:hover {
+    background-color: var(--card-hover);
+    transform: none;
+    box-shadow: none;
+}
+
+/* የምስል መጠን በ20% አድጓል: 100px -> 120px */
+.item-image-container {
+    width: 120px; /* 100px * 1.2 = 120px */
+    height: 120px; /* 100px * 1.2 = 120px */
+    flex-shrink: 0; 
+    
+    /* ************* አዲስ ለውጥ ************* */
+    /* የምስል ማሳያ ጠርዙ ከርቭ እንዲኖረው */
+    border-radius: 8px; 
+    
+    /* በምስል እና መረጃ መካከል ቀጭን መስመር (ቀኝ ጠርዝ) */
+    border-right: 1px solid var(--thin-border-color); 
+    padding-right: 10px; /* ለምስሉ እና ለመረጃው ክፍተት */
+    margin-right: 10px; /* ጠርዙ ከተጨመረ በኋላ ክፍተት */
+    
+    overflow: hidden;
+}
+.item-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    /* ************* አዲስ ለውጥ ************* */
+    /* ምስሉም ክብ ጠርዝ እንዲኖረው */
+    border-radius: 6px; 
+}
+
+
+.item-info {
+    padding: 0; 
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.item-title {
+    color: #ffffff;
+    font-size: 1.1em; 
+    margin: 0 0 2px 0;
+    line-height: 1.2;
+}
+
+.item-price {
+    color: var(--text-color); 
+    font-size: 1.2em; 
+    font-weight: 800;
+    margin: 0 0 5px 0;
+}
+
+.item-meta {
+    font-size: 0.8em; 
+    color: #aaa;
+    margin-bottom: 5px;
+    border-top: none; 
+    padding-top: 0;
+}
+
+
+/* አዲስ የእውቂያ አዝራሮች ስታይል */
+.contact-buttons-group {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.contact-button {
+    flex-grow: 1;
+    border: none;
+    padding: 6px 8px; 
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.8em;
+    width: auto;
+    transition: background-color 0.3s;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contact-button i {
+    margin-right: 5px;
+}
+
+.call-btn {
+    background-color: var(--call-color);
+    color: var(--primary-color);
+}
+.call-btn:hover {
+    background-color: #2e9f5e;
+}
+
+.telegram-btn {
+    background-color: var(--telegram-color);
+    color: #ffffff;
+}
+.telegram-btn:hover {
+    background-color: #0077b3;
+}
+
+
+/* ======================================= */
+/* 6. የምስል ማስፋት (Lightbox/Modal) ስታይል */
+/* ======================================= */
+.image-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.9); 
+    padding-top: 60px;
+    cursor: pointer;
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    max-height: 90vh;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 1;
+}
+
+/* ======================================= */
+/* 5. ለስልኮች ማስተካከያ (Responsive) */
+/* ======================================= */
+@media (max-width: 768px) {
+    .marketplace-container {
+        padding: 0 5px;
+    }
+    .item-card {
+        padding: 5px 0;
+        /* በሞባይል ላይ የምስል እና መረጃ ክፍተት */
+        border-bottom: 1px solid var(--thin-border-color);
+    }
+    
+    /* በሞባይል ላይ የምስል መጠን: 90px -> 108px (20% ጭማሪ) */
+    .item-image-container {
+        width: 108px; /* 90px * 1.2 = 108px */
+        height: 108px; /* 90px * 1.2 = 108px */
+        margin-right: 8px;
+        padding-right: 8px;
+    }
+    .item-title {
+        font-size: 1em;
+    }
+    .item-price {
+        font-size: 1.1em;
+    }
+    .item-meta {
+        margin-bottom: 3px;
+    }
+    
+    .modal-content {
+        width: 95%; /* በሞባይል ላይ ትንሽ ሰፋ እንዲል */
+    }
+}
+@media (min-width: 600px) {
+    .items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); 
+        gap: 10px; 
+    }
+    /* በትልቁ ስክሪን ላይ ባውንደሪው እንዲታይ */
+    .item-card {
+        border-radius: 8px;
+        border: 1px solid var(--thin-border-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+        border-bottom: 1px solid var(--thin-border-color);
+        padding: 10px; /* ክፍተቱን ጨምረናል */
+    }
+    .items-grid .item-card:last-child {
+        border-bottom: 1px solid var(--thin-border-color);
+    }
+    .item-image-container {
+        /* በትልቁ ስክሪን ላይ የምስል ጠርዙን እናስወግዳለን */
+        border-right: none;
+        padding-right: 0;
+        margin-right: 15px; 
+    }
+}
