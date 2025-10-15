@@ -434,3 +434,86 @@ body {
         margin-right: 15px; 
     }
 }
+        /* ✅ ማሻሻያ 7: ለዋና እና ንዑስ ምድብ በተኖች የጥቁር ቀለም ማስተካከያ (ለናሙና እዚህ ጨምሬያለሁ) */
+        /* በ buyers_style.css ውስጥ ካልተገለጸ ይህ ይሰራል */
+        .category-btn, .sub-category-btn {
+            background-color: #5684; /* ጥቁር */
+            color: white;
+            border: 1px solid #000000;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .category-btn.active, .sub-category-btn.active {
+            background-color: #333333; /* ትንሽ ቀለል ያለ ጥቁር ለአክቲቭነት */
+            color: #ffcc00; /* ኮከብ ያለበት ቢጫ ቀለም */
+            border-color: #ffcc00;
+        }
+
+        /* ❌ ችግር 2 ማስተካከያ: የካርዱ ወላጅ ኤሌመንት (item-card) ለኮከብ ባጁ አቀማመጥ ሪላቲቭ (relative) ይሁን */
+        .item-card {
+            position: relative; /* ይህ ማሻሻያ ኮከቡ በካርዱ ውስጥ በትክክል እንዲቀመጥ ያደርጋል */
+            /* ቀሪው የ item-card style በ buyers_style.css ውስጥ እንዳለ ይሁን */
+        }
+
+        /* ✅ ማሻሻያ 6: የኮከብ ባጅ (Star Badge) አቀማመጥ */
+        .star-badge {
+            position: absolute; /* አሁን ከ .item-card አንጻር ይሰራል */
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.9); /* ነጭ ከትንሽ ግልጽነት ጋር */
+            color: #00bcd4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ✅ ማሻሻያ 3: የ X በተን አቀማመጥ በምስሉ ላይ */
+        #imageModal .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #ffffff; /* ነጭ */
+            font-size: 30px;
+            font-weight: bold;
+            transition: 0.3s;
+            z-index: 1000; /* ከምስሉ በላይ እንዲሆን */
+            cursor: pointer;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8); /* በጥቁር ጥላ */
+        }
+        
+        /* ❌ ችግር 1 ማስተካከያ: ሞዳሉን ከስክሪኑ አናት ላይ እንዲታይ ማድረግ */
+        #imageModal {
+            display: none; /* በነባሪ እንዳይታይ */
+            position: fixed; /* ከገጹ ይልቅ ከስክሪኑ አንፃር እንዲሰራ */
+            z-index: 999; /* ከሌሎች ነገሮች በላይ እንዲሆን */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9); /* ጥቁር ግልጽነት ያለው ዳራ */
+            align-items: center; /* ምስሉን በማዕከል ለማድረግ */
+            justify-content: center; /* ምስሉን በማዕከል ለማድረግ */
+        }
+
+        #imageModal .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            height: auto; /* ከስክሪን ሾት ውጭ ምስሉ ከማእከል እንዲታይ */
+            -webkit-animation-name: zoom;
+            -webkit-animation-duration: 0.6s;
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+
+        /* ✅ ማሻሻያ 2: የስልክ በተን (ለማይታይ ቁጥር) */
+        .contact-button.call-btn {
+            background-color: #4CAF50; 
+            color: white;
+            /* ስልክ ቁጥሩን ከስሙ ላይ ማስወገድ */
+        }
