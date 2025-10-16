@@ -1,4 +1,4 @@
-    // የFirebase Config ከሎጊን ገጽ የተወሰደ
+// የFirebase Config ከሎጊን ገጽ የተወሰደ
 const firebaseConfig = {
     apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
     authDomain: "elanyas-info.firebaseapp.com",
@@ -33,6 +33,7 @@ const db = getFirestore(app);
 const CLOUDINARY_CLOUD_NAME = "dddyppnhp"; 
 const CLOUDINARY_UPLOAD_PRESET = "bajaj_upload_preset"; 
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+const MAX_IMAGE_SIZE_MB = 2; // ✅ አዲስ: ከፍተኛ የምስል መጠን በ MB
 
 // DOM Elements
 const coinBalanceDisplay = document.getElementById('coinBalanceDisplay');
@@ -49,8 +50,10 @@ const imagePlaceholder = document.getElementById('imagePlaceholder');
 const listingMessage = document.getElementById('listingMessage');
 const activeListingsGrid = document.getElementById('activeListingsGrid');
 const noActiveListings = document.getElementById('noActiveListings');
-const starRatingSelector = document.getElementById('starRatingSelector'); // ✅ አዲስ
-const starRatingInput = document.getElementById('starRating'); // ✅ አዲስ
+const expiredListingsGrid = document.getElementById('expiredListingsGrid'); // ✅ አዲስ
+const noExpiredListings = document.getElementById('noExpiredListings'); // ✅ አዲስ
+const starRatingSelector = document.getElementById('starRatingSelector'); 
+const starRatingInput = document.getElementById('starRating'); 
 
 // ወሳኝ የLocal Storage Variables
 let loggedInUserName;
@@ -100,12 +103,13 @@ async function loadUserInfo() {
 }
 
 // ----------------------------------------------------------------------
-// 3. የማስታወቂያ ምድቦችን መሙላት (Category Logic) - ✅ ማሻሻያ 1.2: የዋና እና ንኡስ ምድቦች
+// 3. የማስታወቂያ ምድቦችን መሙላት (Category Logic) - ✅ ማሻሻያ 5: የልብስ ምድብ መጨመር
 // ----------------------------------------------------------------------
 const categories = {
     vehicle: ["ባጃጅ", "ሞተር", "መኪና", "ሳይክል", "ሌሎች"],
     spare_part: ["ጎማ/ቲዩብ", "ምንጣፍ", "የሞተር ክፍሎች", "የኤሌትሪክ ክፍሎች", "ቦዲ ፓርትስ", "ሌሎች"],
     phone: ["አንድሮይድ", "አይፎን", "ቻርጅ", "ኤርፎን", "ሌሎች"],
+    clothes: ["ሱሪ", "ቲሸርት", "ጃኬት", "ሹራብ", "ጫማ", "ሌላ"], // ✅ አዲስ ምድብ
     other: ["አገልግሎት (ጥገና, ቅባት)", "ሌላ እቃዎች", "ኪራይ/ሊዝ"]
 };
 
@@ -130,7 +134,7 @@ mainCategorySelect.addEventListener('change', populateSubCategories);
 
 
 // ----------------------------------------------------------------------
-// ✅ አዲስ ተግባር: የኮከብ መምረጫ UI ሎጂክ
+// የኮከብ መምረጫ UI ሎጂክ
 // ----------------------------------------------------------------------
 function setupStarRatingSelector() {
     const stars = starRatingSelector.querySelectorAll('.star');
@@ -161,30 +165,36 @@ function setupStarRatingSelector() {
 
 
 // ----------------------------------------------------------------------
-// 4. የኮይን ዋጋ ስሌት (Coin Cost Calculation) - ✅ ማሻሻያ 2: የዋጋ ለውጥ + ኮከብ ዋጋ
+// 4. የኮይን ዋጋ ስሌት (Coin Cost Calculation) - ✅ ማሻሻያ 6: የቀን ስሌት ማስተካከል
 // ----------------------------------------------------------------------
 function calculateCoinCost() {
     const days = daysDurationSelect.value;
     const mainCategory = mainCategorySelect.value;
     const starRating = parseInt(starRatingInput.value) || 0; // የተመረጠውን ኮከብ ደረጃ ያግኙ
-    let baseCost = 0; // የማስታወቂያ ዋጋ
+    let baseCost = 5; // ነባሪ ዋጋ ለ 7 ቀን (ለተሽከርካሪ ካልሆነ)
     let starCost = 0; // የኮከብ ዋጋ
     
     // 1. የማስታወቂያው መሠረታዊ ዋጋ (Base Listing Cost) ስሌት
-    if (days === '7') {
-        if (mainCategory === 'vehicle') {
+    if (mainCategory === 'vehicle') {
+        if (days === '7') {
             baseCost = 7;
-        } else {
-            baseCost = 5;
+        } else if (days === '14') {
+            baseCost = 12; 
+        } else if (days === '21') { // ✅ አዲስ የቀን ስሌት
+            baseCost = 18;
+        } else if (days === '30') {
+            baseCost = 25;
         }
-    } else if (days === '14') {
-        // በቀድሞው ጥያቄ የተስተካከለው ዋጋ
-        baseCost = (mainCategory === 'vehicle') ? 12 : 8; 
-    } else if (days === '30') {
-        // በቀድሞው ጥያቄ የተስተካከለው ዋጋ
-        baseCost = (mainCategory === 'vehicle') ? 25 : 15;
-    } else {
-        baseCost = 5; // ነባሪ ዋጋ
+    } else { // spare_part, phone, clothes, other
+        if (days === '7') {
+            baseCost = 5;
+        } else if (days === '14') {
+            baseCost = 9; 
+        } else if (days === '21') { // ✅ አዲስ የቀን ስሌት
+            baseCost = 13;
+        } else if (days === '30') {
+            baseCost = 18;
+        }
     }
     
     // 2. የኮከብ ዋጋ (Star Rating Cost) ስሌት
@@ -218,7 +228,7 @@ itemImageInput.addEventListener('change', function(event) {
 });
 
 // ----------------------------------------------------------------------
-// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing) - ✅ ማሻሻያ 4: ኮከብ ማስቀመጥ
+// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing) - ✅ ማሻሻያ 4: የምስል መጠን ገደብ
 // ----------------------------------------------------------------------
 async function postNewListing(event) {
     event.preventDefault();
@@ -232,7 +242,7 @@ async function postNewListing(event) {
     const itemTitle = document.getElementById('itemTitle').value;
     const itemPrice = parseFloat(document.getElementById('itemPrice').value);
     const itemDescription = document.getElementById('itemDescription').value;
-    const starRating = parseInt(starRatingInput.value) || 0; // ✅ አዲስ: የኮከብ ደረጃ
+    const starRating = parseInt(starRatingInput.value) || 0; 
 
     if (currentBalance < coinCost) {
         listingMessage.style.color = '#f44336';
@@ -250,6 +260,13 @@ async function postNewListing(event) {
     if (!imageFile) {
         listingMessage.style.color = '#f44336';
         listingMessage.textContent = "እባክዎ የእቃውን ምስል ይምረጡ!";
+        return;
+    }
+    
+    // ✅ የምስል መጠን ማረጋገጫ (ከ2MB በታች መሆኑን)
+    if (imageFile.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+        listingMessage.style.color = '#f44336';
+        listingMessage.textContent = `የምስሉ መጠን ከ ${MAX_IMAGE_SIZE_MB}MB በላይ መሆን የለበትም።`;
         return;
     }
 
@@ -273,9 +290,10 @@ async function postNewListing(event) {
         const imageUrl = data.secure_url; 
 
         // 2. ማስታወቂያውን ወደ Firestore ማስቀመጥ
+        // ✅ ማሻሻያ 1: የለጣፊው ስም ከሎካል ስቶሬጅ ተወስዶ ይሰቀል (አስቀድሞ ነበረ)
         const itemData = {
             seller_id: sellerDocumentId,
-            seller_name: loggedInUserName,
+            seller_name: loggedInUserName, // ✅ ከሎካል ስቶሬጅ
             seller_phone: loggedInUserPhone,
             itemTitle: itemTitle,
             mainCategory: mainCategory,
@@ -284,12 +302,12 @@ async function postNewListing(event) {
             itemDescription: itemDescription,
             days_duration: parseInt(daysDurationSelect.value),
             coin_cost: coinCost,
-            star_rating: starRating, // ✅ አዲስ: ኮከብ ማስቀመጥ
+            star_rating: starRating, 
             image_url: imageUrl, 
             posted_at: serverTimestamp(), 
             expires_at: new Date(Date.now() + parseInt(daysDurationSelect.value) * 24 * 60 * 60 * 1000), 
             is_active: true,
-            is_featured: starRating > 0 // ኮከብ ካለው እንደ ተለየ (featured) ምልክት ማድረግ
+            is_featured: starRating > 0 
         };
 
         await addDoc(collection(db, "listings"), itemData); 
@@ -324,9 +342,9 @@ newListingForm.addEventListener('submit', postNewListing);
 // 6.1. የካርድ ድርጊቶች ተግባራት (Card Action Functions) 
 // ----------------------------------------------------------------------
 
-// ማስታወቂያውን ለማዘመን የሚያስፈልገው ተግባር (Edit)
+// ማስታወቂያውን ለማዘመን የሚያስፈልገው ተግባር (Edit) - ✅ ማሻሻያ 2: አይጠራም
 function handleEditListing(listingId) {
-    // TODO: ለምሳሌ የሞዳል (Modal) መስኮት በመክፈት የማስታወቂያውን መረጃ ይዘው ማሳየት ይችላሉ።
+    // ይህ ተግባር እንዲወገድ ተጠይቋል (በካርዱ ላይ የለም)
     alert(`የማስታወቂያ መታወቂያ (ID): ${listingId} ለማዘመን (Edit) ተመርጧል!`);
     console.log("Edit request for listing ID:", listingId);
 }
@@ -340,7 +358,7 @@ function handleViewDescription(description) {
 // ማስታወቂያውን ለመክፈል/ለማደስ የሚያስፈልገው ተግባር (Pay/Renew)
 async function handleRepostListing(listingId) {
     const renewDays = 7; // ለ 7 ቀን ማደስ
-    // ✅ ለ 7 ቀን ማደስ የሚሆን ዋጋ ማስላት (በአሁኑ ምድብ ላይ በመመስረት - ኮከብ ሳይጨምር)
+    // ለ 7 ቀን ማደስ የሚሆን ዋጋ ማስላት (በአሁኑ ምድብ ላይ በመመስረት - ኮከብ ሳይጨምር)
     let renewCost = 5; 
     
     // ማስታወቂያውን መጀመሪያ ማምጣት
@@ -355,9 +373,12 @@ async function handleRepostListing(listingId) {
 
         const listingData = listingSnapshot.data();
         
-        // መሰረታዊ የማደሻ ዋጋ
+        // መሰረታዊ የማደሻ ዋጋ (ለ 7 ቀን)
         if (listingData.mainCategory === 'vehicle') {
             renewCost = 7;
+        } else {
+             // clothes, spare_part, phone, other
+            renewCost = 5;
         }
 
         // የኮከብ ዋጋ ካለ መጨመር
@@ -408,6 +429,7 @@ async function handleRepostListing(listingId) {
         // UI እና ዝርዝሩን ማደስ
         loadUserInfo(); 
         renderActiveListings(); 
+        renderExpiredListings(); // ያበቁት ውስጥ ካለ እንዲወገድ
 
     } catch (error) {
         console.error("Error renewing listing or updating balance:", error);
@@ -426,7 +448,8 @@ async function handleDeleteListing(listingId) {
         await deleteDoc(listingDocRef); 
 
         alert("ማስታወቂያው በተሳካ ሁኔታ ተሰርዟል! (ከ Firestore ተወግዷል)");
-        renderActiveListings(); // ዝርዝሩን ማደስ
+        renderActiveListings(); // ንቁ ዝርዝሩን ማደስ
+        renderExpiredListings(); // ያበቁ ዝርዝሩን ማደስ
     } catch (error) {
         console.error("Error deleting listing:", error);
         alert("ማስታወቂያውን መሰረዝ አልተቻለም: " + error.message);
@@ -434,11 +457,104 @@ async function handleDeleteListing(listingId) {
 }
 
 // ----------------------------------------------------------------------
-// 6. ንቁ ማስታወቂያዎችን ማሳየት (Render Active Listings) - ✅ ማሻሻያ 5: ኮከብ ማሳያ
+// 6. ንቁ ማስታወቂያዎችን ማሳየት (Render Active Listings)
 // ----------------------------------------------------------------------
 async function renderActiveListings() {
     activeListingsGrid.innerHTML = ''; 
     noActiveListings.style.display = 'none';
+
+    try {
+        const q = query(
+            collection(db, "listings"), 
+            where("seller_id", "==", sellerDocumentId)
+            // ማስታወቂያው ንቁ መሆን አለበት (expires_at > new Date())
+        );
+        
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            noActiveListings.style.display = 'block';
+            return;
+        }
+        
+        let foundActive = false;
+        querySnapshot.forEach((doc) => {
+            const listing = doc.data();
+            const expiresAt = listing.expires_at ? listing.expires_at.toDate() : new Date();
+            
+            // ንቁ ማስታወቂያዎች: ጊዜያቸው ያላለፈ
+            if (expiresAt > new Date()) { 
+                foundActive = true;
+                const listingId = doc.id;
+                
+                // የማለቂያ ቀንን ማስላት
+                const daysLeft = Math.ceil((expiresAt - new Date()) / (1000 * 60 * 60 * 24));
+                const daysLeftText = daysLeft > 0 ? `${daysLeft} ቀን ቀርቷል` : "ጊዜው አብቅቷል";
+                const daysLeftStyle = daysLeft <= 3 ? 'style="color: #f44336;"' : ''; 
+                
+                // የዋና ምድብ ስም ለማግኘት (ከእንግሊዝኛ ወደ አማርኛ)
+                const mainCategoryMap = {
+                    vehicle: 'ተሽከርካሪ',
+                    spare_part: 'መለዋወጫ',
+                    phone: 'ስልክ',
+                    clothes: 'ልብስ', // ✅ አዲስ
+                    other: 'ሌላ'
+                };
+                const displayMainCategory = mainCategoryMap[listing.mainCategory] || listing.mainCategory;
+
+                // የኮከብ ማሳያ
+                const starRating = listing.star_rating || 0;
+                let starsHTML = '';
+                for (let i = 0; i < starRating; i++) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                }
+                if (starsHTML) {
+                     starsHTML = `<div class="star-display">${starsHTML}</div>`;
+                }
+
+                const card = `
+                    <div class="listing-card" data-id="${listingId}">
+                        <div class="listing-image-container-v2">
+                            <img src="${listing.image_url}" alt="${listing.itemTitle}">
+                        </div>
+                        <div class="listing-info">
+                            <div>
+                                <h3 class="card-title">${listing.itemTitle}</h3>
+                                <p class="card-meta">ዋና ምድብ: ${displayMainCategory}</p>
+                                <p class="card-meta">ንዑስ ምድብ: ${listing.subCategory}</p>
+                                <p class="card-meta">ዋጋ: ${listing.itemPrice.toLocaleString()} ብር</p>
+                                ${starsHTML} </div>
+                            <div class="days-left-info" ${daysLeftStyle}>
+                                <i class="fas fa-clock"></i> ${daysLeftText}
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button desc-btn" data-id="${listingId}" data-desc="${listing.itemDescription.replace(/"/g, '&quot;')}" style="background-color: #ff9800;"><i class="fas fa-file-lines"></i> መግለጫ</button>
+                                <button class="action-button repost-btn" data-id="${listingId}" style="background-color: #4caf50;"><i class="fas fa-redo"></i> ይክፈሉ/አድሱ</button>
+                                <button class="action-button delete-btn" data-id="${listingId}" style="background-color: #f44336;"><i class="fas fa-trash-alt"></i> አስወግድ</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                activeListingsGrid.insertAdjacentHTML('beforeend', card);
+            }
+        });
+        
+        if (!foundActive) {
+            noActiveListings.style.display = 'block';
+        }
+
+    } catch (error) {
+        console.error("Error rendering active listings:", error);
+        activeListingsGrid.innerHTML = `<p class="error-message">ማስታወቂያዎችዎን በመጫን ላይ ችግር ተፈጥሯል።</p>`;
+    }
+}
+
+// ----------------------------------------------------------------------
+// 7. ያበቁ ማስታወቂያዎችን ማሳየት (Render Expired Listings) - ✅ ማሻሻያ 3: ያበቁ ማስታወቂያዎች
+// ----------------------------------------------------------------------
+async function renderExpiredListings() {
+    expiredListingsGrid.innerHTML = ''; 
+    noExpiredListings.style.display = 'none';
 
     try {
         const q = query(
@@ -449,74 +565,84 @@ async function renderActiveListings() {
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            noActiveListings.style.display = 'block';
+            noExpiredListings.style.display = 'block';
             return;
         }
         
+        let foundExpired = false;
         querySnapshot.forEach((doc) => {
             const listing = doc.data();
-            const listingId = doc.id;
-            
-            // የማለቂያ ቀንን ማስላት
             const expiresAt = listing.expires_at ? listing.expires_at.toDate() : new Date();
-            const daysLeft = Math.ceil((expiresAt - new Date()) / (1000 * 60 * 60 * 24));
-            const daysLeftText = daysLeft > 0 ? `${daysLeft} ቀን ቀርቷል` : "ጊዜው አብቅቷል";
-            const daysLeftStyle = daysLeft <= 3 ? 'style="color: #f44336;"' : ''; 
             
-            // የዋና ምድብ ስም ለማግኘት (ከእንግሊዝኛ ወደ አማርኛ)
-            const mainCategoryMap = {
-                vehicle: 'ተሽከርካሪ',
-                spare_part: 'መለዋወጫ',
-                phone: 'ስልክ',
-                other: 'ሌላ'
-            };
-            const displayMainCategory = mainCategoryMap[listing.mainCategory] || listing.mainCategory;
+            // ያበቁ ማስታወቂያዎች: ጊዜያቸው ያለፈ (<= new Date())
+            if (expiresAt <= new Date()) { 
+                foundExpired = true;
+                const listingId = doc.id;
+                
+                // የማለቂያ ቀንን ማስላት (ያለፈ ቀን)
+                const daysLate = Math.ceil((new Date() - expiresAt) / (1000 * 60 * 60 * 24));
+                const daysLateText = `${daysLate} ቀን አልፎታል`;
+                
+                // የዋና ምድብ ስም ለማግኘት (ከእንግሊዝኛ ወደ አማርኛ)
+                const mainCategoryMap = {
+                    vehicle: 'ተሽከርካሪ',
+                    spare_part: 'መለዋወጫ',
+                    phone: 'ስልክ',
+                    clothes: 'ልብስ',
+                    other: 'ሌላ'
+                };
+                const displayMainCategory = mainCategoryMap[listing.mainCategory] || listing.mainCategory;
 
-            // ✅ አዲስ: የኮከብ ማሳያ
-            const starRating = listing.star_rating || 0;
-            let starsHTML = '';
-            for (let i = 0; i < starRating; i++) {
-                starsHTML += '<i class="fas fa-star"></i>';
-            }
-            if (starsHTML) {
-                 starsHTML = `<div class="star-display">${starsHTML}</div>`;
-            }
+                // የኮከብ ማሳያ
+                const starRating = listing.star_rating || 0;
+                let starsHTML = '';
+                for (let i = 0; i < starRating; i++) {
+                    starsHTML += '<i class="fas fa-star"></i>';
+                }
+                if (starsHTML) {
+                     starsHTML = `<div class="star-display">${starsHTML}</div>`;
+                }
 
-            const card = `
-                <div class="listing-card" data-id="${listingId}">
-                    <div class="listing-image-container-v2">
-                        <img src="${listing.image_url}" alt="${listing.itemTitle}">
-                    </div>
-                    <div class="listing-info">
-                        <div>
-                            <h3 class="card-title">${listing.itemTitle}</h3>
-                            <p class="card-meta">ዋና ምድብ: ${displayMainCategory}</p>
-                            <p class="card-meta">ንዑስ ምድብ: ${listing.subCategory}</p>
-                            <p class="card-meta">ዋጋ: ${listing.itemPrice.toLocaleString()} ብር</p>
-                            ${starsHTML} </div>
-                        <div class="days-left-info" ${daysLeftStyle}>
-                            <i class="fas fa-clock"></i> ${daysLeftText}
+                const card = `
+                    <div class="listing-card expired-card" data-id="${listingId}">
+                        <div class="listing-image-container-v2">
+                            <img src="${listing.image_url}" alt="${listing.itemTitle}">
                         </div>
-                        <div class="card-actions">
-                            <button class="action-button edit-btn" data-id="${listingId}" style="background-color: #00bcd4;"><i class="fas fa-edit"></i> አድስ</button>
-                            <button class="action-button desc-btn" data-id="${listingId}" data-desc="${listing.itemDescription.replace(/"/g, '&quot;')}" style="background-color: #ff9800;"><i class="fas fa-file-lines"></i> መግለጫ</button>
-                            <button class="action-button repost-btn" data-id="${listingId}" style="background-color: #4caf50;"><i class="fas fa-redo"></i> ይክፈሉ/አድሱ</button>
-                            <button class="action-button delete-btn" data-id="${listingId}" style="background-color: #f44336;"><i class="fas fa-trash-alt"></i> አስወግድ</button>
+                        <div class="listing-info">
+                            <div>
+                                <h3 class="card-title">${listing.itemTitle}</h3>
+                                <p class="card-meta">ዋና ምድብ: ${displayMainCategory}</p>
+                                <p class="card-meta">ንዑስ ምድብ: ${listing.subCategory}</p>
+                                <p class="card-meta">ዋጋ: ${listing.itemPrice.toLocaleString()} ብር</p>
+                                ${starsHTML} </div>
+                            <div class="days-left-info" style="color: #f44336; font-weight: bold;">
+                                <i class="fas fa-exclamation-circle"></i> ${daysLateText}
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button desc-btn" data-id="${listingId}" data-desc="${listing.itemDescription.replace(/"/g, '&quot;')}" style="background-color: #ff9800;"><i class="fas fa-file-lines"></i> መግለጫ</button>
+                                <button class="action-button repost-btn" data-id="${listingId}" style="background-color: #4caf50;"><i class="fas fa-redo"></i> ይክፈሉ/አድሱ</button>
+                                <button class="action-button delete-btn" data-id="${listingId}" style="background-color: #f44336;"><i class="fas fa-trash-alt"></i> አስወግድ</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            activeListingsGrid.insertAdjacentHTML('beforeend', card);
+                `;
+                expiredListingsGrid.insertAdjacentHTML('beforeend', card);
+            }
         });
         
+        if (!foundExpired) {
+            noExpiredListings.style.display = 'block';
+        }
+        
     } catch (error) {
-        console.error("Error rendering active listings:", error);
-        activeListingsGrid.innerHTML = `<p class="error-message">ማስታወቂያዎችዎን በመጫን ላይ ችግር ተፈጥሯል።</p>`;
+        console.error("Error rendering expired listings:", error);
+        expiredListingsGrid.innerHTML = `<p class="error-message">ያበቁ ማስታወቂያዎችዎን በመጫን ላይ ችግር ተፈጥሯል።</p>`;
     }
 }
 
+
 // ----------------------------------------------------------------------
-// 7. የአሰሳ ተግባር (Navigation Logic)
+// 8. የአሰሳ ተግባር (Navigation Logic) - ✅ ማሻሻያ 3: ያበቁ ማስታወቂያዎችን መጥራት
 // ----------------------------------------------------------------------
 function setupNavigation() {
     const sections = {
@@ -542,6 +668,8 @@ function setupNavigation() {
                 targetSection.style.display = 'block';
                 if (button.id === 'viewActiveListingsBtn') {
                     renderActiveListings(); 
+                } else if (button.id === 'viewExpiredListingsBtn') {
+                    renderExpiredListings(); // ✅ ያበቁ ማስታወቂያዎችን ይጭናል
                 }
             }
 
@@ -564,39 +692,44 @@ function setupNavigation() {
 
 
 // ----------------------------------------------------------------------
-// 8. የንቁ ማስታወቂያ በተን ክሊኮችን ማስተናገድ (Handle Active Listing Button Clicks)
+// 9. የንቁ/ያለቁ ማስታወቂያ በተን ክሊኮችን ማስተናገድ (Handle Listing Button Clicks) - ✅ ማሻሻያ 2: Edit ተወግዷል
 // ----------------------------------------------------------------------
 function setupListingActionListeners() {
-    activeListingsGrid.addEventListener('click', (event) => {
-        const button = event.target.closest('.action-button');
-        if (!button) return; 
+    // ንቁ ማስታወቂያዎች
+    activeListingsGrid.addEventListener('click', handleListingActions);
+    // ያበቁ ማስታወቂያዎች
+    expiredListingsGrid.addEventListener('click', handleListingActions);
+}
 
-        const listingId = button.getAttribute('data-id');
+function handleListingActions(event) {
+    const button = event.target.closest('.action-button');
+    if (!button) return; 
 
-        if (button.classList.contains('edit-btn')) {
-            handleEditListing(listingId);
-        } else if (button.classList.contains('repost-btn')) {
-            handleRepostListing(listingId);
-        } else if (button.classList.contains('delete-btn')) {
-            handleDeleteListing(listingId);
-        } else if (button.classList.contains('desc-btn')) {
-             // ✅ የመግለጫ ቁልፍ ክሊክ ማስተናገድ
-            const description = button.getAttribute('data-desc');
-            handleViewDescription(description);
-        }
-    });
+    const listingId = button.getAttribute('data-id');
+
+    // ✅ የEdit (edit-btn) ማጣሪያ ተወግዷል
+    if (button.classList.contains('repost-btn')) {
+        handleRepostListing(listingId);
+    } else if (button.classList.contains('delete-btn')) {
+        handleDeleteListing(listingId);
+    } else if (button.classList.contains('desc-btn')) {
+         // የመግለጫ ቁልፍ ክሊክ ማስተናገድ
+        const description = button.getAttribute('data-desc');
+        handleViewDescription(description);
+    }
 }
 
 
 // ----------------------------------------------------------------------
-// 9. ገጹ ሲጫን መጀመሪያ የሚሰሩ ተግባራት (Initial Load)
+// 10. ገጹ ሲጫን መጀመሪያ የሚሰሩ ተግባራት (Initial Load)
 // ----------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     if (checkUserAuthentication()) {
         loadUserInfo(); 
         populateSubCategories();
-        setupStarRatingSelector(); // ✅ አዲስ: የኮከብ መምረጫ UI ሎጂክ መጫን
+        setupStarRatingSelector(); 
         calculateCoinCost();
+        // በመጀመሪያ ንቁ ማስታወቂያዎችን ብቻ መጫን
         renderActiveListings(); 
         setupNavigation(); 
         setupListingActionListeners(); 
