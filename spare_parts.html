@@ -11,7 +11,7 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የመለዋወጫ መረጃ - ባጃጅ ሲስተም</title>
+    <title>የመለዋወጫ መረጃ - ድራይቨር ሲስተም</title>
     <link rel="stylesheet" href="style.css"> 
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     
@@ -156,18 +156,10 @@
 </head>
 <body>
     <header class="main-header">
-        <h1>የመለዋወጫ መረጃ</h1>
+      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a> <a href="news.html">ዜናዎች</a> <a href="sales.html">መሸጫ</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="community_data.html">ልውውጥ</a> <a href="fuel_stations.html">የማደያ መረጃ</a> </nav> </div>
+        <h1><span class="accent-text">የመለዋወጫ</span> መረጃ</h1>
         <p>የሚፈልጉትን መለዋወጫ ያግኙ ወይም ያለዎትን መረጃ ያጋሩ!</p>
-        <nav class="sub-nav">
-            <a href="fuel_stations.html">የማደያ መረጃ</a>
-            <a href="news.html">ዜናዎች</a>
-            <a href="sales.html">መሸጫ</a>
-            <a href="maintenance.html">እንክብካቤ</a>
-            <a href="data_entry.html">የማደያ መረጃ አስገባ</a>
-            <a href="community_data.html">የመረጃ ልውውጥ</a>
-            <a href="request_station_info.html">ማደያዎችን ያናግሩ</a>
-             <a href="#" id="logoutButton">መውጫ</a>
-        </nav>
+        
     </header>
 
     <main class="container">
@@ -204,7 +196,7 @@
     </main>
 
     <footer class="main-footer">
-        <p>&copy; 2025 የባጃጅ ሲስተም. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+        <p>&copy; 2025 የድራይቨር ሲስተም. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
     </footer>
 
     <script type="module">
@@ -358,5 +350,6 @@
             console.log("Spare Parts Information page loaded and data fetching is set up.");
         });
     </script>
+    <script src="main.js"></script>
 </body>
 </html>
