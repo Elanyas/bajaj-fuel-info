@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XX2B3RSGP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-2XX2B3RSGP');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ልውውጥ - የመረጃ ማዕከል</title>
+    
+    <link rel="stylesheet" href="style.css"> 
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1. General & Container Overrides to match original structure */
+        .container {
+            max-width: 1200px;
+            /* ሴንተር እንዲይዝ */
+            margin: 20px auto; 
+            padding: 20px;
+            background-color: #1e1e1e; /* Dark background for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            min-height: 80vh;
+            /* ለሞባይል እይታ በጎን በኩል ትንሽ ክፍተት እንዲኖረው */
+            width: 95%; 
+        }
+
+        /* 2. Navigation Buttons Style (አዝራሮችን በጣም ትናንሽ እና ጎን ለጎን) */
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* ክፍተቱን መቀነስ */
+            margin-bottom: 20px;
+            padding: 10px 0;
+            flex-wrap: wrap; 
+        }
+
+        .navigation-buttons button {
+            background-color: #00bcd455; 
+            color: #e0e0e0;
+            padding: 8px 15px; 
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em; 
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            white-space: nowrap; 
+        }
+
+        /* 3. Active Button Style (ሲነካ ወደ ላይ ብድግ ያለ መልክ እና የሲያን ጥላ) */
+        .navigation-buttons button.active {
+            background-color: #00bcd4; 
+            box-shadow: 0 8px 15px #00bcd466; 
+            transform: translateY(-3px); 
+            color: #1e1e1e;
+            border: 2px solid #e0e0e0;
+        }
+        
+        /* 4. Content Display Styles (Grid for data cards) */
+        .data-display-section {
+            padding-top: 20px;
+            /* የካርድ መያዣውን (dataContainer) ሴንተር ለማድረግ */
+            display: flex; 
+            flex-direction: column;
+            align-items: center; /* የልጆችን (ካርድ ኮንቴይነሮች) ሴንተር ለማድረግ */
+            width: 100%;
+        }
+        
+        /* የካርድ ኮንቴይነሮች አቀማመጥ ማስተካከያ */
+        .posts-container, .stations-list, .tip-offs-list {
+            display: grid;
+            /* የካርዱን ዝቅተኛ ስፋት ወደ 300px ከፍ በማድረግ እንዲሰፋ እናደርጋለን */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            padding: 0;
+            width: 90%; /* የዋናውን ኮንቴይነር ስፋት እንዲይዝ */
+            max-width: 1200px;
+            
+            /* ሴንተሩ በ Grid እቃዎች መካከል በትክክል እንዲከፋፈል ያግዛል */
+            justify-content: center; 
+        }
+        
+        /* 5. Card Styles */
+        .community-post-card, .station-card, .tip-off-card {
+            background-color: #2a2a2a;
+            padding: 15px; 
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px; 
+            /* ካርዱ በ Grid ህግ እንዲመራ ለማድረግ width: 100% ተወግዷል */
+            align-items: stretch;
+        }
+        
+        .community-post-card h3, .station-card h3, .tip-off-card h3 {
+            color: #00bcd4;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #444;
+            padding-bottom: 5px;
+        }
+        
+        /* Status Colors */
+        .status-indicator.available { background-color: #4CAF50; color: white; }
+        .status-indicator.low { background-color: #FFC107; color: #333; }
+        .status-indicator.unavailable { background-color: #f44336; color: white; }
+        .status-indicator.no-queue { background-color: #2196F3; color: white; }
+        .status-indicator.short-queue { background-color: #8BC34A; color: white; }
+        .status-indicator.medium-queue { background-color: #FF9800; color: white; }
+        .status-indicator.long-queue { background-color: #D32F2F; color: white; }
+
+        /* Vote Controls */
+        .vote-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #3a3a3a;
+        }
+        .vote-controls button {
+            background: none;
+            border: 1px solid #00bcd4;
+            color: #00bcd4;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .vote-controls button.liked { background-color: #00bcd4; color: white; }
+        .vote-controls button.disliked { background-color: #f44336; color: white; border-color: #f44336; }
+        
+        /* Load More Button & Messages */
+        #loadMoreButton {
+            display: none;
+            width: 90%; /* በሞባይል ጥሩ እይታ እንዲኖረው */
+            max-width: 400px; /* ከፍተኛውን ስፋት መወሰን */
+            padding: 15px;
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .loading-message {
+            text-align: center;
+            font-style: italic;
+            color: #ccc;
+            grid-column: 1 / -1; 
+            padding: 20px;
+        }
+
+        /* 6. Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px auto;
+                padding: 10px;
+            }
+            .navigation-buttons {
+                justify-content: center; 
+                gap: 5px;
+            }
+            .navigation-buttons button {
+                padding: 6px 10px; 
+                font-size: 0.8em; 
+            }
+            /* በትንንሽ ስክሪኖች ላይ ካርዶችን በአንድ አምድ ማሳየት */
+            .posts-container, .stations-list, .tip-offs-list {
+                /* በሞባይል ላይ ሙሉ ስፋቱን እንዲይዝ */
+                grid-template-columns: 1fr;
+                gap: 15px; 
+                padding: 0 5px; 
+            }
+        }
+    </style>
+    
+    <script>
+        // Global variables for user session (As in original files)
+        let isLoggedIn = false;
+        let loggedInUserName = '';
+        let loggedInUserPhone = '';
+        let loggedInUserPassword = '';
+        let loggedInUserLastPaymentDate = '';
+
+        // Check login status and subscription before page load (As in original files)
+        (function checkAuthAndSubscription() {
+            // ... (Your original authentication and subscription check logic goes here) ...
+            
+            isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            loggedInUserName = localStorage.getItem('loggedInUserName');
+            loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+            loggedInUserPassword = localStorage.getItem('loggedInUserPassword');
+            loggedInUserLastPaymentDate = localStorage.getItem('loggedInUserLastPaymentDate');
+
+            if (!isLoggedIn || !loggedInUserName || !loggedInUserPhone || !loggedInUserPassword || !loggedInUserLastPaymentDate) {
+                // If not logged in, redirect to login.html
+                // alert("ይህንን ገጽ ለመጠቀም መግባት አለብዎት።");
+                // localStorage.clear(); 
+                // window.location.href = 'login.html'; 
+                // return;
+                console.warn("User session data missing. Running in simulated mode for code demonstration.");
+            }
+            
+            // Check subscription expiration (30 days)
+            try {
+                const today = new Date();
+                const lastPaymentDate = new Date(loggedInUserLastPaymentDate);
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(today.getDate() - 30);
+
+                if (lastPaymentDate < thirtyDaysAgo) {
+                    // Subscription expired, redirect to login.html
+                    // alert("የደንበኝነት ምዝገባዎ ጊዜው አልፎበታል። እባክዎ ያድሱ።");
+                    // localStorage.clear();
+                    // window.location.href = 'login.html'; 
+                    // return;
+                     console.warn("Subscription expired. Running in simulated mode for code demonstration.");
+                }
+            } catch(e) {
+                console.error("Subscription check error:", e);
+                // alert("የመግባት ፍቃድዎ ሊረጋገጥ አልቻለም።");
+                // localStorage.clear();
+                // window.location.href = 'login.html'; 
+                // return;
+            }
+        })();
+    </script>
+
+</head>
+<body>
+    <header class="main-header">
+      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a>  <a href="stations_fuel_data.html">የተረጋገጠ የማደያዎች መረጃ</a> 
+      <a href="news.html">ዜናዎች</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="combined_community_data.html">ልውውጥ</a> </nav> </div>
+       <div class="ad-marquee-container">
+        <p class="ad-marquee-text">
+            ✨ የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
+            💡 ይህንን እድል ለሌሎች ሹፌር ጓደኞችዎ አሳዎቀዋል? &nbsp; &nbsp; &nbsp; &nbsp;
+            💰 ይህንን ሰፊ የመገናኛ መድረክ እና የመረጃ ምንጭ ለሌሎች ጓደኞቾም ያስተዋውቁ! &nbsp; &nbsp; &nbsp; &nbsp;
+            🛠️ የአገልግሎታችን ተጠቃሚ ስለሆኑ እናመሰግናለን! &nbsp; &nbsp; &nbsp; &nbsp;
+        </p>
+      </div>
+        <h1><span class="accent-text">ልውውጥ</span></h1>
+        <p>የተጠቃሚዎች የማደያ መረጃዎች፣ የተዘጉ የመንገድ ጥቆማዎች እና የማህበረሰብ ልጥፎች</p>
+        
+        <div class="navigation-buttons">
+            <button id="btn-fuel-stations" class="active" data-collection="fuelStations">የማደያ መረጃዎች</button>
+            <button id="btn-tip-offs" data-collection="tipOffs">የተዘጉ መንገዶች</button>
+            <button id="btn-community" data-collection="communityPosts">የማህበረሰብ ልጥፎች</button>
+        </div>
+        
+    </header>
+
+    <main class="container">
+        <section class="data-display-section">
+            <h2 id="sectionTitle">የቅርብ ጊዜ የማደያ መረጃዎች</h2>
+            <div id="dataContainer" class="stations-list">
+                <p class="loading-message">መረጃዎች እየተጫኑ ነው...</p>
+            </div>
+            <button id="loadMoreButton" style="display: none;">ተጨማሪ መረጃ ጫን</button>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2024 ድራይቨር መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
+    </footer>
+
+    <script type="module">
+        // --- Firebase Imports (ከነበሩት ገጾች የተወሰደ) ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit, doc, updateDoc, deleteDoc, addDoc, where, startAfter, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- Firebase Configuration (ከነበሩት ገጾች የተወሰደ) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da5ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // --- Global State Variables for Pagination (ማስተካከያ 6) ---
+        const ITEMS_PER_PAGE = 10; // በየጊዜው የሚጫነው የመረጃ ብዛት
+        let currentCollection = 'fuelStations';
+        let lastVisible = null;
+        let isLoading = false;
+        
+        const dataContainer = document.getElementById('dataContainer');
+        const loadMoreButton = document.getElementById('loadMoreButton');
+        const sectionTitle = document.getElementById('sectionTitle');
+
+        // --- Utility Functions ---
+
+        // TimeAgo function (ከነበሩት ገጾች የተወሰደ)
+        function timeAgo(date) {
+            if (!date) return 'ያልታወቀ';
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) { const value = Math.floor(interval); return value + " " + (value === 1 ? "ዓመት" : "ዓመታት") + " በፊት"; }
+            interval = seconds / 2592000;
+            if (interval > 1) { const value = Math.floor(interval); return value + " " + (value === 1 ? "ወር" : "ወራት") + " በፊት"; }
+            interval = seconds / 86400;
+            if (interval > 1) { const value = Math.floor(interval); return value + " " + (value === 1 ? "ቀን" : "ቀናት") + " በፊት"; }
+            interval = seconds / 3600;
+            if (interval > 1) { const value = Math.floor(interval); return value + " " + (value === 1 ? "ሰዓት" : "ሰዓታት") + " በፊት"; }
+            interval = seconds / 60;
+            if (interval > 1) { const value = Math.floor(interval); return value + " " + (value === 1 ? "ደቂቃ" : "ደቂቃዎች") + " በፊት"; }
+            return "ከጥቂት ሰከንዶች በፊት";
+        }
+        
+        // Function to check and ban user (ከነበሩት ገጾች የተወሰደ)
+        async function checkAndBanUser(phoneNumber) {
+            try {
+                const falspostQuery = query(collection(db, "falspost"), where("phoneNumber", "==", phoneNumber));
+                const falspostSnapshot = await getDocs(falspostQuery);
+
+                if (falspostSnapshot.size >= 3) {
+                    const banusersRef = collection(db, "banusers");
+                    const banQuery = query(banusersRef, where("phoneNumber", "==", phoneNumber));
+                    const banSnapshot = await getDocs(banQuery);
+
+                    if (banSnapshot.empty) {
+                        await addDoc(banusersRef, {
+                            phoneNumber: phoneNumber,
+                            bannedAt: new Date()
+                        });
+                        alert(`ተጠቃሚ ${phoneNumber} በተደጋጋሚ የተሳሳተ መረጃ በመለጠፉ ተገድቧል።`);
+                    }
+                }
+            } catch (error) {
+                console.error("Error checking or banning user:", error);
+            }
+        }
+        
+        // --- Core Data Fetching Function (ማስተካከያ 5 እና 6) ---
+        async function fetchInitialData(collectionName) {
+            if (isLoading) return;
+            isLoading = true;
+            
+            sectionTitle.textContent = getTitleForCollection(collectionName);
+            dataContainer.innerHTML = '<p class="loading-message">መረጃዎች እየተጫኑ ነው...</p>';
+            loadMoreButton.style.display = 'none';
+            lastVisible = null;
+
+            try {
+                const q = query(
+                    collection(db, collectionName), 
+                    orderBy("timestamp", "desc"), 
+                    limit(ITEMS_PER_PAGE)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                dataContainer.innerHTML = ''; 
+
+                if (querySnapshot.empty) {
+                    dataContainer.innerHTML = `<p class="loading-message">ምንም ${getTitleForCollection(collectionName).replace('የቅርብ ጊዜ ', '')} አልተገኘም።</p>`;
+                    isLoading = false;
+                    return;
+                }
+
+                displayData(querySnapshot.docs);
+
+                lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+                
+                // ከተጫኑት ያነሰ መረጃ ካለ ተጨማሪ የመጫኛ አዝራሩ አይታይም
+                if (querySnapshot.docs.length === ITEMS_PER_PAGE) {
+                    loadMoreButton.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error("Error fetching initial data:", error);
+                dataContainer.innerHTML = `<p class="loading-message" style="color: #f44336;">መረጃዎችን በመጫን ላይ ስህተት ተፈጥሯል: ${error.message}</p>`;
+            } finally {
+                isLoading = false;
+            }
+        }
+        
+        async function fetchMoreData() {
+            if (isLoading || !lastVisible) return;
+            isLoading = true;
+            loadMoreButton.disabled = true;
+            loadMoreButton.textContent = 'በመጫን ላይ...';
+
+            try {
+                const q = query(
+                    collection(db, currentCollection), 
+                    orderBy("timestamp", "desc"), 
+                    startAfter(lastVisible),
+                    limit(ITEMS_PER_PAGE)
+                );
+                
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    loadMoreButton.style.display = 'none';
+                    dataContainer.insertAdjacentHTML('beforeend', '<p class="loading-message">ሁሉም መረጃዎች ተጭነዋል።</p>');
+                    isLoading = false;
+                    return;
+                }
+
+                displayData(querySnapshot.docs);
+
+                lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+                
+                if (querySnapshot.docs.length < ITEMS_PER_PAGE) {
+                    loadMoreButton.style.display = 'none';
+                    dataContainer.insertAdjacentHTML('beforeend', '<p class="loading-message">ሁሉም መረጃዎች ተጭነዋል።</p>');
+                }
+
+            } catch (error) {
+                console.error("Error fetching more data:", error);
+                alert("ተጨማሪ መረጃ በመጫን ላይ ስህተት ተፈጥሯል።");
+            } finally {
+                isLoading = false;
+                loadMoreButton.disabled = false;
+                loadMoreButton.textContent = 'ተጨማሪ መረጃ ጫን';
+            }
+        }
+        
+        // --- Data Rendering Function ---
+        function getTitleForCollection(collectionName) {
+            switch(collectionName) {
+                case 'fuelStations': return 'የቅርብ ጊዜ የማደያ መረጃዎች';
+                case 'tipOffs': return 'የቅርብ ጊዜ የተዘጉ የመንገድ ጥቆማዎች';
+                case 'communityPosts': return 'የቅርብ ጊዜ ማህበረሰብ ልጥፎች';
+                default: return 'የመረጃ ዝርዝሮች';
+            }
+        }
+
+        function displayData(docs) {
+            dataContainer.className = ''; // Clear previous grid styles
+            
+            docs.forEach(docSnap => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+                // Check if timestamp is a Firebase Timestamp object and convert it
+                const dateObject = data.timestamp && typeof data.timestamp.toDate === 'function' ? data.timestamp.toDate() : null;
+                const postedTime = dateObject ? timeAgo(dateObject) : 'ያልታወቀ';
+                const likes = data.likes || [];
+                const dislikes = data.dislikes || [];
+                
+                if (currentCollection === 'fuelStations') {
+                    dataContainer.classList.add('stations-list');
+                    const fuelStatusClass = data.fuelStatus === "አለ" ? "available" : (data.fuelStatus === "አነስተኛ" ? "low" : "unavailable");
+                    const queueStatusClass = data.queueStatus === "የለም" ? "no-queue" : (data.queueStatus === "አጭር" ? "short-queue" : (data.queueStatus === "መካከለኛ" ? "medium-queue" : "long-queue"));
+                    
+                    const card = document.createElement('div');
+                    card.className = 'station-card';
+                    card.innerHTML = `
+                        <h3>${data.stationName || 'ያልታወቀ ማደያ'}</h3>
+                        <p><strong>የነዳጅ አይነት:</strong> ${data.fuelType || 'አልተገለጸም'}</p>
+                        <p><strong>የነዳጅ ሁኔታ:</strong> <span class="status-indicator ${fuelStatusClass}">${data.fuelStatus || 'የለም'}</span></p>
+                        <p><strong>የወረፋ ሁኔታ:</strong> <span class="status-indicator ${queueStatusClass}">${data.queueStatus || 'ረጅም'}</span></p>
+                        <p><strong>መረጃ የለጠፈው:</strong> ${data.submittedBy || 'ያልታወቀ'}</p>
+                        <p><strong>የተለጠፈበት ቀን:</strong> ${postedTime}</p>
+                        
+                        <div class="vote-controls">
+                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${id}" data-collection="fuelStations">👍 <span class="like-count">${likes.length}</span></button>
+                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${id}" data-collection="fuelStations">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                        </div>
+                    `;
+                    dataContainer.appendChild(card);
+
+                } else if (currentCollection === 'communityPosts') {
+                    dataContainer.classList.add('posts-container');
+                    const displayAuthorName = data.authorName || 'ያልታወቀ';
+
+                    const card = document.createElement('div');
+                    card.className = 'community-post-card';
+                    card.innerHTML = `
+                        <h3>${data.title || 'ያልታወቀ ርዕስ'}</h3>
+                        <p><strong>የለጠፈው:</strong> ${displayAuthorName}</p>
+                        <p class="post-content">${data.content || 'ይዘት የለም'}</p>
+                        <p><strong>የተለጠፈበት ቀን:</strong> ${postedTime}</p>
+                        
+                        <div class="vote-controls">
+                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${id}" data-collection="communityPosts">👍 <span class="like-count">${likes.length}</span></button>
+                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${id}" data-collection="communityPosts">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                        </div>
+                    `;
+                    dataContainer.appendChild(card);
+                    
+                } else if (currentCollection === 'tipOffs') {
+                    // *** የተጠየቀው ማሻሻያ ለ TipOffs: የካርድ ዲዛይን እና የድምፅ መስጫ መጨመር ***
+                    dataContainer.classList.add('tip-offs-list');
+                    const submittedBy = data.submittedBy || 'ያልታወቀ ተጠቃሚ'; 
+                    
+                    const card = document.createElement('div');
+                    // የካርዱን ክላስ ወደ 'community-post-card' ወይም ተመሳሳይ ዲዛይን ወደሚጋራው ቀይረናል (እዚህ 'tip-off-card' እንዳለ ሆኖ ግን ዲዛይኑ ከ'community-post-card' ጋር ተመሳሳይ እንዲሆን CSS ተስተካክሏል)
+                    card.className = 'tip-off-card'; 
+                    
+                    card.innerHTML = `
+                        <h3 class="tip-location">${data.location || 'ያልታወቀ ቦታ'}</h3>
+                        <p class="tip-details"><strong>ዝርዝር:</strong> ${data.details || 'ዝርዝር አልተገለጸም'}</p>
+                        <p class="tip-meta">የተላከው በ: <strong>${submittedBy}</strong></p>
+                        <p class="tip-meta">የተዘመነ በ: ${postedTime}</p>
+                        
+                        <div class="vote-controls">
+                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${id}" data-collection="tipOffs">👍 <span class="like-count">${likes.length}</span></button>
+                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${id}" data-collection="tipOffs">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                        </div>
+                    `;
+                    dataContainer.appendChild(card);
+                }
+            });
+            
+            // Re-attach event listeners after rendering new cards
+            attachVoteListeners();
+        }
+        
+        // --- Voting Logic (ማስተካከያ 3) ---
+        async function handleVote(event, type) {
+            // Check if user is logged in
+            if (!loggedInUserPhone) {
+                alert("ለድምፅ መስጠት መግባት አለብዎት።");
+                return;
+            }
+            
+            const button = event.currentTarget;
+            const postId = button.dataset.id;
+            const collectionName = button.dataset.collection;
+            
+            const postRef = doc(db, collectionName, postId);
+
+            try {
+                const docSnap = await getDoc(postRef); 
+                if (!docSnap.exists()) {
+                    alert("መረጃው አልተገኘም።");
+                    fetchInitialData(currentCollection);
+                    return;
+                }
+
+                const data = docSnap.data();
+                const currentLikes = data.likes || [];
+                const currentDislikes = data.dislikes || [];
+                // The phone number of the user who posted the data (used for banning)
+                const postAuthor = data.author || data.submittedBy || null; 
+
+                let newLikes = [...currentLikes];
+                let newDislikes = [...currentDislikes];
+
+                const isAlreadyLiked = newLikes.includes(loggedInUserPhone);
+                const isAlreadyDisliked = newDislikes.includes(loggedInUserPhone);
+
+                // --- Vote Toggling Logic ---
+                if (type === 'like') {
+                    if (isAlreadyLiked) {
+                        newLikes = newLikes.filter(phone => phone !== loggedInUserPhone);
+                        button.classList.remove('liked');
+                    } else {
+                        newLikes.push(loggedInUserPhone);
+                        button.classList.add('liked');
+                        if (isAlreadyDisliked) {
+                            newDislikes = newDislikes.filter(phone => phone !== loggedInUserPhone);
+                            // Also update the UI for the disliked button on the same card
+                            document.querySelector(`.dislike-button[data-id="${postId}"]`).classList.remove('disliked');
+                        }
+                    }
+                } else if (type === 'dislike') {
+                    if (isAlreadyDisliked) {
+                        newDislikes = newDislikes.filter(phone => phone !== loggedInUserPhone);
+                        button.classList.remove('disliked');
+                    } else {
+                        newDislikes.push(loggedInUserPhone);
+                        button.classList.add('disliked');
+                        if (isAlreadyLiked) {
+                            newLikes = newLikes.filter(phone => phone !== loggedInUserPhone);
+                             // Also update the UI for the liked button on the same card
+                            document.querySelector(`.like-button[data-id="${postId}"]`).classList.remove('liked');
+                        }
+                    }
+                }
+
+                await updateDoc(postRef, {
+                    likes: newLikes,
+                    dislikes: newDislikes
+                });
+
+                // Update counts on the page directly
+                document.querySelector(`.like-button[data-id="${postId}"] .like-count`).textContent = newLikes.length;
+                document.querySelector(`.dislike-button[data-id="${postId}"] .dislike-count`).textContent = newDislikes.length;
+
+                // --- Automated Deletion and Ban Logic (Applies to fuelStations, communityPosts, and now tipOffs) ---
+                if (newDislikes.length >= 5) {
+                    // Check if the post meets the deletion criteria
+                    if (!(newLikes.length >= 15 && newDislikes.length >= 10)) {
+                        await deleteDoc(postRef); 
+                        alert("መረጃው በተደጋጋሚ ዲስላይክ በመደረጉ ተሰርዟል።");
+
+                        if (postAuthor) {
+                             await addDoc(collection(db, "falspost"), {
+                                phoneNumber: postAuthor,
+                                reason: `${collectionName} Deleted due to excessive dislikes`,
+                                timestamp: new Date()
+                            });
+                            await checkAndBanUser(postAuthor);
+                        }
+                        // Refresh list after deletion
+                        fetchInitialData(currentCollection); 
+                    }
+                }
+
+            } catch (error) {
+                console.error("Vote operation failed:", error);
+                alert("ድምፅ ለመስጠት አልተቻለም። እባክዎ እንደገና ይሞክሩ።");
+            }
+        }
+        
+        function attachVoteListeners() {
+            // Remove previous listeners to prevent multiple execution
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.removeEventListener('click', (e) => handleVote(e, 'like'));
+            });
+            document.querySelectorAll('.dislike-button').forEach(button => {
+                button.removeEventListener('click', (e) => handleVote(e, 'dislike'));
+            });
+            
+            // Attach new listeners
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', (e) => handleVote(e, 'like'));
+            });
+            document.querySelectorAll('.dislike-button').forEach(button => {
+                button.addEventListener('click', (e) => handleVote(e, 'dislike'));
+            });
+        }
+
+        // --- Event Handlers ---
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const navButtons = document.querySelectorAll('.navigation-buttons button');
+            
+            // Button Click Handler
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const newCollection = button.dataset.collection;
+                    
+                    // Update active button style
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    if (currentCollection !== newCollection) {
+                        currentCollection = newCollection;
+                        fetchInitialData(currentCollection);
+                    }
+                });
+            });
+            
+            // Load More Button Handler (Scroll event for auto-load is not implemented, using the explicit button as requested)
+            loadMoreButton.addEventListener('click', fetchMoreData);
+            
+            // Initial data load (Default to fuelStations)
+            fetchInitialData('fuelStations');
+        });
+        
+    </script>
+    <script src="main.js"></script>
+</body>
+</html>

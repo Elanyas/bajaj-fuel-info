@@ -264,7 +264,8 @@
     </head>
 <body>
     <header class="main-header">
-      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a> <a href="stations_fuel_data.html">የተረጋገጠ የማደያዎች መረጃ</a> <a href="news.html">ዜናዎች</a> <a href="sales.html">መሸጫ</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="community_data.html">ልውውጥ</a> <a href="fuel_stations.html">የተጠቃሚዎች የማደያ መረጃ</a> </nav> </div>
+      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a>  <a href="stations_fuel_data.html">የተረጋገጠ የማደያዎች መረጃ</a> 
+      <a href="news.html">ዜናዎች</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="combined_community_data.html">ልውውጥ</a> </nav> </div>
       <div class="ad-marquee-container">
         <p class="ad-marquee-text">
             ✨  የነፃ ምዝገባ ጀምረናል! &nbsp; &nbsp; &nbsp; &nbsp;
@@ -286,7 +287,7 @@
                 <label for="selectFuelStation">የማደያ መረጃ ማስገቢያ</label>
 
                 <input type="radio" id="selectTipOff" name="formType" value="tipOffForm">
-                <label for="selectTipOff">ሀሳብ አስተያየትዎን ለመስጠት</label>
+                <label for="selectTipOff">የተዘጉ መንገዶችን ለመጠቆም</label>
 
                 <input type="radio" id="selectCommunityPost" name="formType" value="communityPostForm">
                 <label for="selectCommunityPost">የማህበረሰብ ልጥፍ</label>
@@ -348,15 +349,15 @@
         </section>
 
         <section id="tipOffForm" class="data-entry-form-card">
-            <h2>ሀሳብ አስተያየትዎን ለመስጠት</h2>
+            <h2>የተዘጉ መንገዶችን ይጠቁሙ</h2>
             <form id="tipOffSubmissionForm" class="data-form">
                 <div class="input-group">
-                    <label for="tipOffLocation">ርእስ:</label>
-                    <input type="text" id="tipOffLocation" placeholder="ለምሳሌ: ዌብሳይት፣ ቦት" required>
+                    <label for="tipOffLocation">መንገድ:</label>
+                    <input type="text" id="tipOffLocation" placeholder="ለምሳሌ: ከአጂፕ አራተኛ መንገድ" required>
                 </div>
                 <div class="input-group">
                     <label for="tipOffDetails">ዝርዝር:</label>
-                    <textarea id="tipOffDetails" rows="4" placeholder="ለምሳሌ፦ ዌብሳይቱ በጣም ጥሩ ነው። የብዙዎችን ህይወት በማቅለል ጥሩ አገሎገሎት ይሰጣል።" required></textarea>
+                    <textarea id="tipOffDetails" rows="4" placeholder="ለምሳሌ፦ በኮሪደር ልማት ምክንያት በትራፊክ መብራት ወደ አራተኛ የሚወስደው መንገድ ተዘግቷል።" required></textarea>
                 </div>
                 <button type="submit" class="submit-button">አስገባ</button>
                 <p id="tipOffMessage" class="form-message"></p>
@@ -488,34 +489,40 @@
                 }
             });
 
-            // Tip-Off Form Submission
-            const tipOffSubmissionForm = document.getElementById('tipOffSubmissionForm');
-            const tipOffMessage = document.getElementById('tipOffMessage');
+// Tip-Off Form Submission
+const tipOffSubmissionForm = document.getElementById('tipOffSubmissionForm');
+const tipOffMessage = document.getElementById('tipOffMessage');
 
-            tipOffSubmissionForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                tipOffMessage.textContent = 'ጥቆማ እየተላከ ነው...';
-                tipOffMessage.style.color = '#e0e0e0';
+tipOffSubmissionForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    tipOffMessage.textContent = 'ጥቆማ እየተላከ ነው...';
+    tipOffMessage.style.color = '#e0e0e0';
 
-                const tipOffLocation = document.getElementById('tipOffLocation').value.trim();
-                const tipOffDetails = document.getElementById('tipOffDetails').value.trim();
+    const tipOffLocation = document.getElementById('tipOffLocation').value.trim();
+    const tipOffDetails = document.getElementById('tipOffDetails').value.trim();
 
-                try {
-                    await window.addDoc(window.collection(window.db, "tipOffs"), {
-                        location: tipOffLocation,
-                        details: tipOffDetails,
-                        // removed submittedBy and authorPhone for anonymity
-                        timestamp: window.serverTimestamp()
-                    });
-                    tipOffMessage.textContent = 'ጥቆማ በተሳካ ሁኔታ ገብቷል! እናመሰግናለን።';
-                    tipOffMessage.style.color = '#4CAF50';
-                    tipOffSubmissionForm.reset();
-                } catch (error) {
-                    console.error("Error adding tip-off document: ", error);
-                    tipOffMessage.textContent = 'ጥቆማ ማስገባት አልተቻለም: ' + error.message;
-                    tipOffMessage.style.color = '#f44336';
-                }
-            });
+    // የተለጠፈውን ሰው ስም እና ስልክ ቁጥር ከ localStorage ወስደን መጨመር
+    const loggedInUserName = localStorage.getItem('loggedInUserName');
+    const loggedInUserPhone = localStorage.getItem('loggedInUserPhone');
+
+    try {
+        await window.addDoc(window.collection(window.db, "tipOffs"), {
+            location: tipOffLocation,
+            details: tipOffDetails,
+            // የጠቋሚውን መረጃ ለመጨመር:
+            submittedBy: loggedInUserName || 'ያልታወቀ ተጠቃሚ', // የለጠፈውን ሰው ሙሉ ስም
+            authorPhone: loggedInUserPhone || 'ስልክ ቁጥር የለም',   // የለጠፈውን ሰው ስልክ ቁጥር
+            timestamp: window.serverTimestamp()
+        });
+        tipOffMessage.textContent = 'ጥቆማ በተሳካ ሁኔታ ገብቷል! እናመሰግናለን።';
+        tipOffMessage.style.color = '#4CAF50';
+        tipOffSubmissionForm.reset();
+    } catch (error) {
+        console.error("Error adding tip-off document: ", error);
+        tipOffMessage.textContent = 'ጥቆማ ማስገባት አልተቻለም: ' + error.message;
+        tipOffMessage.style.color = '#f44336';
+    }
+});
 
             // Community Post Form Submission
             const communityPostSubmissionForm = document.getElementById('communityPostSubmissionForm');
