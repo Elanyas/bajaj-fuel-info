@@ -504,12 +504,11 @@
                     dataContainer.appendChild(card);
                     
                 } else if (currentCollection === 'tipOffs') {
-                    // *** የተጠየቀው ማሻሻያ ለ TipOffs: የካርድ ዲዛይን እና የድምፅ መስጫ መጨመር ***
+                    // *** የተዘጉ የመንገድ ጥቆማዎች (tipOffs) ማሻሻያ፡ መሰረዝን/እግድን የሚያስከትል ሎጂክ ተወግዷል ***
                     dataContainer.classList.add('tip-offs-list');
                     const submittedBy = data.submittedBy || 'ያልታወቀ ተጠቃሚ'; 
                     
                     const card = document.createElement('div');
-                    // የካርዱን ክላስ ወደ 'community-post-card' ወይም ተመሳሳይ ዲዛይን ወደሚጋራው ቀይረናል (እዚህ 'tip-off-card' እንዳለ ሆኖ ግን ዲዛይኑ ከ'community-post-card' ጋር ተመሳሳይ እንዲሆን CSS ተስተካክሏል)
                     card.className = 'tip-off-card'; 
                     
                     card.innerHTML = `
@@ -519,8 +518,8 @@
                         <p class="tip-meta">የተዘመነ በ: ${postedTime}</p>
                         
                         <div class="vote-controls">
-                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${id}" data-collection="tipOffs">👍 <span class="like-count">${likes.length}</span></button>
-                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${id}" data-collection="tipOffs">👎 <span class="dislike-count">${dislikes.length}</span></button>
+                            <button class="like-button ${likes.includes(loggedInUserPhone) ? 'liked' : ''}" data-id="${id}" data-collection="tipOffs">ተዘግቷል<span class="like-count">${likes.length}</span></button>
+                            <button class="dislike-button ${dislikes.includes(loggedInUserPhone) ? 'disliked' : ''}" data-id="${id}" data-collection="tipOffs">ተከፍቷል<span class="dislike-count">${dislikes.length}</span></button>
                         </div>
                     `;
                     dataContainer.appendChild(card);
@@ -603,8 +602,8 @@
                 document.querySelector(`.like-button[data-id="${postId}"] .like-count`).textContent = newLikes.length;
                 document.querySelector(`.dislike-button[data-id="${postId}"] .dislike-count`).textContent = newDislikes.length;
 
-                // --- Automated Deletion and Ban Logic (Applies to fuelStations, communityPosts, and now tipOffs) ---
-                if (newDislikes.length >= 5) {
+                // --- Automated Deletion and Ban Logic (Applies ONLY to fuelStations and communityPosts) ---
+                if (collectionName !== 'tipOffs' && newDislikes.length >= 5) {
                     // Check if the post meets the deletion criteria
                     if (!(newLikes.length >= 15 && newDislikes.length >= 10)) {
                         await deleteDoc(postRef); 
