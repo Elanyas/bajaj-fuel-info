@@ -90,11 +90,11 @@ async function loadUserInfo() {
         const userDocRef = doc(db, "users", sellerDocumentId);
         const userSnapshot = await getDoc(userDocRef); 
 
-        if (userSnapshot.exists() && userSnapshot.data().bs_coin_balance !== undefined) {
-            coinBalanceDisplay.textContent = userSnapshot.data().bs_coin_balance;
+        if (userSnapshot.exists() && userSnapshot.data().ds_coin_balance !== undefined) {
+            coinBalanceDisplay.textContent = userSnapshot.data().ds_coin_balance;
         } else {
             coinBalanceDisplay.textContent = '0';
-            console.warn("BS Coin balance not found in user document. Defaulting to 0.");
+            console.warn("DS Coin balance not found in user document. Defaulting to 0.");
         }
     } catch (error) {
         console.error("Error loading coin balance:", error);
@@ -246,7 +246,7 @@ async function postNewListing(event) {
 
     if (currentBalance < coinCost) {
         listingMessage.style.color = '#f44336';
-        listingMessage.textContent = `ቂንትሮስ የ BS Coin ባላንስ የለዎትም። ${coinCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ።`;
+        listingMessage.textContent = `ቂንትሮስ የ DS Coin ባላንስ የለዎትም። ${coinCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ።`;
         return;
     }
 
@@ -316,7 +316,7 @@ async function postNewListing(event) {
         const userDocRef = doc(db, "users", sellerDocumentId); 
         const newBalance = currentBalance - coinCost;
         await updateDoc(userDocRef, {
-            bs_coin_balance: newBalance
+            ds_coin_balance: newBalance
         });
 
         // ስኬታማ ከሆነ
@@ -395,7 +395,7 @@ async function handleRepostListing(listingId) {
         }
 
         if (currentBalance < totalRenewCost) {
-            alert(`ቂንትሮስ የ BS Coin ባላንስ የለዎትም (${currentBalance} ኮይን)። ማስታወቂያውን ለማደስ ${totalRenewCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ። (መሰረታዊ: ${renewCost} + ኮከብ: ${starCost})`);
+            alert(`ቂንትሮስ የ DS Coin ባላንስ የለዎትም (${currentBalance} ኮይን)። ማስታወቂያውን ለማደስ ${totalRenewCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ። (መሰረታዊ: ${renewCost} + ኮከብ: ${starCost})`);
             return;
         }
         
@@ -421,7 +421,7 @@ async function handleRepostListing(listingId) {
         const newBalance = currentBalance - totalRenewCost;
         
         await updateDoc(userDocRef, {
-            bs_coin_balance: newBalance
+            ds_coin_balance: newBalance
         });
 
         alert(`ማስታወቂያው በተሳካ ሁኔታ ታድሷል! የኮይን ሂሳብዎ ${totalRenewCost} ኮይን ተቀንሷል። አዲስ ባላንስ: ${newBalance}`);
