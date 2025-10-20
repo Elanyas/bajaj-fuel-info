@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ዜና አስተዳደር - የሐረሪ ክልል ትራንስፖርት</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ከ style.css በተጨማሪ ለዚህ ገጽ የተዘጋጁ ተጨማሪ ስታይሎች */
+        :root {
+            --cyan-accent: #00bcd4; /* ሲያን ከለር */
+            --light-bg: #1e1e1e;
+            --dark-bg: #121212;
+            --text-color: #e0e0e0;
+        }
+
+        /* የመግቢያ ሞዳል ስታይል */
+        .modal {
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--light-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .modal-content input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-size: 1.1em;
+            text-align: center;
+            transition: box-shadow 0.3s, border-color 0.3s; 
+        }
+        /* የይለፍ ቃል ማስገቢያ ሲነካ የሲያን ጥላ እንዲኖረው */
+        .modal-content input[type="password"]:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 8px rgba(0, 188, 212, 0.6); /* ሲያን ከለር ጥላ */
+            outline: none;
+        }
+        .modal-content button {
+            background-color: var(--cyan-accent);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .modal-content button:hover {
+            background-color: #0097a7;
+        }
+        .auth-message {
+            margin-top: 15px;
+            color: red;
+            font-weight: 700;
+        }
+
+
+        .main-header {
+            padding: 20px 0;
+        }
+
+        .admin-nav {
+            display: flex;
+            justify-content: center; /* በተኖቹ ሴንተር ላይ እንዲሆኑ */
+            gap: 15px;
+            margin: 0 auto 30px auto; 
+            max-width: fit-content;
+        }
+        .admin-nav-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.3s, transform 0.1s;
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            color: #ffffff;
+            background-color: #333;
+        }
+        .admin-nav-btn.active,
+        .admin-nav-btn:hover {
+            background-color: var(--cyan-accent); /* ሲያን ከለር */
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto 50px auto;
+            padding: 20px;
+            background-color: var(--light-bg); 
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* የጽሁፍ ማስገቢያዎች ስታይል እና ሲነኩ የሚወጣው ጥላ (Cyan Shadow) */
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            transition: box-shadow 0.3s, border-color 0.3s;
+            resize: none; /* አዲስ: የTextareaን ሪሳይዝ ማጥፋት፣ በJS መቆጣጠር */
+            overflow: hidden; /* አዲስ: Scrollbarን መደበቅ */
+            min-height: 50px; /* አዲስ: ዝቅተኛ ቁመት */
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 8px rgba(0, 188, 212, 0.6); /* ሲያን ከለር ጥላ */
+            outline: none;
+        }
+        
+        /* የምስል ማስገቢያ ቦታ ማስተካከያ */
+        .image-upload-area {
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
+            padding: 15px;
+            border: 2px dashed rgba(0, 188, 212, 0.4); 
+            border-radius: 8px;
+            background-color: #2c2c2c;
+            margin-top: 10px;
+        }
+        #newsImage {
+            margin-bottom: 15px;
+        }
+        #imagePreview {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            border: 2px solid var(--cyan-accent);
+            border-radius: 5px;
+            display: none; 
+            margin-top: 10px;
+        }
+        
+        /* የ submit በተን ስታይል - ትልቅ እና ሴንተር ላይ እንዲሆን */
+        .submit-btn {
+            background-color: var(--cyan-accent); /* ሲያን ከለር */
+            padding: 15px 30px; 
+            font-size: 1.2em; 
+            margin: 20px auto; 
+            display: block; 
+            width: fit-content; 
+        }
+        .submit-btn:hover {
+            background-color: #0097a7;
+        }
+
+        /* ለተለጠፉ ዜናዎች ካርዶች ስታይል */
+        .news-article-card {
+            display: flex;
+            background-color: #2c2c2c;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        /* አዲስ፡ የምስል አቀማመጥ ማስተካከያ */
+        .article-image {
+            width: 200px; /* ስፋት እንዲወስድ */
+            height: 150px; /* ቁመት እንዲወስድ */
+            object-fit: cover; /* ምስሉ ካርዱን ይሙሉ (ይቆረጥ) */
+            object-position: center; /* ምስሉ መሃል ላይ እንዲሆን */
+            flex-shrink: 0; /* እንዳይቀንስ */
+            align-self: center; /* መሃል ላይ እንዲቀመጥ */
+            margin: 10px; /* ከጽሁፉ ትንሽ እንዲርቅ */
+            border-radius: 5px;
+        }
+        @media (max-width: 600px) {
+            .news-article-card {
+                flex-direction: column; /* በትንሽ ስክሪን ላይ ምስል እና ጽሁፍ ተደራርበው */
+                align-items: center;
+            }
+            .article-image {
+                width: 95%; 
+                height: 180px;
+                margin: 10px 0;
+            }
+        }
+        /* መጨረሻ ማስተካከያ: ምስሉ ካርዱን ከላይ ወደታች እንዲገጥም */
+        .article-body {
+            flex-grow: 1;
+            padding: 15px;
+        }
+        
+        /* የ Edit/Delete በተኖችን እኩል ለማድረግ */
+        .feedback-panel {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: space-between; 
+        }
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #fff;
+            transition: opacity 0.3s;
+            flex-grow: 1; 
+            text-align: center; 
+        }
+        .edit-btn {
+            background-color: #4A4A4A; /* ጥቁር ግራጫ */
+        }
+        .delete-btn {
+            background-color: #383838; /* ከበፊቱ የጠቆረ ግራጫ */
+        }
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <h2>የዜና አስተዳደር መግቢያ</h2>
+            <p>ለመቀጠል የ8-digit የይለፍ ቃልዎን ያስገቡ።</p>
+            <input type="password" id="adminPassword" placeholder="8-Digit የይለፍ ቃል" maxlength="8" required>
+            <button id="loginBtn">ይግቡ</button>
+            <p id="authMessage" class="auth-message" style="display: none;"></p>
+        </div>
+    </div>
+    
+    <div id="adminPanelContent" style="display: none;">
+        <header class="main-header">
+            <h1>የዜና አስተዳደር ማዕከል</h1>
+            <div class="admin-nav">
+                <button class="admin-nav-btn active" id="showPostFormBtn">ዜና አስገባ</button>
+                <button class="admin-nav-btn" id="showPostedNewsBtn">የተለጠፉ ዜናዎች</button>
+            </div>
+        </header>
+    
+        <main class="container">
+            
+            <section id="postNewsSection">
+                <h2 id="formTitle">አዲስ ዜና መለጠፍ</h2>
+                <form id="newsForm">
+                    <input type="hidden" id="newsIdToEdit" value=""> 
+
+                    <div class="form-group">
+                        <label for="newsTitle">የርዕስ ርዕስ (Title):</label>
+                        <input type="text" id="newsTitle" name="newsTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsSummary">ማጠቃለያ (Summary - አጭር መግለጫ):</label>
+                        <textarea id="newsSummary" name="newsSummary" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsContent">ሙሉ የዜና ይዘት (Full Content):</label>
+                        <textarea id="newsContent" name="newsContent" rows="8" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="newsImage">ዋና ምስል (Image):</label>
+                        <div class="image-upload-area">
+                            <input type="file" id="newsImage" name="newsImage" accept="image/*">
+                            <img id="imagePreview" src="" alt="ምስል ቅድመ እይታ">
+                            <p id="currentImageUrl" style="color: #ccc; font-size: 0.9em; display: none;">የአሁን ምስል:</p>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitNewsBtn"><i class="fas fa-upload"></i> ዜናውን ይለጥፉ</button>
+                    <p id="formMessage" class="message" style="display: none;"></p>
+                </form>
+            </section>
+    
+            <section id="postedNewsSection" style="display: none;">
+                <h2>የተለጠፉ ዜናዎች</h2>
+                <div id="newsListings">
+                    <p style="text-align: center;">ዜናዎች በቅርቡ እዚህ ይታያሉ።</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script type="module" src="admin_logic.js"></script> 
+</body>
+</html>

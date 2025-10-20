@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የዜና ለጣፊ ምዝገባ - የሐረሪ ክልል ትራንስፖርት</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ከ style.css በመውሰድ ለዚህ ገጽ የተዘጋጁ ስታይሎች */
+        :root {
+            --cyan-accent: #00bcd4; /* ሲያን ከለር */
+            --light-bg: #1e1e1e;
+            --dark-bg: #121212;
+            --text-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            /* ይህ ለ header h1 ነው */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: var(--light-bg); 
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        /* የጽሁፍ ማስገቢያዎች ስታይል እና ሲነኩ የሚወጣው ጥላ (Cyan Shadow) */
+        input[type="text"], input[type="tel"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: var(--text-color);
+            box-sizing: border-box;
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="tel"]:focus, input[type="password"]:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 8px rgba(0, 188, 212, 0.6); /* ሲያን ከለር ጥላ */
+            outline: none;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--cyan-accent); /* ሲያን ከለር */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 700;
+        }
+
+        .submit-btn:hover {
+            background-color: #0097a7;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .error-message {
+            background-color: #FF4136;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <header class="main-header">
+            <h1><i class="fas fa-user-plus"></i> የዜና ለጣፊ ምዝገባ</h1>
+            <p style="color: #bbb; font-size: 0.9em;">አዲስ የዜና አስተዳዳሪን ይመዝግቡ።</p>
+        </header>
+
+        <form id="posterRegistrationForm">
+            <div class="form-group">
+                <label for="posterName"><i class="fas fa-user"></i> ሙሉ ስም:</label>
+                <input type="text" id="posterName" required>
+            </div>
+            <div class="form-group">
+                <label for="posterPhone"><i class="fas fa-phone"></i> ስልክ ቁጥር (ለምዝገባና መግቢያ የሚውል):</label>
+                <input type="tel" id="posterPhone" pattern="[0-9]{10}" maxlength="10" placeholder="ለምሳሌ: 09XXXXXXXX" required>
+            </div>
+            <div class="form-group">
+                <label for="posterPassword"><i class="fas fa-lock"></i> የይለፍ ቃል (Password - 8-Digit):</label>
+                <input type="password" id="posterPassword" pattern="[0-9]{8}" maxlength="8" placeholder="8-Digit ቁጥር ብቻ" required>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="registerBtn"><i class="fas fa-sign-in-alt"></i> ይመዝገቡ</button>
+            <p id="formMessage" class="message" style="display: none;"></p>
+        </form>
+    </div>
+
+    <script type="module">
+        // ======================================================================
+        // 1. Firebase Configs
+        // ======================================================================
+        
+        // ከቀደምት ውይይቶችዎ የተወሰደው የFirebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+        
+        // ወሳኝ የFirebase ሞዱሎችን ማስመጣት
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            query, 
+            where, 
+            getDocs 
+        } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+        
+        // Firebase App እና Firestore Database ማስጀመር
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app); 
+        const NEWSPOSTER_COLLECTION = "newsposter";
+
+        // ======================================================================
+        // 2. DOM Elements ማግኘት
+        // ======================================================================
+        const form = document.getElementById('posterRegistrationForm');
+        const posterNameInput = document.getElementById('posterName');
+        const posterPhoneInput = document.getElementById('posterPhone');
+        const posterPasswordInput = document.getElementById('posterPassword');
+        const registerBtn = document.getElementById('registerBtn');
+        const formMessage = document.getElementById('formMessage');
+
+        // ======================================================================
+        // 3. የምዝገባ ተግባር
+        // ======================================================================
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            formMessage.style.display = 'none';
+
+            const name = posterNameInput.value.trim();
+            const phone = posterPhoneInput.value.trim();
+            const password = posterPasswordInput.value.trim();
+
+            if (!name || phone.length !== 10 || password.length !== 8) {
+                showMessage("እባክዎ ትክክለኛውን ስም፣ 10-digit ስልክ ቁጥር እና 8-digit የይለፍ ቃል ያስገቡ።", 'error');
+                return;
+            }
+
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> በመመዝገብ ላይ...';
+
+            try {
+                // 1. ስልክ ቁጥሩ መደጋገሙን አጣራ
+                const q = query(collection(db, NEWSPOSTER_COLLECTION), where("phone", "==", phone));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    showMessage(`ስልክ ቁጥር (${phone}) አስቀድሞ ተመዝግቧል።`, 'error');
+                    registerBtn.disabled = false;
+                    registerBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ይመዝገቡ';
+                    return;
+                }
+
+                // 2. አዲስ ለጣፊ ወደ Firestore አስገባ
+                await addDoc(collection(db, NEWSPOSTER_COLLECTION), {
+                    name: name,
+                    phone: phone,
+                    password: password, // የይለፍ ቃልዎን በተሻለ ሁኔታ ኢንክሪፕት ማድረግ ቢኖርብዎም፣ ለአሁኑ በቀጥታ እናስቀምጣለን
+                    registeredAt: new Date().toISOString()
+                });
+
+                showMessage(`✅ ዜና ለጣፊው (${name}) በተሳካ ሁኔታ ተመዝግቧል።`, 'success');
+                form.reset(); // ቅጹን አጽዳ
+
+            } catch (error) {
+                console.error("Error registering poster: ", error);
+                showMessage(`ምዝገባውን ለመፈፀም አልተቻለም: ${error.message}`, 'error');
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ይመዝገቡ';
+            }
+        });
+
+        function showMessage(message, type) {
+            formMessage.textContent = message;
+            formMessage.className = `message ${type}-message`;
+            formMessage.style.display = 'block';
+            setTimeout(() => {
+                formMessage.style.display = 'none';
+            }, 6000);
+        }
+
+    </script> 
+</body>
+</html>
