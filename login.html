@@ -41,7 +41,11 @@
                 <p class="forgot-password-link" style="display: none;">
                     የይለፍ ቃልዎን ረሱ? <a href="#" id="forgotPasswordTrigger">እዚህ ይጫኑ</a>
                 </p>
-            </div>
+                
+                <p class="register-link-container">
+                    አዲስ ተጠቃሚ ነዎት? <a href="driver_register.html" id="registerTrigger" class="register-link">ይመዝገቡ</a>
+                </p>
+                </div>
         </div>
 
         <div class="info-container">
@@ -80,13 +84,8 @@
                     <b> የነጻ ምዝገባ ላይ ነን!</b>
                     በዚህ ጊዜ የምትመዘገቡ ከሆነ የክፍያ ማረጋገጫ ሳያስፈልግዎ የዌብሳይቱን አገልግሎት መጠቀም ይችላሉ።
                    <br>
-                   <b> ነጻ ምዝገባ ለማድረግ: </b>ወደ ቴሌግራም ቦት ይሂዱ እና ሙሉ ስምዎን፣ የመረጡትን የይለፍ ቃል እና ስልክ ቁጥርዎን ይላኩ።
-                    (ለምሳሌ: አበበ ከበደ, 1234, 0912345678)
+                   <b> ነጻ ምዝገባ ለማድረግ: </b>በመግቢያ ገጹ ስር ያለውን **"ይመዝገቡ"** የሚለውን በተን ይጫኑ እና በሚመጣው ገጽ ላይ አስፈላጊውን መረጃ ይሙሉ።
                 </p>
-                <p>ከታች ያለውን በተን በመጫን ወደ <span class="telegram-link-text">ቴሌግራም ቦት</span> ላይ ይሂዱ።</p>
-                <div class="telegram-button-container">
-                    <a href="https://t.me/elan_payment_bot" target="_blank" class="telegram-button"><strong>ቴሌግራም ቦት</strong></a>
-                </div>
             </div>
             <p class="important-note"><strong> ድረ-ገጹ ስራዎን ለማቃለል እና ወጪዎን ለመቀነስ እንደሚረዳዎ እርግጠኞች ነን!</strong></p>
         </div>
@@ -278,7 +277,8 @@
     // Forgot password functionality
     forgotPasswordTrigger.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent default link behavior
-        alert("የይለፍ ቃልዎን ለማግኘት ወደ ቴሌግራም ቦት ይሂዱ እና 'ፓስወርድ(Elan)' ብለው ይጻፉ።");
+        // ✅ የቴሌግራም መመሪያው ወደ መመዝገቢያ ገጹ ለመሄድ እንዲረዳ ተለውጧል
+        alert("የይለፍ ቃልዎን ለማግኘት ወደ አድሚን ያግኙ ወይም እንደገና ለመመዝገብ ይሞክሩ።");
     });
 
 </script>

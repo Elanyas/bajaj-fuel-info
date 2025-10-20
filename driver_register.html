@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የድራይቨር ነዳጅ መረጃ - ነጻ ምዝገባ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /*
+        * አዲስ የዳርክ ሞድ ስታይል (Driver Registration Dark Mode Style)
+        * ✅ ዋናው አረንጓዴ ቀለም ወደ ሳይያን ተቀይሯል (primary-color: #00bcd4)
+        */
+        :root {
+            --primary-color: #00bcd4; /* ሳይያን */
+            --primary-light: #26c6da;
+            --background-color: #1a202c; /* በጣም ጥቁር */
+            --card-background: #2d3748; /* ለካርድ ትንሽ የቀለለ ጥቁር */
+            --text-color: #e2e8f0; /* ነጭに近い */
+            --input-background: #4a5568;
+            --border-color: #4a5568;
+            --error-color: #e53e3e;
+            --success-color: #00bcd4; /* ሳይያን */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 400px; /* ለምዝገባ ገጽ ትንሽ እንዲሆን */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-section {
+            width: 100%;
+        }
+
+        .login-form-card {
+            background-color: var(--card-background);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5); /* ጥላ ለዳርክ ሞድ */
+            transition: transform 0.3s ease;
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            font-size: 16px;
+            color: var(--text-color);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-background);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 1px var(--primary-light);
+        }
+        
+        /* የ date input ቀለሙን ማስተካከል */
+        input[type="date"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-light);
+        }
+
+        button:active {
+            transform: scale(0.99);
+        }
+
+        button:disabled {
+            background-color: #4a5568;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            background-color: #fee2e220;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            background-color: #d6f2e020;
+        }
+        
+        /* አዲስ ለነጻ ምዝገባ */
+        .free-registration-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #90cdf4; /* ለየት ያለ ቀለም */
+        }
+        .free-registration-note a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .login-form-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="login-section"> 
+            <div class="login-form-card">
+                <h2 class="form-title">ወደ አገልግሎቱ ይመዝገቡ!</h2>
+                <p class="form-subtitle">በነጻ የአገልግሎቱ ተጠቃሚ ይሁኑ።</p>
+                
+                <div class="input-group">
+                    <label for="fullNameInput" class="sr-only">ሙሉ ስም:</label>
+                    <input type="text" id="fullNameInput" placeholder="ሙሉ ስም" required>
+                </div>
+                <div class="input-group">
+                    <label for="phoneNumberInput" class="sr-only">ስልክ ቁጥር:</label>
+                    <input type="tel" id="phoneNumberInput" placeholder="ስልክ ቁጥር (ለምሳሌ: 0912345678)" required>
+                </div>
+                <div class="input-group">
+                    <label for="passwordInput" class="sr-only">የይለፍ ቃል:</label>
+                    <input type="text" id="passwordInput" placeholder="የይለፍ ቃል (ቢያንስ 4 ፊደላት)" required>
+                </div>
+                
+                <button id="registerButton">መመዝገቢያ</button>
+                
+                <p id="errorMessage" class="message error-message"></p>
+
+                <p id="successMessage" class="message success-message"></p>
+                
+                <p class="free-registration-note">
+                   አስቀድመው ተመዝግበዋል? ወደ <a href="login.html">መግቢያ ገጽ</a> ይሂዱ።
+                </p>
+            </div>
+        </div>
+        
+        </div>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+    // ✅ የ Firebase ኮንፊግሬሽን
+    const firebaseConfig = {
+        apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+        authDomain: "elanyas-info.firebaseapp.com",
+        projectId: "elanyas-info",
+        storageBucket: "elanyas-info.firebasestorage.app",
+        messagingSenderId: "769306910360",
+        appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+        measurementId: "G-2XX2B3RSGP"
+    };
+
+    // Firebaseን ማስጀመር
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // የ HTML ኤለመንቶችን መያዝ
+    const fullNameInput = document.getElementById('fullNameInput');
+    const phoneNumberInput = document.getElementById('phoneNumberInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const registerButton = document.getElementById('registerButton');
+    const errorMessageDisplay = document.getElementById('errorMessage');
+    const successMessageDisplay = document.getElementById('successMessage');
+
+    // የስህተት መልእክት ለማሳየት
+    function showErrorMessage(message) {
+        errorMessageDisplay.textContent = message;
+        errorMessageDisplay.style.opacity = "1";
+        successMessageDisplay.style.opacity = "0";
+    }
+
+    // የስኬት መልእክት ለማሳየት
+    function showSuccessMessage(message) {
+        successMessageDisplay.textContent = message;
+        successMessageDisplay.style.opacity = "1";
+        errorMessageDisplay.style.opacity = "0";
+    }
+
+    // መልእክቶችን ለመደበቅ
+    function hideMessages() {
+        errorMessageDisplay.style.opacity = "0";
+        errorMessageDisplay.textContent = "";
+        successMessageDisplay.style.opacity = "0";
+        successMessageDisplay.textContent = "";
+    }
+    
+    // የምዝገባ ቁልፉ ሲጫን
+    registerButton.addEventListener('click', async () => {
+        hideMessages();
+
+        const fullName = fullNameInput.value.trim();
+        const phoneNumber = phoneNumberInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // የመረጃ ማስገቢያው ባዶ አለመሆኑን ማረጋገጥ
+        if (!fullName || !phoneNumber || !password) {
+            showErrorMessage("እባክዎ ሁሉንም መስኮች ይሙሉ!");
+            return;
+        }
+
+        // የስልክ ቁጥር ትክክለኛነት ማረጋገጥ
+        if ((!phoneNumber.startsWith('09') && !phoneNumber.startsWith('07')) || phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
+            showErrorMessage("ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ (ለምሳሌ: 0912345678)");
+            return;
+        }
+
+        // የይለፍ ቃል ርዝመት ማረጋገጥ
+        if (password.length < 4) {
+            showErrorMessage("የይለፍ ቃልዎ ቢያንስ 4 ፊደላት መሆን አለበት።");
+            return;
+        }
+        
+        // የይለፍ ቃል ትክክለኛ ፎርማት ማረጋገጥ
+        if (!/^[a-zA-Z0-9\-\s]+$/.test(password)) {
+            showErrorMessage("የይለፍ ቃልዎ ፊደሎችን፣ ቁጥሮችን፣ ሰረዞችን (-) እና ክፍተቶችን (space) ብቻ ሊይዝ ይችላል።");
+            return;
+        }
+
+        registerButton.disabled = true; // ምዝገባ እስኪጠናቀቅ አዝራሩን disable ማድረግ
+        showErrorMessage("እየተመዘገበ ነው... እባክዎ ይጠብቁ።");
+
+        try {
+            // ✅ የይለፍ ቃሉን ወደ ትልቅ ፊደል መቀየር
+            const passwordUpper = password.toUpperCase();
+            
+            // ✅ የዶክመንት ID ለመፍጠር: ስልክ ቁጥር ብቻ
+            const userDocId = phoneNumber; 
+            const userDocRef = doc(db, "users", userDocId);
+
+            // ተጠቃሚው አስቀድሞ መኖሩን ማረጋገጥ
+            const userSnapshot = await getDoc(userDocRef);
+            
+            // ለመመዝገብ የሚያስፈልጉ መረጃዎች
+            const registrationData = {
+                full_name: fullName,
+                password: passwordUpper,
+                phone_number: phoneNumber,
+                registered_status: true,
+                is_active: true,
+                last_payment_date: serverTimestamp(), // አሁን ያለውን ሰዓት እንደ ክፍያ ቀን ማስቀመጥ
+                bs_coin_balance: 0, // ✅ የመጀመሪያ የ 'bs_coin_balance' ዜሮ እንዲሆን ተደርጓል
+            };
+
+            if (userSnapshot.exists()) {
+                // ✅ አስቀድሞ ከተመዘገበ: እንዳለ ያሳውቅ
+                showErrorMessage(`ይህ ስልክ ቁጥር (${phoneNumber}) አስቀድሞ ተመዝግቧል። ወደ መግቢያ ገጽ ይሂዱ።`);
+                // መረጃዎቹን ማጽዳት
+                fullNameInput.value = '';
+                phoneNumberInput.value = '';
+                passwordInput.value = '';
+            } else {
+                // አዲስ ከሆነ ይመዘግበዋል
+                await setDoc(userDocRef, {
+                    ...registrationData,
+                    created_at: serverTimestamp(),
+                    registered_at: serverTimestamp()
+                });
+                showSuccessMessage("ምዝገባዎ በተሳካ ሁኔታ ተጠናቋል! አሁን ወደ መግቢያ ገጽ ይሂዱ።");
+                
+                // የገቡትን መረጃዎች ማጽዳት
+                fullNameInput.value = '';
+                phoneNumberInput.value = '';
+                passwordInput.value = '';
+
+                // ወደ መግቢያ ገጹ መምራት
+                setTimeout(() => {
+                    window.location.href = "login.html"; 
+                }, 3000); 
+            }
+
+        } catch (error) {
+            console.error("በምዝገባ ላይ ስህተት ተፈጠረ:", error);
+            showErrorMessage("በምዝገባ ላይ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
+        } finally {
+            registerButton.disabled = false; // ምዝገባ ሲጠናቀቅ አዝራሩን enable ማድረግ
+        }
+    });
+
+    </script>
+</body>
+</html>
