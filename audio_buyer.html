@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS ኦዲዮ ገበያ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* ------------------------------------------------ */
+        /* --- Dark Theme & Glassmorphism Variables --- */
+        /* ------------------------------------------------ */
+        :root {
+            /* ከእርስዎ style.css የተወሰዱ ቀለሞች */
+            --color-bg-darkest: #04040C; 
+            --color-bg-primary: #0A0A1A; /* ዋና ዳራ - Dark Blue/Black */
+            --color-bg-secondary: #120D1A; /* ሁለተኛ ዳራ - Dark Violet */
+            --color-card-bg: rgba(26, 26, 46, 0.35); /* ለ Glass Effect */
+            --color-text-light: #E0E0E0;
+            --color-text-muted: #A0A0B0;
+            --color-accent-purple-light: #9B5DE5; 
+            --color-accent-blue-light: #00B2FF; 
+            --color-error: #FF6B6B;
+            --color-success: #3DCC91;
+
+            /* Gradient - ለ Button እና Highlight */
+            --gradient-1: linear-gradient(90deg, #9B5DE5, #00B2FF); 
+        }
+
+        /* ------------------------------------------------ */
+        /* --- Global & Typography --- */
+        /* ------------------------------------------------ */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 16px;
+            overflow-x: hidden; 
+            transition: background-color 0.5s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--color-text-light);
+        }
+
+        /* ------------------------------------------------ */
+        /* --- Layout & Market Structure --- */
+        /* ------------------------------------------------ */
+        .market-container {
+            width: 95%; 
+            max-width: 1200px;
+            margin: 50px auto 100px;
+            padding: 30px;
+            background-color: var(--color-bg-darkest);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            min-height: 60vh;
+        }
+
+        .market-header {
+            display: flex; /* ✅ ለተጠቃሚ መረጃ እና ርዕስ */
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--color-text-muted);
+            padding-bottom: 20px;
+        }
+
+        .market-header h1 {
+            font-size: 2.2em;
+            color: var(--color-accent-purple-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        /* ✅ የተጠቃሚ መረጃ ክፍል */
+        #userInfoContainer {
+            text-align: center;
+            font-size: 1em;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        #userName {
+             font-weight: 700;
+             color: var(--color-text-light);
+        }
+        
+        #userCoin {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--color-text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        #coinPlus {
+            background: var(--gradient-1);
+            color: var(--color-bg-darkest);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1em;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+
+        #coinPlus:hover {
+            transform: scale(1.1);
+        }
+
+        /* ------------------------------------------------ */
+        /* --- Audio Listings Grid and Card --- */
+        /* ------------------------------------------------ */
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .audio-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px; /* ✅ ጠባብ እንዲሆን */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .audio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(155, 93, 229, 0.3);
+        }
+
+        .audio-card h3 {
+            color: var(--color-accent-purple-light);
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .audio-card-details p {
+            font-size: 0.9em;
+            margin: 3px 0;
+            color: var(--color-text-muted);
+        }
+
+        .audio-price {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--color-text-light);
+            margin: 10px 0;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .action-button {
+            padding: 5px 10px; /* ✅ በጣም በትንሹ */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            flex-grow: 1;
+            white-space: nowrap;
+        }
+
+        .desc-btn {
+            background-color: rgba(0, 178, 255, 0.2);
+            color: var(--color-accent-blue-light);
+        }
+
+        .buy-btn {
+            background: var(--gradient-1);
+            color: var(--color-bg-darkest);
+        }
+
+        .open-btn {
+            background-color: rgba(155, 93, 229, 0.2);
+            color: var(--color-accent-purple-light);
+        }
+        
+        .buy-btn:hover { background: linear-gradient(90deg, #b373ff, #29c2ff); }
+        .open-btn:hover { background-color: rgba(155, 93, 229, 0.4); }
+        
+        /* ------------------------------------------------ */
+        /* --- Download Progress Bar --- */
+        /* ------------------------------------------------ */
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+            display: none; /* በመጀመሪያ መደበቅ */
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-1);
+            transition: width 0.1s linear;
+        }
+        
+        .progress-text {
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: 5px;
+            color: var(--color-accent-blue-light);
+        }
+        
+        /* ------------------------------------------------ */
+        /* --- Audio Player (Modal/Drawer) --- */
+        /* ------------------------------------------------ */
+        .audio-player-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background-color: var(--color-bg-secondary);
+            z-index: 1000;
+            transition: height 0.5s ease-in-out;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .audio-player-drawer.open {
+            height: 300px; /* የሚወጣው ቁመት */
+            padding: 20px;
+        }
+
+        .player-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .close-player-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: var(--color-error);
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .cassette-visual {
+            width: 150px;
+            height: 90px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            border: 5px solid #1a1a1a;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .cassette-title {
+            color: #f1c40f;
+            font-size: 0.8em;
+            text-align: center;
+            margin-top: 5px;
+            font-family: monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 5px;
+        }
+
+        .reel {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #444;
+            top: 30px;
+            border: 3px solid #666;
+            animation: spin 3s linear infinite paused; /* በመጀመሪያ የቆመ */
+        }
+        
+        .reel.play {
+            animation-play-state: running;
+        }
+
+        .reel-left { left: 15px; }
+        .reel-right { right: 15px; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .audio-controls {
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .player-title {
+            color: var(--color-accent-blue-light);
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            color: var(--color-text-muted);
+        }
+
+        .time-display span {
+            font-family: monospace;
+        }
+        
+        .player-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .player-progress {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-1);
+            border-radius: 4px;
+        }
+
+        .control-buttons button {
+            background: none;
+            border: none;
+            color: var(--color-text-light);
+            font-size: 1.5em;
+            margin: 0 15px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .control-buttons button:hover {
+            color: var(--color-accent-purple-light);
+        }
+        
+        /* ------------------------------------------------ */
+        /* --- Mobile Responsiveness --- */
+        /* ------------------------------------------------ */
+        @media (max-width: 768px) {
+            .market-container {
+                width: 100%; 
+                padding: 15px; 
+                margin: 0;
+                border-radius: 0; 
+            }
+            .market-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .market-header h1 {
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+            #userInfoContainer {
+                align-items: flex-start;
+                width: 100%;
+                margin-top: -10px;
+            }
+            .listings-grid {
+                grid-template-columns: 1fr; 
+            }
+            .audio-player-drawer.open {
+                height: 250px; 
+            }
+            .control-buttons button {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="market-container">
+        <header class="market-header">
+            <h1><i class="fas fa-compact-disc" style="color: var(--color-accent-blue-light);"></i> DS የኦዲዮ ገበያ</h1>
+            <div id="userInfoContainer">
+                <p id="userName">...</p>
+                <div id="userCoin">
+                    <span id="coinBalance">0</span> <i class="fas fa-coins" style="color: cyan;"></i> 
+                    <a href="https://t.me/elan_payment_bot" target="_blank" id="coinPlus" title="ኮይን ለመጨመር ይጫኑ">+</a>
+                </div>
+            </div>
+        </header>
+
+        <section id="audioListingsSection">
+            <h2>ለሽያጭ የቀረቡ ኦዲዮዎች</h2>
+            <div id="audioGrid" class="listings-grid">
+                </div>
+            
+            <p id="noAudioMessage" style="text-align: center; font-style: italic; color: var(--color-text-muted); padding: 40px; display: none;">ገና ለሽያጭ የቀረበ ኦዲዮ የለም።</p>
+        </section>
+        
+    </div>
+
+    <div id="audioPlayerDrawer" class="audio-player-drawer">
+        <button class="close-player-btn" id="closePlayerBtn"><i class="fas fa-times-circle"></i></button>
+        <div class="player-content">
+            <h3 class="player-title" id="playerTitle">የኦዲዮ ርዕስ</h3>
+
+            <div class="cassette-visual">
+                <div class="cassette-title" id="cassetteTitle">...</div>
+                <div class="reel reel-left"></div>
+                <div class="reel reel-right"></div>
+            </div>
+            
+            <div class="audio-controls">
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="durationTime">0:00</span>
+                </div>
+                
+                <div class="player-bar" id="playerBar">
+                    <div class="player-progress" id="playerProgress"></div>
+                </div>
+
+                <div class="control-buttons" style="text-align: center;">
+                    <button id="skipBackwardBtn"><i class="fas fa-backward"></i></button>
+                    <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+                    <button id="skipForwardBtn"><i class="fas fa-forward"></i></button>
+                    <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="hiddenAudioPlayer" preload="metadata"></audio>
+
+
+    <script type="module" src="audio_market_logic.js"></script>
+</body>
+</html>
