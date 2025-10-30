@@ -28,6 +28,15 @@
             color: #ffffff; /* ነጭ ርዕስ */
             margin-bottom: 25px;
         }
+        .form-container h3 {
+            /* የነዳጅ ርዕሶችን ለመቀየስ */
+            background-color: #00bcd433; /* ደብዛዛ ሲያን */
+            color: #ffffff;
+            padding: 10px 15px;
+            margin: 20px -30px 15px -30px; /* ሙሉ ስፋት እንዲይዝ */
+            font-size: 1.2em;
+            text-align: center;
+        }
         .auth-container label, .form-container label {
             display: block;
             margin-bottom: 8px;
@@ -96,6 +105,28 @@
             min-height: 80px; /* ዝቅተኛ ቁመት */
             max-height: 200px; /* ከፍተኛ ቁመት */
         }
+        /* አዲስ የተጨመረው ስታይል ለ ClearCache በተን */ 
+        #clearCacheButton:hover { 
+            color: #ccc !important; /* ሲነካው ጽሁፉ እንዲታይ */ 
+        }
+        /* የQuantity ማስገቢያውን ለመደበቅ/ለማሳየት የሚያገለግል (ቅርጹን ከሌላው ጋር ተመሳሳይ ለማድረግ ስታይሎች ተነስተዋል) */
+        .quantity-input-group {
+            margin-bottom: 15px;
+            display: none; /* መጀመሪያ ይደበቅ */
+        }
+        /* አዲስ የተጨመረ - ለተጨማሪ ማብራሪያ ክፍል */
+        .notes-container {
+            background-color: #00bcd41a; /* ደብዛዛ ሲያን */
+            padding: 15px 30px 5px 30px; /* የካርዱን ግራና ቀኝ ፓዲንግ ያስወግዳል */
+            margin: 20px -30px 20px -30px; /* ሙሉ ስፋት እንዲይዝ እና ከላይና ከታች ክፍተት እንዲኖር */
+            border-radius: 0 0 8px 8px; /* ከታች ብቻ ጠማማ (optional, ግን card design ለማስጠበቅ ጥሩ ነው) */
+        }
+        .notes-container label {
+            color: #e0e0e0;
+        }
+        .notes-container textarea {
+            width: 100%; /* በውስጠኛው ፓዲንግ ምክንያት 100% ማድረግ */
+        }
     </style>
 </head>
 <body>
@@ -121,16 +152,24 @@
         <div class="form-container" id="dataEntryContainer">
             <h2>የነዳጅ ማደያ መረጃ አስገባ</h2>
             <form id="fuelDataEntryForm">
-                <label for="stationNameAmh">የማደያ ስም (አማርኛ):</label>
-                <input type="text" id="stationNameAmh" readonly required> <label for="stationNameEng">የማደያ ስም (እንግሊዝኛ):</label>
-                <input type="text" id="stationNameEng" readonly> <h3>ቤንዚን መረጃ:</h3>
+                <label for="stationNameAmh">የማደያ ስም:</label>
+                <input type="text" id="stationNameAmh" readonly required> 
+                <label for="stationNameEng">የቦታው ልዩ መጠሪያ:</label>
+                <input type="text" id="stationNameEng" readonly> 
+                
+                <h3>ቤንዚን መረጃ:</h3>
+                
                 <label for="petrolStatus">የቤንዚን ሁኔታ:</label>
                 <select id="petrolStatus" required>
                     <option value="አለ">አለ</option>
                     <option value="የለም">የለም</option>
                     <option value="አልታወቀም">አልታወቀም</option>
                 </select>
-
+                
+                <div class="quantity-input-group" id="petrolQuantityGroup">
+                    <label for="petrolQuantity">የሚገኝ መጠን (በሊትር):</label>
+                    <input type="number" id="petrolQuantity" step="1" min="0" placeholder="0">
+                </div>
                 <label for="petrolPrice">የቤንዚን ዋጋ (ብር/ሊትር):</label>
                 <input type="number" id="petrolPrice" step="0.01" placeholder="ለምሳሌ: 49.90">
 
@@ -145,12 +184,18 @@
                 </select>
 
                 <h3>ናፍጣ መረጃ:</h3>
+                
                 <label for="dieselStatus">የናፍጣ ሁኔታ:</label>
                 <select id="dieselStatus" required>
                     <option value="አለ">አለ</option>
                     <option value="የለም">የለም</option>
                     <option value="አልታወቀም">አልታወቀም</option>
                 </select>
+                
+                <div class="quantity-input-group" id="dieselQuantityGroup">
+                    <label for="dieselQuantity">የሚገኝ መጠን (በሊትር):</label>
+                    <input type="number" id="dieselQuantity" step="1" min="0" placeholder="0">
+                </div>
 
                 <label for="dieselPrice">የናፍጣ ዋጋ (ብር/ሊትር):</label>
                 <input type="number" id="dieselPrice" step="0.01" placeholder="ለምሳሌ: 49.90">
@@ -164,19 +209,39 @@
                     <option value="(ከ20 ተሽከርካሪ በላይ)">(ከ20 ተሽከርካሪ በላይ)</option>
                     <option value="አልታወቀም">አልታወቀም</option>
                 </select>
-                
-                <label for="additionalNotes">ተጨማሪ ማብራሪያ (ከ250 ፊደላት የማይበልጥ):</label>
-                <textarea id="additionalNotes" maxlength="250" placeholder="ሌላ ማሳወቅ የሚፈልጉት ነገር ካለ ይጻፉ..."></textarea>
 
-                <input type="hidden" id="stationDocId" value=""> <button type="submit">መረጃ አስገባ/አዘምን</button>
+                <h3>ነጭ ጋዝ (Kerosene) መረጃ:</h3>
+                
+                <label for="keroseneStatus">የነጭ ጋዝ ሁኔታ:</label>
+                <select id="keroseneStatus" required>
+                    <option value="አለ">አለ</option>
+                    <option value="የለም">የለም</option>
+                    <option value="አልታወቀም">አልታወቀም</option>
+                </select>
+                
+                <div class="quantity-input-group" id="keroseneQuantityGroup">
+                    <label for="keroseneQuantity">የሚገኝ መጠን (በሊትር):</label>
+                    <input type="number" id="keroseneQuantity" step="1" min="0" placeholder="0">
+                </div>
+                
+                <label for="kerosenePrice">የነጭ ጋዝ ዋጋ (ብር/ሊትር):</label>
+                <input type="number" id="kerosenePrice" step="0.01" placeholder="ለምሳሌ: 49.90">
+                <div class="notes-container" id="notesContainer">
+                    <label for="additionalNotes">ተጨማሪ ማብራሪያ (ከ250 ፊደላት የማይበልጥ):</label>
+                    <textarea id="additionalNotes" maxlength="250" placeholder="ሌላ ማሳወቅ የሚፈልጉት ነገር ካለ ይጻፉ..."></textarea>
+                </div>
+
+                <input type="hidden" id="stationDocId" value=""> 
+                <button type="submit">መረጃ አስገባ/አዘምን</button>
             </form>
             <div id="dataEntryMessage" class="message" style="display: none;"></div>
         </div>
     </main>
 
-    <footer class="main-footer">
-        <p>&copy; 2025 የድራይቨር ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p>
-        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p>
+    <footer class="main-footer"> 
+        <p>&copy; 2025 የድራይቨር ነዳጅ መረጃ. ሁሉም መብቶች የተጠበቁ ናቸው።</p> 
+        <p>ለወቅታዊ መረጃ ድረ-ገጻችንን ይጎብኙ።</p> 
+        <button id="clearCacheButton" style="background: none; border: none; color: transparent; cursor: pointer; padding: 5px; font-size: 0.8em; margin-top: 5px;">ClearCach</button> 
     </footer>
 
     <script type="module">
@@ -207,15 +272,45 @@
         const fuelDataEntryForm = document.getElementById('fuelDataEntryForm');
         const stationNameAmhInput = document.getElementById('stationNameAmh');
         const stationNameEngInput = document.getElementById('stationNameEng');
+        
+        // ቤንዚን Elements
         const petrolStatusSelect = document.getElementById('petrolStatus');
+        const petrolQuantityGroup = document.getElementById('petrolQuantityGroup'); 
+        const petrolQuantityInput = document.getElementById('petrolQuantity'); 
         const petrolPriceInput = document.getElementById('petrolPrice');
         const petrolQueueSelect = document.getElementById('petrolQueue');
+        
+        // ናፍጣ Elements
         const dieselStatusSelect = document.getElementById('dieselStatus');
+        const dieselQuantityGroup = document.getElementById('dieselQuantityGroup'); 
+        const dieselQuantityInput = document.getElementById('dieselQuantity'); 
         const dieselPriceInput = document.getElementById('dieselPrice');
         const dieselQueueSelect = document.getElementById('dieselQueue');
+
+        // ነጭ ጋዝ Elements
+        const keroseneStatusSelect = document.getElementById('keroseneStatus');
+        const keroseneQuantityGroup = document.getElementById('keroseneQuantityGroup'); 
+        const keroseneQuantityInput = document.getElementById('keroseneQuantity'); 
+        const kerosenePriceInput = document.getElementById('kerosenePrice');
+        
         const additionalNotesTextarea = document.getElementById('additionalNotes');
         const stationDocIdInput = document.getElementById('stationDocId');
         const dataEntryMessage = document.getElementById('dataEntryMessage');
+        const clearCacheButton = document.getElementById('clearCacheButton');
+        
+        // የሁኔታ ለውጥ መከታተያ ተግባር
+        function toggleQuantityInput(statusSelect, quantityGroup, quantityInput) {
+            if (statusSelect.value === 'አለ') {
+                quantityGroup.style.display = 'block';
+                // ሲታይ ዋጋ ከሌለው 0 እንዲሆን ማረጋገጥ
+                if (quantityInput.value === "" || quantityInput.value === null || isNaN(parseInt(quantityInput.value))) {
+                    quantityInput.value = 0; 
+                }
+            } else {
+                quantityGroup.style.display = 'none';
+                quantityInput.value = ""; // ሲደበቅ ዋጋውን ባዶ አድርግ (ሲላክ null/አልታወቀም ይሆናል)
+            }
+        }
 
         // ገጹ ሲጫን የሚሰራ ተግባር
         document.addEventListener('DOMContentLoaded', async () => {
@@ -224,6 +319,11 @@
             const storedStationNameAmh = localStorage.getItem('stationNameAmh');
             const storedStationNameEng = localStorage.getItem('stationNameEng');
             const storedStationDocId = localStorage.getItem('stationDocId');
+
+            // የሁኔታ ለውጥ መከታተያዎችን ማዘጋጀት
+            petrolStatusSelect.addEventListener('change', () => toggleQuantityInput(petrolStatusSelect, petrolQuantityGroup, petrolQuantityInput));
+            dieselStatusSelect.addEventListener('change', () => toggleQuantityInput(dieselStatusSelect, dieselQuantityGroup, dieselQuantityInput));
+            keroseneStatusSelect.addEventListener('change', () => toggleQuantityInput(keroseneStatusSelect, keroseneQuantityGroup, keroseneQuantityInput));
 
             if (storedPassword && storedStationNameAmh && storedStationDocId) {
                 // መረጃ ካለ ወዲያውኑ የመረጃ ማስገቢያ ቅጹን አሳይ
@@ -298,23 +398,41 @@
                     const existingData = querySnapshot.docs[0].data();
                     // ቅጹን ባለው መረጃ ሙላ
                     petrolStatusSelect.value = existingData.petrolStatus || 'አልታወቀም';
+                    petrolQuantityInput.value = existingData.petrolQuantity && existingData.petrolQuantity !== 'አልታወቀም' ? existingData.petrolQuantity : ''; 
                     petrolPriceInput.value = existingData.petrolPrice || '';
                     petrolQueueSelect.value = existingData.petrolQueue || 'አልታወቀም';
+                    
                     dieselStatusSelect.value = existingData.dieselStatus || 'አልታወቀም';
+                    dieselQuantityInput.value = existingData.dieselQuantity && existingData.dieselQuantity !== 'አልታወቀም' ? existingData.dieselQuantity : ''; 
                     dieselPriceInput.value = existingData.dieselPrice || '';
                     dieselQueueSelect.value = existingData.dieselQueue || 'አልታወቀም';
+                    
+                    keroseneStatusSelect.value = existingData.keroseneStatus || 'አልታወቀም';
+                    keroseneQuantityInput.value = existingData.keroseneQuantity && existingData.keroseneQuantity !== 'አልታወቀም' ? existingData.keroseneQuantity : ''; 
+                    kerosenePriceInput.value = existingData.kerosenePrice || '';
+                    
                     additionalNotesTextarea.value = existingData.additionalNotes || '';
-                    // የ Document ID ን አስገባ - ይህ ለመዘመን ያገለግላል
                     stationDocIdInput.value = querySnapshot.docs[0].id; // የ fueldata document id
+
+                    // ቅጹ ሲጫን መጠኖቹን ማሳየት/መደበቅ
+                    toggleQuantityInput(petrolStatusSelect, petrolQuantityGroup, petrolQuantityInput);
+                    toggleQuantityInput(dieselStatusSelect, dieselQuantityGroup, dieselQuantityInput);
+                    toggleQuantityInput(keroseneStatusSelect, keroseneQuantityGroup, keroseneQuantityInput);
                 } else {
                     // አዲስ መረጃ ለመፍጠር ቅጹን ባዶ አድርግ
                     fuelDataEntryForm.reset();
-                    // ፓስወርዱ ልክ ሲሆን የመጣውን የማደያ ስም እንዳይጠፋ ማረጋገጥ
+                    // መግቢያው ሲሳካ የመጣውን የማደያ ስም እንዳይጠፋ ማረጋገጥ
                     const storedStationNameAmh = localStorage.getItem('stationNameAmh');
                     const storedStationNameEng = localStorage.getItem('stationNameEng');
                     stationNameAmhInput.value = storedStationNameAmh;
                     stationNameEngInput.value = storedStationNameEng;
-                    stationDocIdInput.value = localStorage.getItem('stationDocId'); // የማደያውን fuelowners Document ID መልስ
+                    stationDocIdInput.value = localStorage.getItem('stationDocId'); 
+                    
+                    // አዲስ ሲጫን መጠኖቹን መደበቅ
+                    petrolQuantityGroup.style.display = 'none';
+                    dieselQuantityGroup.style.display = 'none';
+                    keroseneQuantityGroup.style.display = 'none';
+
                     console.log("ምንም ነባር መረጃ አልተገኘም። አዲስ መረጃ ይፈጠራል።");
                 }
             } catch (error) {
@@ -330,16 +448,52 @@
 
             const stationAmh = stationNameAmhInput.value.trim();
             const stationEng = stationNameEngInput.value.trim();
+            
+            // ቤንዚን
             const petrolStatus = petrolStatusSelect.value;
+            let petrolQuantity = null;
+            if (petrolStatus === 'አለ') {
+                 const value = petrolQuantityInput.value.trim();
+                 if (value !== "" && !isNaN(parseInt(value))) {
+                     petrolQuantity = parseInt(value);
+                 } else {
+                     petrolQuantity = 'አልታወቀም'; // ባዶ ከሆነ/ቁጥር ካልሆነ አልታወቀም ይላክ
+                 }
+            }
             const petrolPrice = parseFloat(petrolPriceInput.value);
             const petrolQueue = petrolQueueSelect.value;
+            
+            // ናፍጣ
             const dieselStatus = dieselStatusSelect.value;
+            let dieselQuantity = null;
+            if (dieselStatus === 'አለ') {
+                 const value = dieselQuantityInput.value.trim();
+                 if (value !== "" && !isNaN(parseInt(value))) {
+                     dieselQuantity = parseInt(value);
+                 } else {
+                     dieselQuantity = 'አልታወቀም'; // ባዶ ከሆነ/ቁጥር ካልሆነ አልታወቀም ይላክ
+                 }
+            }
             const dieselPrice = parseFloat(dieselPriceInput.value);
             const dieselQueue = dieselQueueSelect.value;
+            
+            // ነጭ ጋዝ
+            const keroseneStatus = keroseneStatusSelect.value;
+            let keroseneQuantity = null;
+            if (keroseneStatus === 'አለ') {
+                 const value = keroseneQuantityInput.value.trim();
+                 if (value !== "" && !isNaN(parseInt(value))) {
+                     keroseneQuantity = parseInt(value);
+                 } else {
+                     keroseneQuantity = 'አልታወቀም'; // ባዶ ከሆነ/ቁጥር ካልሆነ አልታወቀም ይላክ
+                 }
+            }
+            const kerosenePrice = parseFloat(kerosenePriceInput.value);
+
             const additionalNotes = additionalNotesTextarea.value.trim();
             const stationOwnersDocId = localStorage.getItem('stationDocId'); // ከ Local Storage የወጣው የማደያ Document ID
 
-            if (!stationAmh || !petrolStatus || !petrolQueue || !dieselStatus || !dieselQueue) {
+            if (!stationAmh || !petrolStatus || !petrolQueue || !dieselStatus || !dieselQueue || !keroseneStatus) {
                 showMessage(dataEntryMessage, "እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ!", "error");
                 return;
             }
@@ -348,12 +502,24 @@
             const fuelData = {
                 stationName: stationAmh,
                 stationNameEnglish: stationEng,
+                
+                // ቤንዚን
                 petrolStatus: petrolStatus,
+                petrolQuantity: petrolQuantity, 
                 petrolPrice: isNaN(petrolPrice) ? null : petrolPrice,
                 petrolQueue: petrolQueue,
+                
+                // ናፍጣ
                 dieselStatus: dieselStatus,
+                dieselQuantity: dieselQuantity, 
                 dieselPrice: isNaN(dieselPrice) ? null : dieselPrice,
                 dieselQueue: dieselQueue,
+                
+                // ነጭ ጋዝ
+                keroseneStatus: keroseneStatus,
+                keroseneQuantity: keroseneQuantity, 
+                kerosenePrice: isNaN(kerosenePrice) ? null : kerosenePrice,
+                
                 additionalNotes: additionalNotes,
                 lastUpdated: serverTimestamp(), // የቅርብ ጊዜ ዝመና
                 stationDocId: stationOwnersDocId // መረጃውን ያስገባው የማደያ ልዩ መታወቂያ
@@ -390,6 +556,21 @@
             element.className = `message ${type}`;
             element.style.display = 'block';
         }
+        
+        // ClearCache ተግባር
+        clearCacheButton.addEventListener('click', () => { 
+            /* ሁሉንም የማደያ መረጃዎች ከ Local Storage አጥፋ*/
+            localStorage.removeItem('stationPassword'); 
+            localStorage.removeItem('stationNameAmh'); 
+            localStorage.removeItem('stationNameEng'); 
+            localStorage.removeItem('stationDocId'); 
+            
+            /* ገጹን ወደ መጀመሪያው ሁኔታ (መግቢያ) መልስ*/ 
+            dataEntryContainer.style.display = 'none'; /* የመረጃ ማስገቢያውን ደብቅ*/ 
+            authContainer.style.display = 'block'; /* የመግቢያ ቅጹን አምጣ */
+            authForm.reset(); /* የመግቢያ ቅጹን ባዶ አድርግ*/ 
+            showMessage(authMessage, "የተቀመጠው የማደያ መረጃ ጠፍቷል። እባክዎ በድጋሚ ይግቡ።", "error"); 
+        });
     </script>
 </body>
 </html>

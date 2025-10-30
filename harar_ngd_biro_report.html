@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>የነዳጅ መረጃ ሪፖርት - ንግድ ቢሮ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: #2c2c2c;
+            color: #f0f0f0;
+            margin: 0;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+        /* የሪፖርት መያዣው */
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+            /* html2canvas ሙሉውን ይዘት እንዲይዝ እዚህ ተጨማሪ ቅንብር አያስፈልግም */
+        }
+        
+        /* ርዕስ እና ቀን */
+        .header-info {
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .header-info h1 {
+            color: #00bcd4;
+            font-size: 1.1em; /* ርዕሱ ቀንሷል */
+            margin: 0;
+            white-space: normal; /* ረጅም ርዕስ እንዲጠቀለል */
+            word-wrap: break-word;
+            padding: 0 5px;
+        }
+        .date-display {
+            font-size: 0.9em; /* የቀን ማሳያው ቀንሷል */
+            font-weight: bold;
+            color: #ccc;
+        }
+        
+        /* ሰንጠረዥ ስታይል */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 15px;
+            /* ሰንጠረዡ ትልቅ ሲሆን ሳይታይ እንዲያልፍ ያደርጋል */
+        }
+        #fuelReportTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8em;
+            min-width: 650px;
+        }
+        #fuelReportTable thead tr {
+            background-color: #008899;
+            color: #ffffff;
+            text-align: left;
+            font-weight: bold;
+        }
+        #fuelReportTable th, #fuelReportTable td {
+            padding: 6px 8px;
+            border: 1px solid #333;
+            text-align: center;
+            color: #e0e0e0;
+        }
+        #fuelReportTable tbody tr:nth-of-type(even) {
+            background-color: #242424;
+        }
+        #fuelReportTable tbody tr:hover {
+            background-color: #383838;
+        }
+
+        /* የምርመራ (Verification) አምድ */
+        .verification-cell {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .verification-cell .check-mark {
+            color: #555;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .verification-cell.verified .check-mark {
+            color: #4CAF50;
+        }
+        
+        /* በተኖች ስታይል */
+        .button-group {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .export-button {
+            /* የሲያን ቀለም */
+            background-color: #00bcd4; 
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin: 4px;
+            transition: background-color 0.3s;
+        }
+        .export-button:hover {
+            background-color: #0097a7; /* ጠቆር ያለ ሲያን */
+        }
+        #loadingMessage {
+            text-align: center;
+            color: #00bcd4;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="report-container" id="reportContainer">
+        <div class="header-info">
+            <div class="date-display" id="ethiopianDate">ቀን: በመጫን ላይ...</div>
+            <h1>የዛሬው እለት በክልላችን አገልግሎት እየሰጡ ያሉ የነዳጅ ምርቶች የሚገኙባቸው ማደያዎች</h1>
+        </div>
+
+        <div id="loadingMessage">መረጃዎችን ከፋየርቤዝ በመጫን ላይ...</div>
+
+        <div class="table-wrapper" id="tableWrapper">
+            <table id="fuelReportTable">
+                <thead>
+                    <tr>
+                        <th>ተ.ቁ</th>
+                        <th>የማደያው ስም</th>
+                        <th>ቀበሌ</th>
+                        <th>የቦታው ልዩ መጠሪያ</th>
+                        <th>ቤንዚን (በሊትር)</th>
+                        <th>ናፍጣ (በሊትር)</th>
+                        <th>ነጭ ጋዝ (በሊትር)</th>
+                        <th>ምርመራ</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="button-group" id="buttonGroup">
+            <button class="export-button" id="exportToImageButton">ሰንጠረዡን ወደ ምስል (PNG) ቀይር</button>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.11/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.11/locale/am.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script type="module">
+        // የFirebase ተግባራትን በቀጥታ ከሞጁሎች አስመጣ
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+        import { getFirestore, collection, getDocs, query } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1daffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        // Firebase App ን አስጀምር
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // የ HTML Elements ዎችን ያዝ
+        const reportContainer = document.getElementById('reportContainer');
+        const reportTableBody = document.getElementById('reportTableBody');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const ethDateElement = document.getElementById('ethiopianDate');
+        const exportToImageButton = document.getElementById('exportToImageButton');
+        const buttonGroup = document.getElementById('buttonGroup');
+        
+        // --- የዓለም አቀፍ (ጎርጎሮሳዊ) ቀን ማሳያ ተግባር (በቁጥር ፎርማት) ---
+        function displayInternationalDate() {
+            // ፎርማት ቀን/ወር/ዓመት እንዲሆን
+            const now = dayjs(); 
+            const dateStr = now.format('DD/MM/YYYY'); 
+            ethDateElement.textContent = `ቀን: ${dateStr}`;
+        }
+        
+        // --- የመረጃ መሰብሰቢያ ተግባር (ያለ ለውጥ) ---
+        async function fetchAndDisplayReport() {
+            loadingMessage.style.display = 'block';
+            reportTableBody.innerHTML = '';
+            
+            try {
+                // 1. ሁሉንም የነዳጅ መረጃዎች (fueldata) ሰብስብ
+                const fuelDataQuery = query(collection(db, "fueldata"));
+                const fuelDataSnapshot = await getDocs(fuelDataQuery);
+                const fuelDataMap = new Map();
+                
+                fuelDataSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    fuelDataMap.set(data.stationDocId, data);
+                });
+
+                // 2. ሁሉንም የማደያ ባለቤቶች መረጃዎች (fuelowners) ሰብስብ
+                const ownersQuery = query(collection(db, "fuelowners"));
+                const ownersSnapshot = await getDocs(ownersQuery);
+                
+                let counter = 1;
+
+                // 3. መረጃውን ሰንጠረዥ ውስጥ ሙላ
+                ownersSnapshot.forEach(ownerDoc => {
+                    const ownerData = ownerDoc.data();
+                    const stationDocId = ownerDoc.id;
+                    const fuelData = fuelDataMap.get(stationDocId);
+
+                    // የማደያው ስም የግድ ያስፈልጋል
+                    if (!ownerData.stationNameAmh) return; 
+
+                    // ከነዳጅ መረጃው እሴቶችን አዘጋጅ
+                    const getQuantityDisplay = (data, fuelType) => {
+                        const status = data?.[`${fuelType}Status`];
+                        const quantity = data?.[`${fuelType}Quantity`];
+                        
+                        // 'የለም' ወይም 'አልታወቀም' ከሆነ -
+                        if (status === 'የለም' || status === 'አልታወቀም') return '-'; 
+
+                        // 'አለ' ተብሎ መጠኑ አልተሞላም/string 'አልታወቀም' ከሆነ
+                        if (status === 'አለ' && (quantity === 'አልታወቀም' || quantity === null || quantity === undefined)) return 'አልታወቀም'; 
+                        
+                        // ትክክለኛ ቁጥር ሲሆን
+                        if (quantity !== undefined && quantity !== null) return quantity;
+                        
+                        return '-'; // ሌላ ያልታወቀ ሁኔታ ሲኖር
+                    };
+
+                    const petrolQuantity = getQuantityDisplay(fuelData, 'petrol');
+                    const dieselQuantity = getQuantityDisplay(fuelData, 'diesel');
+                    const keroseneQuantity = getQuantityDisplay(fuelData, 'kerosene'); 
+
+                    const stationName = ownerData.stationNameAmh || 'ስም የለውም';
+                    const kebele = ownerData.kebele || '-'; 
+                    const locationName = ownerData.stationNameEng || '-'; 
+
+                    // የሰንጠረዥ ረድፍ (Row) ፍጠር
+                    const row = reportTableBody.insertRow();
+                    row.id = `row-${stationDocId}`; 
+
+                    row.innerHTML = `
+                        <td>${counter++}</td>
+                        <td style="text-align: left;">${stationName}</td>
+                        <td>${kebele}</td>
+                        <td>${locationName}</td>
+                        <td>${petrolQuantity}</td>
+                        <td>${dieselQuantity}</td>
+                        <td>${keroseneQuantity}</td>
+                        <td class="verification-cell" data-id="${stationDocId}">
+                            <span class="check-mark">&#10003;</span>
+                        </td>
+                    `;
+                });
+
+                loadingMessage.style.display = 'none';
+                setupVerificationClicks(); 
+
+            } catch (error) {
+                console.error("የሪፖርት መረጃ ሲጫን ስህተት ተፈጠረ:", error);
+                loadingMessage.textContent = `መረጃውን መጫን አልተቻለም። ስህተት: ${error.message}`;
+            }
+        }
+        
+        // --- የምርመራ ማርክ (Verification Mark) ተግባር (ያለ ለውጥ) ---
+        function setupVerificationClicks() {
+            const cells = document.querySelectorAll('.verification-cell');
+            const verificationStatus = JSON.parse(localStorage.getItem('hararNgdBirosVerificationStatus') || '{}'); 
+
+            cells.forEach(cell => {
+                const id = cell.getAttribute('data-id');
+                if (verificationStatus[id]) {
+                    cell.classList.add('verified');
+                }
+
+                cell.addEventListener('click', () => {
+                    cell.classList.toggle('verified');
+                    const isVerified = cell.classList.contains('verified');
+                    
+                    if (isVerified) {
+                        verificationStatus[id] = true;
+                    } else {
+                        delete verificationStatus[id];
+                    }
+                    localStorage.setItem('hararNgdBirosVerificationStatus', JSON.stringify(verificationStatus));
+                });
+            });
+        }
+
+        // --- ሰንጠረዡን ወደ ምስል (PNG) የመቀየር ተግባር (ለትክክለኛ ቀረጻ ተስተካክሏል) ---
+        exportToImageButton.addEventListener('click', () => {
+            const container = reportContainer;
+            
+            // የኤክስፖርት በተኖችን ደብቅ
+            buttonGroup.style.display = 'none';
+
+            // የPNG ፋይል ስም
+            const dateText = ethDateElement.textContent.replace('ቀን: ', '').replace(/\//g, '-'); // / በ - እንዲተካ ተደርጓል
+            const filename = `Harar_Fuel_Report_${dateText}.png`;
+
+            // HTML2Canvasን በመጠቀም የሪፖርት ኮንቴይነሩን ምስል ቀይር
+            html2canvas(container, {
+                scale: 2, // ጥራት ለመጨመር
+                logging: false,
+                useCORS: true,
+                backgroundColor: '#1e1e1e', // ዳራውን ጠቆር ያለ አድርግ
+                allowTaint: true, // ለትላልቅ ሰንጠረዦች ቀረጻ ያግዛል
+                ignoreElements: (element) => {
+                    // የአዝራር ቡድኑን ከምስሉ ውስጥ እንዳይካተት ችላ እንዲል ያደርጋል
+                    return element.id === 'buttonGroup';
+                }
+            }).then(canvas => {
+                // ካንቫሱን ወደ ዳታ URL ቀይርና አውርድ
+                const image = canvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.href = image;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // ኤክስፖርት ሲጠናቀቅ በተኖችን መልስ
+                buttonGroup.style.display = 'block';
+                alert("የሪፖርቱ ምስል በተሳካ ሁኔታ ወርዷል!");
+            });
+        });
+
+        // ገጹ ሲጫን
+        document.addEventListener('DOMContentLoaded', () => {
+            displayInternationalDate();
+            fetchAndDisplayReport();
+        });
+
+    </script>
+</body>
+</html>

@@ -88,8 +88,8 @@
 </head>
 <body>
     <header class="main-header">
-      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a>  <a href="stations_fuel_data.html">የተረጋገጠ የማደያዎች መረጃ</a> 
-      <a href="news.html">ዜናዎች</a> <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="combined_community_data.html">ልውውጥ</a> </nav> </div>
+      <div class="menu-container"> <button class="menu-btn" onclick="toggleMenu()">☰</button> <nav id="dropdown-menu" class="dropdown-content"> <a href="data.html">ዋናው ገጽ</a>
+       <a href="maintenance.html">እንክብካቤ</a> <a href="data_entry.html">መረጃ ማስገቢያ</a> <a href="combined_community_data.html">ልውውጥ</a> </nav> </div>
         <h1><span class="accent-text">የነዳጅ ማደያ </span>ማስመዝገቢያ</h1>
         <p>የነዳጅ ማደያ አስመዝግብ</p>
         
@@ -99,12 +99,14 @@
         <div class="register-container">
             <h2>አዲስ ነዳጅ ማደያ አስመዝግብ</h2>
             <form id="registerStationForm">
-                <label for="newStationNameAmh">የማደያ ስም (አማርኛ):</label>
+                <label for="newStationNameAmh">የማደያ ስም:</label>
                 <input type="text" id="newStationNameAmh" required>
 
-                <label for="newStationNameEng">የማደያ ስም (እንግሊዝኛ - እንደ አማራጭ):</label>
+                <label for="newStationNameEng">የቦታው ልዩ መጠሪያ:</label>
                 <input type="text" id="newStationNameEng">
 
+                <label for="newStationKebele">ቀበሌ:</label>
+                <input type="text" id="newStationKebele">
                 <label for="newStationPhone">ስልክ ቁጥር:</label>
                 <input type="tel" id="newStationPhone" pattern="[0-9]{10}" title="እባክዎ 10 ዲጂት ስልክ ቁጥር ያስገቡ" required>
 
@@ -145,6 +147,8 @@
         const registerStationForm = document.getElementById('registerStationForm');
         const newStationNameAmhInput = document.getElementById('newStationNameAmh');
         const newStationNameEngInput = document.getElementById('newStationNameEng');
+        // አዲስ የተጨመረው ቀበሌ input ያዝ
+        const newStationKebeleInput = document.getElementById('newStationKebele');
         const newStationPhoneInput = document.getElementById('newStationPhone');
         const newStationPasswordInput = document.getElementById('newStationPassword');
         const registerMessage = document.getElementById('registerMessage');
@@ -156,10 +160,12 @@
 
             const stationNameAmh = newStationNameAmhInput.value.trim();
             const stationNameEng = newStationNameEngInput.value.trim();
+            // አዲስ የገባውን የቀበሌ መረጃ ያዝ
+            const kebele = newStationKebeleInput.value.trim();
             const phoneNumber = newStationPhoneInput.value.trim();
             const password = newStationPasswordInput.value.trim();
 
-            // መስኮች መሞላታቸውን አረጋግጥ
+            // መስኮች መሞላታቸውን አረጋግጥ (ቀበሌ የግድ መሙላት ስለሌለበት አልጨመርኩትም)
             if (!stationNameAmh || !phoneNumber || !password) {
                 showMessage(registerMessage, "እባክዎ ሁሉንም አስፈላጊ መስኮች ይሙሉ!", "error");
                 return;
@@ -204,6 +210,7 @@
                 await addDoc(collection(db, "fuelowners"), {
                     stationNameAmh: stationNameAmh,
                     stationNameEng: stationNameEng,
+                    kebele: kebele, // አዲስ የቀበሌ መስክ ወደ Firestore ተጨምሯል
                     phoneNumber: phoneNumber,
                     password: password, // ፓስወርዱ አሁን ባለው መልኩ ይገባል
                     createdAt: new Date() // የተመዘገበበት ቀን
