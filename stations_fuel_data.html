@@ -389,6 +389,24 @@ function timeAgo(date) {
                     lastUpdated = timeAgo(dateObject); 
                 }
 // ------------------------------------
+                
+// ******************************************************************
+// 🚨 የተጠየቀው ማስተካከያ ኮድ 🚨
+// ******************************************************************
+                // ቤንዚን (Petrol) ሁኔታን ማስተካከል
+                let petrolStatusDisplay = data.petrolStatus || 'አልታወቀም';
+                // petrolQuantity 'አልታወቀም' የሚል string ወይም null ሊሆን ስለሚችል ቁጥር መሆኑን እና 'አለ' መሆኑን ማረጋገጥ
+                if (data.petrolStatus === 'አለ' && data.petrolQuantity && data.petrolQuantity !== 'አልታወቀም') {
+                    petrolStatusDisplay = `አለ (${data.petrolQuantity} ሊትር)`;
+                }
+
+                // ናፍጣ (Diesel) ሁኔታን ማስተካከል
+                let dieselStatusDisplay = data.dieselStatus || 'አልታወቀም';
+                // dieselQuantity 'አልታወቀም' የሚል string ወይም null ሊሆን ስለሚችል ቁጥር መሆኑን እና 'አለ' መሆኑን ማረጋገጥ
+                if (data.dieselStatus === 'አለ' && data.dieselQuantity && data.dieselQuantity !== 'አልታወቀም') {
+                    dieselStatusDisplay = `አለ (${data.dieselQuantity} ሊትር)`;
+                }
+// ******************************************************************
 
                 const cardHtml = `
                     <div class="fuel-station-card">
@@ -396,13 +414,13 @@ function timeAgo(date) {
                         ${data.stationNameEnglish ? `<p class="station-name-english">${data.stationNameEnglish}</p>` : ''}
                         <div class="fuel-type-details petrol">
                             <h3>ቤንዚን:</h3>
-                            <p class="fuel-status">ሁኔታ: <strong>${data.petrolStatus || 'አልታወቀም'}</strong></p>
+                            <p class="fuel-status">ሁኔታ: <strong>${petrolStatusDisplay}</strong></p>
                             <p>ዋጋ: <strong>${data.petrolPrice ? `${data.petrolPrice.toFixed(2)} ብር/ሊትር` : 'አልታወቀም'}</strong></p>
                             <p class="fuel-status">የወረፋ ሁኔታ: <strong>${data.petrolQueue || 'አልታወቀም'}</strong></p>
                         </div>
                         <div class="fuel-type-details diesel">
                             <h3>ናፍጣ:</h3>
-                            <p class="fuel-status">ሁኔታ: <strong>${data.dieselStatus || 'አልታወቀም'}</strong></p>
+                            <p class="fuel-status">ሁኔታ: <strong>${dieselStatusDisplay}</strong></p>
                             <p>ዋጋ: <strong>${data.dieselPrice ? `${data.dieselPrice.toFixed(2)} ብር/ሊትር` : 'አልታወቀም'}</strong></p>
                             <p class="fuel-status">የወረፋ ሁኔታ: <strong>${data.dieselQueue || 'አልታወቀም'}</strong></p>
                         </div>
