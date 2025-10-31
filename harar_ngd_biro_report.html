@@ -155,7 +155,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.11/dayjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.11/locale/am.js"></script>
+    <script src="https://cdn.jsdelivr.com/npm/dayjs@1.11.11/locale/am.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <script type="module">
@@ -194,7 +194,7 @@
             ethDateElement.textContent = `ቀን: ${dateStr}`;
         }
         
-        // --- የመረጃ መሰብሰቢያ ተግባር (ያለ ለውጥ) ---
+        // --- የመረጃ መሰብሰቢያ ተግባር ---
         async function fetchAndDisplayReport() {
             loadingMessage.style.display = 'block';
             reportTableBody.innerHTML = '';
@@ -216,6 +216,27 @@
                 
                 let counter = 1;
 
+                // **የተሻሻለ የነዳጅ መጠን ማሳያ ተግባር (የእርስዎ ጥያቄ)**
+                const getQuantityDisplay = (data, fuelType) => {
+                    const status = data?.[`${fuelType}Status`];
+                    const quantity = data?.[`${fuelType}Quantity`];
+                    
+                    // 1. መጠኑ 0 ከሆነ 0 ያድርግ
+                    if (quantity === 0) return 0;
+                    
+                    // 2. መጠኑ 'አልታወቀም' ከሆነ ወይም ሁኔታው 'አልታወቀም' ከሆነ 'አልታወቀም' ያድርግ
+                    if (quantity === 'አልታወቀም' || status === 'አልታወቀም' || quantity === null || quantity === undefined) return 'አልታወቀም'; 
+                    
+                    // 3. ሁኔታው 'የለም' ከሆነ: (ከ$fuel2\_station\_data\_entry.html$ ላይ 'የለም' ከሆነ 0 ነው የሚላከው)
+                    if (status === 'የለም') return 0;
+
+                    // ትክክለኛ ቁጥር ሲሆን (ከ0 በላይ)
+                    if (typeof quantity === 'number') return quantity;
+                    
+                    // ሌላ ያልታወቀ ሁኔታ ሲኖር
+                    return 'አልታወቀም'; 
+                };
+                
                 // 3. መረጃውን ሰንጠረዥ ውስጥ ሙላ
                 ownersSnapshot.forEach(ownerDoc => {
                     const ownerData = ownerDoc.data();
@@ -224,23 +245,6 @@
 
                     // የማደያው ስም የግድ ያስፈልጋል
                     if (!ownerData.stationNameAmh) return; 
-
-                    // ከነዳጅ መረጃው እሴቶችን አዘጋጅ
-                    const getQuantityDisplay = (data, fuelType) => {
-                        const status = data?.[`${fuelType}Status`];
-                        const quantity = data?.[`${fuelType}Quantity`];
-                        
-                        // 'የለም' ወይም 'አልታወቀም' ከሆነ -
-                        if (status === 'የለም' || status === 'አልታወቀም') return '-'; 
-
-                        // 'አለ' ተብሎ መጠኑ አልተሞላም/string 'አልታወቀም' ከሆነ
-                        if (status === 'አለ' && (quantity === 'አልታወቀም' || quantity === null || quantity === undefined)) return 'አልታወቀም'; 
-                        
-                        // ትክክለኛ ቁጥር ሲሆን
-                        if (quantity !== undefined && quantity !== null) return quantity;
-                        
-                        return '-'; // ሌላ ያልታወቀ ሁኔታ ሲኖር
-                    };
 
                     const petrolQuantity = getQuantityDisplay(fuelData, 'petrol');
                     const dieselQuantity = getQuantityDisplay(fuelData, 'diesel');
@@ -302,7 +306,7 @@
             });
         }
 
-        // --- ሰንጠረዡን ወደ ምስል (PNG) የመቀየር ተግባር (ለትክክለኛ ቀረጻ ተስተካክሏል) ---
+        // --- ሰንጠረዡን ወደ ምስል (PNG) የመቀየር ተግባር (ያለ ለውጥ) ---
         exportToImageButton.addEventListener('click', () => {
             const container = reportContainer;
             

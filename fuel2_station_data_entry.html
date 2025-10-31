@@ -398,17 +398,18 @@
                     const existingData = querySnapshot.docs[0].data();
                     // ቅጹን ባለው መረጃ ሙላ
                     petrolStatusSelect.value = existingData.petrolStatus || 'አልታወቀም';
-                    petrolQuantityInput.value = existingData.petrolQuantity && existingData.petrolQuantity !== 'አልታወቀም' ? existingData.petrolQuantity : ''; 
+                    // ነባር መረጃ ላይ 'አልታወቀም' የሚል string ካለ ባዶ አድርገን እንጭነዋለን፣ ቁጥር ካለ ግን እንጭነዋለን። 0 የሚለውንም እንጭናለን።
+                    petrolQuantityInput.value = existingData.petrolQuantity !== null && existingData.petrolQuantity !== 'አልታወቀም' ? existingData.petrolQuantity : ''; 
                     petrolPriceInput.value = existingData.petrolPrice || '';
                     petrolQueueSelect.value = existingData.petrolQueue || 'አልታወቀም';
                     
                     dieselStatusSelect.value = existingData.dieselStatus || 'አልታወቀም';
-                    dieselQuantityInput.value = existingData.dieselQuantity && existingData.dieselQuantity !== 'አልታወቀም' ? existingData.dieselQuantity : ''; 
+                    dieselQuantityInput.value = existingData.dieselQuantity !== null && existingData.dieselQuantity !== 'አልታወቀም' ? existingData.dieselQuantity : ''; 
                     dieselPriceInput.value = existingData.dieselPrice || '';
                     dieselQueueSelect.value = existingData.dieselQueue || 'አልታወቀም';
                     
                     keroseneStatusSelect.value = existingData.keroseneStatus || 'አልታወቀም';
-                    keroseneQuantityInput.value = existingData.keroseneQuantity && existingData.keroseneQuantity !== 'አልታወቀም' ? existingData.keroseneQuantity : ''; 
+                    keroseneQuantityInput.value = existingData.keroseneQuantity !== null && existingData.keroseneQuantity !== 'አልታወቀም' ? existingData.keroseneQuantity : ''; 
                     kerosenePriceInput.value = existingData.kerosenePrice || '';
                     
                     additionalNotesTextarea.value = existingData.additionalNotes || '';
@@ -440,7 +441,28 @@
                 showMessage(dataEntryMessage, "ነባር መረጃዎችን መጫን አልተቻለም።", "error");
             }
         }
-
+        
+        // **የነዳጅ መጠን (Quantity) አመክንዮን የሚያስተካክል ረዳት ተግባር**
+        function getFuelQuantity(status, quantityInput) {
+            if (status === 'አለ') {
+                const value = quantityInput.value.trim();
+                // 1) አለ ከሆነ እና ዋጋ ካለው - ቁጥሩን ይላካል
+                if (value !== "" && !isNaN(parseInt(value))) {
+                    return parseInt(value); 
+                } else {
+                    // 2) አለ ሆኖ ግን ባዶ ከሆነ - 'አልታወቀም' ይላካል
+                    return 'አልታወቀም'; 
+                }
+            } else if (status === 'የለም') {
+                // 3) የለም ከሆነ - 0 ይላካል (በእርስዎ ጥያቄ መሰረት)
+                return 0;
+            } else if (status === 'አልታወቀም') {
+                // 4) አልታወቀም ከሆነ - 'አልታወቀም' ይላካል (በእርስዎ ጥያቄ መሰረት)
+                return 'አልታወቀም';
+            }
+            return null; // መድረስ የለበትም
+        }
+        
         // የመረጃ ማስገቢያ ቅጽ ሲላክ የሚሰራ ተግባር
         fuelDataEntryForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -451,43 +473,22 @@
             
             // ቤንዚን
             const petrolStatus = petrolStatusSelect.value;
-            let petrolQuantity = null;
-            if (petrolStatus === 'አለ') {
-                 const value = petrolQuantityInput.value.trim();
-                 if (value !== "" && !isNaN(parseInt(value))) {
-                     petrolQuantity = parseInt(value);
-                 } else {
-                     petrolQuantity = 'አልታወቀም'; // ባዶ ከሆነ/ቁጥር ካልሆነ አልታወቀም ይላክ
-                 }
-            }
+            // የተሻሻለው ተግባር
+            const petrolQuantity = getFuelQuantity(petrolStatus, petrolQuantityInput);
             const petrolPrice = parseFloat(petrolPriceInput.value);
             const petrolQueue = petrolQueueSelect.value;
             
             // ናፍጣ
             const dieselStatus = dieselStatusSelect.value;
-            let dieselQuantity = null;
-            if (dieselStatus === 'አለ') {
-                 const value = dieselQuantityInput.value.trim();
-                 if (value !== "" && !isNaN(parseInt(value))) {
-                     dieselQuantity = parseInt(value);
-                 } else {
-                     dieselQuantity = 'አልታወቀም'; // ባዶ ከሆነ/ቁጥር ካልሆነ አልታወቀም ይላክ
-                 }
-            }
+            // የተሻሻለው ተግባር
+            const dieselQuantity = getFuelQuantity(dieselStatus, dieselQuantityInput);
             const dieselPrice = parseFloat(dieselPriceInput.value);
             const dieselQueue = dieselQueueSelect.value;
             
             // ነጭ ጋዝ
             const keroseneStatus = keroseneStatusSelect.value;
-            let keroseneQuantity = null;
-            if (keroseneStatus === 'አለ') {
-                 const value = keroseneQuantityInput.value.trim();
-                 if (value !== "" && !isNaN(parseInt(value))) {
-                     keroseneQuantity = parseInt(value);
-                 } else {
-                     keroseneQuantity = 'አልታወቀም'; // ባዶ ከሆነ/ቁጥር ካልሆነ አልታወቀም ይላክ
-                 }
-            }
+            // የተሻሻለው ተግባር
+            const keroseneQuantity = getFuelQuantity(keroseneStatus, keroseneQuantityInput);
             const kerosenePrice = parseFloat(kerosenePriceInput.value);
 
             const additionalNotes = additionalNotesTextarea.value.trim();
