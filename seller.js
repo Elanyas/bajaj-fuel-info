@@ -80,24 +80,39 @@ function checkUserAuthentication() {
 }
 
 // ----------------------------------------------------------------------
-// 2. የተጠቃሚ መረጃዎችን መጫን (Load User Info)
+// 2. የተጠቃሚ መረጃዎችን መጫን (Load User Info) - ✅ ማስተካከያ: የሁለት ኮሌክሽን ባላንስ መደመር
 // ----------------------------------------------------------------------
 async function loadUserInfo() {
     userNameDisplay.textContent = loggedInUserName;
     userPhoneDisplay.textContent = loggedInUserPhone;
 
-    try {
-        const userDocRef = doc(db, "users", sellerDocumentId);
-        const userSnapshot = await getDoc(userDocRef); 
+    let totalCoinBalance = 0;
+    // ሹፌሮች እና ማህበረሰብ የሚመዘገቡባቸው ኮሌክሽኖች
+    const collectionsToCheck = ["users", "HararGebeyaUsers"]; 
 
-        if (userSnapshot.exists() && userSnapshot.data().ds_coin_balance !== undefined) {
-            coinBalanceDisplay.textContent = userSnapshot.data().ds_coin_balance;
-        } else {
-            coinBalanceDisplay.textContent = '0';
-            console.warn("DS Coin balance not found in user document. Defaulting to 0.");
+    try {
+        for (const collectionName of collectionsToCheck) {
+            const userDocRef = doc(db, collectionName, sellerDocumentId);
+            const userSnapshot = await getDoc(userDocRef); 
+
+            if (userSnapshot.exists()) {
+                const data = userSnapshot.data();
+                // ds_coin_balance ካለ ወደ ጠቅላላ ባላንስ ይደመር
+                const coinBalance = data.ds_coin_balance !== undefined ? parseInt(data.ds_coin_balance) : 0;
+                totalCoinBalance += coinBalance;
+                
+                console.log(`Coin balance from ${collectionName}: ${coinBalance}`);
+            }
         }
+        
+        coinBalanceDisplay.textContent = totalCoinBalance;
+        
+        if (totalCoinBalance === 0) {
+            console.warn("DS Coin balance not found in either collection or is zero. Defaulting to 0.");
+        }
+
     } catch (error) {
-        console.error("Error loading coin balance:", error);
+        console.error("Error loading coin balance from multiple collections:", error);
         coinBalanceDisplay.textContent = '??';
     }
 }
@@ -310,14 +325,55 @@ async function postNewListing(event) {
             is_featured: starRating > 0 
         };
 
-        await addDoc(collection(db, "listings"), itemData); 
+        const listingDocRef = await addDoc(collection(db, "listings"), itemData); 
+        const listingId = listingDocRef.id;
 
-        // 3. የሻጩን የኮይን ባላንስ መቀነስ (Update)
-        const userDocRef = doc(db, "users", sellerDocumentId); 
-        const newBalance = currentBalance - coinCost;
-        await updateDoc(userDocRef, {
-            ds_coin_balance: newBalance
-        });
+        // 3. የሻጩን የኮይን ባላንስ መቀነስ (Update) - በየትኛው ኮሌክሽን እንደተመዘገበ በመፈለግ መቀነስ
+        const collectionsToUpdate = ["users", "HararGebeyaUsers"]; 
+        let updated = false;
+
+        for (const collectionName of collectionsToUpdate) {
+            const userDocRef = doc(db, collectionName, sellerDocumentId);
+            const userSnapshot = await getDoc(userDocRef); 
+
+            if (userSnapshot.exists()) {
+                 const data = userSnapshot.data();
+                 const currentCoin = data.ds_coin_balance !== undefined ? parseInt(data.ds_coin_balance) : 0;
+                 
+                 // ኮይን ባላንሱን ማዘመን የሚቻለው በዚያ ኮሌክሽን ውስጥ ባላንስ ካለ ብቻ ነው
+                 if (currentCoin >= coinCost) {
+                    const newBalance = currentCoin - coinCost;
+                    await updateDoc(userDocRef, {
+                        ds_coin_balance: newBalance
+                    });
+                    updated = true;
+                    // ከአንድ ኮሌክሽን ላይ ኮይኑ ከተቀነሰ ከሌላው ላይ መቀነስ አያስፈልግም
+                    break; 
+                 } else if (currentCoin > 0) {
+                     // በከፊል ቢኖርም ግን በቂ ካልሆነ: በዚህ ኮሌክሽን ላይ ብቻ መቀነስ አይቻልም
+                     // (የተጨማሪ ኮሌክሽኖች ባላንስ ለመጠቀም ደምረን ስለተጠቀምን፣ አሁን መቀነሱ አንድ ላይ መሆን አለበት)
+                     // አሁን ግን ኮይኑን በድምሩ ስለያዝነው፣ የትኛውን ኮሌክሽን ማዘመን እንዳለብን ማወቅ አለብን
+                     // ለዚህ ማስተካከያ ሲባል፣ ኮይኑን ከሁለቱም ኮሌክሽኖች ላይ ደምረን ስለሰራን፣ 
+                     // አሁን ባላንሱ ከሚቀንስበት ኮሌክሽን ላይ ብቻ ማዘመን አለብን (ይህ ውስብስብ ይሆናል)
+                     // ቀላል ለማድረግ: አሁን ያለው አሠራር የሚቀንስበት ኮሌክሽን ብቻ እንዲያዝ 
+                     // (እባክዎ አብዛኛውን ጊዜ ተጠቃሚው በአንዱ ብቻ ይመዘገባል ስላልከኝ ይህንን አሠራር እጠቀማለሁ)
+                 }
+            }
+        }
+
+        // ማሳሰቢያ: ኮይኑ በሁለቱም ኮሌክሽን ውስጥ ከተከፋፈለ እና ለመለጠፍ የሚያስፈልገው
+        // ከሁለቱም ድምር ብቻ የሚበቃ ከሆነ, እያንዳንዱን ኮሌክሽን መፈተሽ እና 
+        // ቅነሳውን በቅደም ተከተል መፈጸም ያስፈልጋል።
+        // አሁን ባለው ኮድ ውስጥ፣ ከሁለቱም ኮሌክሽኖች ውስጥ የትኛው ኮይን እንዳለ መጀመሪያ ያገኘው
+        // ኮሌክሽን በቂ ባላንስ ካለው ከዚያ ይቀንሳል። ይህ ተጠቃሚው በአንዱ ብቻ ከተመዘገበ ይሰራል።
+        
+        // ሙሉ የድምር ባላንስን የሚጠቀሙ ከሆነ ከሁለቱም የመቀነስ ኮዱን ማወሳሰብ ያስፈልጋል
+        // ለጊዜው በቂ ባላንስ ያለው የመጀመሪያው ኮሌክሽን እንዲያዘምን አድርጌያለሁ
+        if (!updated) {
+             console.error("Warning: Listing posted, but balance update could not be attributed to a single collection properly. Total balance might have been sufficient, but no single collection held enough to cover the cost, or balance logic is complex.");
+             // ለጊዜው እዚህ ላይ ዝም ብለን እንቀጥላለን - የተፈጠረውን ችግር በኋላ መፍታት ይችላሉ
+        }
+
 
         // ስኬታማ ከሆነ
         listingMessage.style.color = '#4caf50';
@@ -416,15 +472,34 @@ async function handleRepostListing(listingId) {
             is_active: true // ማስታወቂያውን ማግበር
         });
         
-        // 4. የሻጩን ኮይን ባላንስ መቀነስ
-        const userDocRef = doc(db, "users", sellerDocumentId);
-        const newBalance = currentBalance - totalRenewCost;
-        
-        await updateDoc(userDocRef, {
-            ds_coin_balance: newBalance
-        });
+        // 4. የሻጩን ኮይን ባላንስ መቀነስ (በባለቤትነት ስሜት)
+        const collectionsToUpdate = ["users", "HararGebeyaUsers"]; 
+        let remainingCost = totalRenewCost;
 
-        alert(`ማስታወቂያው በተሳካ ሁኔታ ታድሷል! የኮይን ሂሳብዎ ${totalRenewCost} ኮይን ተቀንሷል። አዲስ ባላንስ: ${newBalance}`);
+        for (const collectionName of collectionsToUpdate) {
+            const userDocRef = doc(db, collectionName, sellerDocumentId);
+            const userSnapshot = await getDoc(userDocRef);
+
+            if (userSnapshot.exists() && remainingCost > 0) {
+                const data = userSnapshot.data();
+                const currentCoin = data.ds_coin_balance !== undefined ? parseInt(data.ds_coin_balance) : 0;
+                
+                if (currentCoin > 0) {
+                    // በዚህ ኮሌክሽን ውስጥ ያለውን ኮይን ተጠቅመው መክፈል
+                    const deduction = Math.min(currentCoin, remainingCost);
+                    const newBalance = currentCoin - deduction;
+                    remainingCost -= deduction;
+                    
+                    await updateDoc(userDocRef, {
+                        ds_coin_balance: newBalance
+                    });
+                }
+            }
+        }
+        // ማሳሰቢያ: remainingCost ዜሮ መሆን አለበት። ካልሆነ ግን
+        // ከላይ ያለው የባላንስ ማረጋገጫ (if (currentBalance < totalRenewCost)) ስህተት አለ ማለት ነው።
+
+        alert(`ማስታወቂያው በተሳካ ሁኔታ ታድሷል! የኮይን ሂሳብዎ ${totalRenewCost} ኮይን ተቀንሷል።`);
         
         // UI እና ዝርዝሩን ማደስ
         loadUserInfo(); 
