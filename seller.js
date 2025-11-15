@@ -71,7 +71,7 @@ function checkUserAuthentication() {
 
     if (!loggedInUserName || !loggedInUserPhone) {
         localStorage.setItem('errorMessageOnLoad', "እባክዎ ዳሽቦርዱን ለመጠቀም ይግቡ!");
-        window.location.href = "login.html"; 
+        window.location.href ="login_gebeya.html"; 
         return false;
     }
     

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ሐረር ገበያ - መግቢያ</title>
+    
+    <!-- የጉግል ፎንት (Google Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ገጹ ላይ የተካተተ ስታይል (Embedded CSS) -->
+    <style>
+        /* CSS Reset and Base Setup */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: #1a202c; /* ዳርክ ሙድ የጀርባ ከለር */
+            color: #e2e8f0; /* ፈዛዛ የፅሁፍ ከለር */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* ከላይ ጀምሮ እንዲደረድር */
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+
+        /* ዋና ኮንቴነር */
+        .container {
+            width: 100%;
+            max-width: 450px; /* ለንፅህና መጠኑን ማስተካከል */
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem; /* በካርዶቹ መካከል ያለው ክፍተት */
+        }
+
+        /* የመግቢያ ካርድ */
+        .login-card {
+            background-color: #2d3748; /* ከጀርባው ከለር ትንሽ የፈካ */
+            border-radius: 0.75rem; /* የተጠጋጋ ጠርዝ */
+            padding: 2rem 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            text-align: center; /* ፅሁፎች መሃል ላይ */
+        }
+
+        .login-card h2 {
+            font-size: 1.6rem; /* አነስ ያለ ርዕስ */
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+        }
+
+        .login-card p {
+            font-size: 0.9rem; /* አነስ ያለ ገላጭ ፅሁፍ */
+            color: #a0aec0; /* ግራጫማ ከለር */
+            margin-bottom: 1.75rem;
+        }
+
+        /* የመረጃ ማስገቢያ (Input) ግሩፕ */
+        .input-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background-color: #1a202c; /* እንደ ጀርባው አንድ አይነት */
+            border: 2px solid #4a5568; /* ግራጫ ጠርዝ */
+            border-radius: 0.5rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            transition: all 0.3s ease; /* ዳይናሚክ ስሜት */
+        }
+
+        .input-field::placeholder {
+            color: #718096;
+        }
+
+        /* ሲነካ የሚኖረው ላይት (Focus Effect) */
+        .input-field:focus {
+            outline: none;
+            border-color: #00bcd4; /* ሲያን ከለር ጠርዝ */
+            box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.3); /* ሲያን ከለር ግሎው */
+        }
+
+        /* የመግቢያ ቁልፍ (Button) */
+        #loginButton {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: #00bcd4; /* ሲያን ከለር */
+            color: #1a202c; /* ዳርክ ፅሁፍ ለኮንትራስት */
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        #loginButton:hover {
+            background-color: #00e5ff; /* ሲነካ ትንሽ የፈካ */
+        }
+
+        #loginButton:active {
+            transform: scale(0.98); /* ሲጫን ዳይናሚክ ስሜት */
+        }
+
+        #loginButton:disabled {
+            background-color: #4a5568;
+            color: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        /* የስህተት መልዕክት */
+        #errorMessage {
+            color: #f56565; /* ቀይ ከለር */
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            opacity: 0; /* መጀመሪያ ላይ ይደበቅ */
+            transition: opacity 0.3s ease;
+            min-height: 1.2em; /* ሌይአውት እንዳይዘል */
+            font-weight: 600;
+        }
+
+        /* የመመዝገቢያ ሊንክ */
+        .register-link-container {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+
+        .register-link-container a {
+            color: #00bcd4; /* ሲያን ከለር */
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* የመረጃ ክፍል */
+        .info-section {
+            background-color: #2d3748;
+            border-radius: 0.75rem;
+            padding: 2rem 2.5rem;
+            text-align: center;
+        }
+
+        .info-section h2 {
+            font-size: 1.3rem; /* አነስ ያለ ርዕስ */
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #00bcd4; /* ሲያን መስመር */
+            padding-bottom: 0.5rem;
+            display: inline-block; /* መስመሩ ከፅሁፉ ጋር እኩል እንዲሆን */
+        }
+
+        .info-section ul {
+            list-style: none; /* ነጥቦችን ማጥፋት */
+            text-align: left;
+            padding-left: 0.5rem;
+        }
+
+        .info-section li {
+            position: relative;
+            padding-left: 1.75rem; /* ለعلامት የሚሆን ቦታ */
+            margin-bottom: 1rem;
+            font-size: 0.9rem; /* አነስ ያለ ፅሁፍ */
+            color: #cbd5e0;
+            line-height: 1.6;
+        }
+
+        /* ለሊስቶቹ የራሱ ምልክት (Custom bullet) */
+        .info-section li::before {
+            content: '✔'; /* ወይም '🛒' መጠቀም ይቻላል */
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #00bcd4; /* ሲያን ከለር */
+            font-weight: 700;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ዋና ኮንቴነር -->
+    <div class="container">
+
+        <!-- የመግቢያ ካርድ -->
+        <div class="login-card">
+            <h2>እንኳን ወደ ሐረር ገበያ ደህና መጡ!</h2>
+            <p>ለመግባት እባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ።</p>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="tel" id="phoneNumberInput" class="input-field" placeholder="ስልክ ቁጥር (09... ወይም 07...)" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="passwordInput" class="input-field" placeholder="የይለፍ ቃል" required>
+                </div>
+                
+                <button type="button" id="loginButton">መግቢያ</button>
+                
+                <p id="errorMessage"></p>
+            </form>
+
+            <p class="register-link-container">
+                አዲስ ተጠቃሚ ነዎት? <a href="register_gebeya.html" id="registerTrigger">እዚህ ይመዝገቡ</a>
+            </p>
+        </div>
+
+        <!-- የኦንላይን ግብይት መረጃ ክፍል -->
+        <div class="info-section">
+            <h2>ለሐረር ገበያ ተጠቃሚዎች</h2>
+            <ul>
+                <li>
+                    <strong>ቀላል ግብይት:</strong> እቃዎችን ከየትኛውም ቦታ ሆነው በቀላሉ ይመልከቱ፣ ያወዳድሩ እና ይዘዙ።
+                </li>
+                <li>
+                    <strong>ጊዜ ይቆጥቡ:</strong> ወደ ገበያ በመሄድ የሚያጠፉትን ጊዜ እና የትራንስፖርት ወጪ ይቀንሳሉ።
+                </li>
+                <li>
+                    <strong>ሰፊ ምርጫ:</strong> የተለያዩ ሱቆች የሚያቀርቧቸውን እቃዎች በአንድ ቦታ በማግኘት የተሻለውን ይምረጡ።
+                </li>
+                <li>
+                    <strong>ዋጋ ያወዳድሩ:</strong> የሚፈልጉትን እቃ በተለያዩ ዋጋዎች በቀላሉ በማወዳደር ተመጣጣኙን ያግኙ።
+                </li>
+                <li>
+                    <strong>የአጠቃቀም መረጃ:</strong> እቃውን የገዙ ሌሎች ሰዎች የሚሰጡትን አስተያየት (Review) በማንበብ ትክክለኛ ውሳኔ ይወስኑ።
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ጃቫ ስክሪፕት እና ፋየርቤዝ -->
+    <script type="module">
+        // የፋየርቤዝ ሞጁሎችን ማስገባት (Import)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+        
+        // ማሳሰቢያ፡ ይህ ከዚህ ቀደም ከሰጡኝ 'login.html' የተወሰደ የፋየርቤዝ ኮንፊግ ነው።
+        // እባክዎ ለ 'HararGebeya' ፕሮጀክትዎ ትክክለኛ መሆኑን ያረጋግጡ።
+        const firebaseConfig = {
+            apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+            authDomain: "elanyas-info.firebaseapp.com",
+            projectId: "elanyas-info",
+            storageBucket: "elanyas-info.firebasestorage.app",
+            messagingSenderId: "769306910360",
+            appId: "1:769306910360:web:70988eed5b1da8ffa0faed",
+            measurementId: "G-2XX2B3RSGP"
+        };
+
+        // ፋየርቤዝን ማስጀመር
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // የ HTML ኤለመንቶችን መያዝ
+        const phoneNumberInput = document.getElementById('phoneNumberInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginButton = document.getElementById('loginButton');
+        const errorMessageDisplay = document.getElementById('errorMessage');
+        const loginForm = document.getElementById('loginForm');
+
+        // ፎርሙ 'submit' ሲደረግ ገጹ 'refresh' እንዳያደርግ መከልከል
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+        });
+
+        // የስህተት መልዕክት ማሳያ ፈንክሽን
+        function showErrorMessage(message) {
+            errorMessageDisplay.textContent = message;
+            errorMessageDisplay.style.opacity = "1";
+        }
+
+        // የስህተት መልዕክት መደበቂያ ፈንክሽን
+        function hideErrorMessage() {
+            errorMessageDisplay.style.opacity = "0";
+            errorMessageDisplay.textContent = "";
+        }
+
+        // ገጹ ሲጫን በሎካል ስቶሬጅ የተቀመጠ ስህተት ካለ ያሳያል
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedErrorMessage = localStorage.getItem('errorMessageOnLoad');
+            if (storedErrorMessage) {
+                showErrorMessage(storedErrorMessage);
+                localStorage.removeItem('errorMessageOnLoad'); 
+            }
+        });
+
+        // የመግቢያ ቁልፍ ሲጫን የሚሰራው ዋናው ሎጂክ
+        loginButton.addEventListener('click', async () => {
+            hideErrorMessage();
+
+            const phoneNumber = phoneNumberInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // 1. ግብአቶችን ማረጋገጥ
+            if (!phoneNumber || !password) {
+                showErrorMessage("እባክዎ ስልክ ቁጥር እና የይለፍ ቃል ያስገቡ!");
+                return;
+            }
+            if ((!phoneNumber.startsWith('09') && !phoneNumber.startsWith('07')) || phoneNumber.length !== 10 || !/^\d+$/.test(phoneNumber)) {
+                showErrorMessage("ትክክለኛ የ10 አሃዝ ስልክ ቁጥር ያስገቡ (ለምሳሌ: 0912345678)");
+                return;
+            }
+
+            loginButton.disabled = true;
+            loginButton.textContent = "እየገባ ነው... እባክዎ ይጠብቁ።";
+
+            try {
+                // 2. የዶክመንት መለያ (Document ID) ማዘጋጀት (ስልክ ቁጥሩን መጠቀም)
+                const userDocId = phoneNumber; 
+                
+                // 3. ✅ ቁልፍ ለውጥ፡ ወደ 'HararGebeyaUsers' ኮሌክሽን መቀየር
+                const userDocRef = doc(db, "HararGebeyaUsers", userDocId);
+                const userSnapshot = await getDoc(userDocRef);
+
+                // 4. ተጠቃሚው መመዝገቡን ማረጋገጥ
+                if (!userSnapshot.exists()) {
+                    showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም። እባክዎ ይመዝገቡ።");
+                    loginButton.disabled = false;
+                    loginButton.textContent = "መግቢያ";
+                    return;
+                }
+
+                const userData = userSnapshot.data();
+                
+                // 5. ተጠቃሚው ገባሪ (active) መሆኑን ማረጋገጥ
+                if (!userData.is_active) { 
+                    showErrorMessage("ለመግባት አልተፈቀደልዎትም። እባክዎ የአድሚን ማረጋገጫ ይጠብቁ።");
+                    loginButton.disabled = false;
+                    loginButton.textContent = "መግቢያ";
+                    return;
+                }
+
+                // 6. የይለፍ ቃል ማነፃፀር (Plain Text እና UpperCase)
+                if (userData.password !== password.toUpperCase()) {
+                     showErrorMessage("ስልክ ቁጥርዎ ወይም የይለፍ ቃልዎ ትክክል አይደለም።");
+                     loginButton.disabled = false;
+                     loginButton.textContent = "መግቢያ";
+                     return;
+                }
+                
+                // 7. ✅ የክፍያ ማረጋገጫ ሎጂክ ተወግዷል (As requested)
+
+                // 8. በተሳካ ሁኔታ ሲገባ መረጃን በሎካል ስቶሬጅ ማስቀመጥ
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loggedInUserName', userData.full_name || 'ያልታወቀ ተጠቃሚ');
+                localStorage.setItem('loggedInUserPhone', phoneNumber); 
+                localStorage.setItem('loggedInUserPassword', password.toUpperCase()); 
+                // ✅ የ 'last_payment_date' እዚህ ላይ አልተቀመጠም (As requested)
+                
+                // 9. ለተጠቃሚው መልዕክት ማሳየት
+                // 'alert' ከመጠቀም ይልቅ አዝራሩን መቀየር የተሻለ ነው
+                loginButton.textContent = "በተሳካ ሁኔታ ገብተዋል!";
+                
+                // 10. ✅ ቁልፍ ለውጥ፡ ወደ አዲሱ ገጽ መውሰድ
+                setTimeout(() => {
+                    window.location.href = "https://elanyas-info.web.app/buyer_marketplace.html"; 
+                }, 1000); // ተጠቃሚው መልዕክቱን እንዲያይ 1 ሰከንድ እንጠብቃለን
+
+            } catch (error) {
+                console.error("Error during login:", error);
+                showErrorMessage("በመግባት ላይ ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።");
+                loginButton.disabled = false;
+                loginButton.textContent = "መግቢያ";
+            }
+        });
+
+    </script>
+</body>
+</html>
