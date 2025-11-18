@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ስለ ድራይቨር ገበያ | የድርጅት ማንነት</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================= */
+        /* 1. የዲዛይን መሰረታዊ ቀለሞችና ቅርጾች (Theme) */
+        /* ========================================= */
+        :root {
+            --primary-color: #0d0d0d; /* ጥቁር ዳራ */
+            --secondary-color: #1a1a1a; /* ለዋና ፓነል */
+            --card-background: #242424; /* ለካርዶች */
+            --accent-color: #00bcd4; /* ዋናው የሲስተም ቀለም (Cyan/Turquoise) */
+            --text-color: #f0f0f0; /* ዋናው ጽሁፍ */
+            --sub-text-color: #b0b0b0; /* ለንዑስ ጽሁፎች */
+            --thin-border-color: #383838;
+        }
+
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        .main-header {
+            background-color: var(--secondary-color);
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .main-header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: var(--accent-color);
+        }
+        
+        .main-header p {
+            margin: 5px 0 0 0;
+            color: var(--sub-text-color);
+            font-size: 1em;
+        }
+
+        .about-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        /* ========================================= */
+        /* 2. የክፍል (Section) ስታይል */
+        /* ========================================= */
+        .mission-section, .values-section, .contact-section {
+            background-color: var(--card-background);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--thin-border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .section-title i {
+            margin-right: 8px;
+        }
+        
+        /* እሴቶች (Values) */
+        .value-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .value-card {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .value-card h4 {
+            color: var(--text-color);
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        
+        .value-card p {
+            color: var(--sub-text-color);
+            font-size: 0.9em;
+        }
+        
+        /* የእውቂያ (Contact) መረጃ */
+        .contact-info p {
+            margin: 10px 0;
+            color: var(--sub-text-color);
+        }
+        
+        .contact-info i {
+            color: var(--accent-color);
+            margin-right: 10px;
+        }
+        
+        .app-focus-box {
+            background-color: #2c2c2c;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid var(--accent-color);
+            text-align: center;
+        }
+        
+        .app-focus-box p {
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        /* ========================================= */
+        /* 3. ለትንሽ ስክሪን ማስተካከያ (Mobile Responsive) */
+        /* ========================================= */
+        @media (max-width: 600px) {
+            .main-header h1 {
+                font-size: 1.5em;
+            }
+            .section-title {
+                font-size: 1.3em;
+            }
+            .about-container {
+                margin: 20px auto;
+            }
+            .value-card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <header class="main-header">
+        <h1><i class="fas fa-info-circle"></i> ስለ ድራይቨር ገበያ</h1>
+        <p>የኢትዮጵያ ባለ 3-እግር እና ባለ 2-እግር ተሽከርካሪዎች መሸጫ እና መለዋወጫ ማዕከል</p>
+    </header>
+
+    <div class="about-container">
+        
+        <section class="mission-section">
+            <h2 class="section-title"><i class="fas fa-bullseye"></i> የእኛ ራዕይ እና ተልዕኮ</h2>
+            
+            <p style="color: var(--text-color); margin-bottom: 20px;">
+                የድራይቨር ገበያ የኢትዮጵያ የባለ 3-እግር (ባጃጅ/ቶክቶክ) እና ባለ 2-እግር ተሽከርካሪዎች (ሞተር ሳይክሎች) ማህበረሰብ ፍላጎቶችን ለማሟላት የተፈጠረ የሞባይል ዌብ አፕሊኬሽን ነው። 
+                ተልዕኳችን ገዢዎችን እና ሻጮችን በአስተማማኝ፣ ግልጽነት ባለው እና ፈጣን በሆነ መንገድ ማገናኘት ነው።
+            </p>
+            
+            <h3>ዋና ዓላማችን:</h3>
+            <ul>
+                <li style="color: var(--sub-text-color);"><i class="fas fa-handshake"></i> አስተማማኝ ግብይት: በገዢና በሻጭ መካከል ቀጥተኛና አስተማማኝ ግንኙነት መፍጠር።</li>
+                <li style="color: var(--sub-text-color);"><i class="fas fa-chart-line"></i> ገቢ ማስገኘት: ሻጮች ማስታወቂያዎቻቸውን በክፍያ (በDS Coin) በመለጠፍ ሰፊ ገበያ እንዲያገኙ እና ድርጅታችን ገቢ እንዲያስገኝ ማድረግ።</li>
+                <li style="color: var(--sub-text-color);"><i class="fas fa-mobile-alt"></i> የዌብ አፕሊኬሽን ተሞክሮ: ተጠቃሚዎች በአፕ የሚጠቀሙት ያህል ቀላልና ፈጣን የሆነ የአጠቃቀም ልምድ መስጠት።</li>
+            </ul>
+        </section>
+
+        <section class="values-section">
+            <h2 class="section-title"><i class="fas fa-star"></i> ዋና እሴቶቻችን</h2>
+            
+            <div class="value-card-grid">
+                <div class="value-card">
+                    <h4>ግልጽነት</h4>
+                    <p>በመረጃ አቀራረብና በክፍያ ሂደት ውስጥ ሙሉ ግልጽነትን እናረጋግጣለን። የተደበቀ ወጪ የለም።</p>
+                </div>
+                
+                <div class="value-card">
+                    <h4>አስተማማኝነት</h4>
+                    <p>በመድረኩ ላይ የሚለጠፉ ማስታወቂያዎችን በተቻለ መጠን በማጣራት አስተማማኝ የንግድ መድረክ እንፈጥራለን።</p>
+                </div>
+                
+                <div class="value-card">
+                    <h4>ቀላል አጠቃቀም</h4>
+                    <p>ቴክኖሎጂያችንን ቀላልና ለሁሉም ተጠቃሚ ምቹ እንዲሆን አድርገን እንሰራለን።</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <h2 class="section-title"><i class="fas fa-hands-helping"></i> ያግኙን</h2>
+            
+            <div class="contact-info">
+                <p><i class="fas fa-phone-alt"></i> ስልክ ቁጥር: +251 9XX XXX XXX</p>
+                <p><i class="fab fa-telegram-plane"></i> ቴሌግራም: @DriverSystemMarket</p>
+                <p><i class="fas fa-envelope"></i> ኢሜይል: support@driversystem.com</p>
+            </div>
+            
+            <div class="app-focus-box">
+                <p>ይህ ገበያ በተለየ ሁኔታ <i class="fas fa-mobile-alt"></i> ለሞባይል አፕሊኬሽናችን ተጠቃሚዎች ተብሎ የተዘጋጀ ነው።</p>
+            </div>
+        </section>
+        
+    </div>
+    
+</body>
+</html>
