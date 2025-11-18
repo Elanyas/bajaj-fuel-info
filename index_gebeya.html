@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ድራይቨር ሲስተም - በመጫን ላይ...</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* አፕሊኬሽኑ እንደተለመደው እንዲጫን የሚያደርገው የእርስዎ ነባር ስታይል ይቆያል */
+        
+        /* የማሻሻያ ሞዳል (Update Modal) ቅንብሮች */
+        .modal {
+            display: none; /* መጀመሪያ ላይ ይደበቃል */
+            position: fixed;
+            z-index: 9999; /* ከሁሉም በላይ እንዲታይ */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8); /* ጥቁር ግልጽ ዳራ */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #1e1e1e; /* ከ style.css ጋር የሚስማማ ዳራ */
+            margin: 15% auto; 
+            padding: 30px;
+            border: 1px solid #00bcd4; /* የአክሰንት ቀለም */
+            width: 85%; 
+            max-width: 400px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            color: #e0e0e0;
+        }
+
+        .modal-content h2 {
+            color: #00bcd4;
+            margin-top: 0;
+        }
+
+        .modal-content p {
+            margin-bottom: 25px;
+        }
+        
+        /* አዝራር ስታይል */
+        .modal-btn {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 12px 25px;
+            background-color: #00bcd4;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+
+        .modal-btn:hover {
+            background-color: #008c99;
+        }
+
+        .dismiss-btn {
+            background-color: #555555;
+        }
+
+        .dismiss-btn:hover {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="loader"></div>
+        <h1>ሐረር ገበያ</h1>
+        <p>እንኳን ደህና መጡ! እየተጫነ ነው። እባክዎ ትንሽ ይጠብቁ...</p>
+        <p class="small-text">በአንዳንድ ብሮውዘር ላይ በራስ-ሰር ካልሄደ፣ <a href="login.html" class="redirect-link">እዚህ ይጫኑ</a>።</p>
+    </div>
+
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <h2>ማስጠንቀቂያ: የአፕሊኬሽን ማሻሻያ!</h2>
+            <p id="updateMessage">አዲስ ማሻሻያ ወጥቷል! አፑን ለማሻሻል እባክዎ በተኑን ይጫኑ።</p>
+            <a id="updateButton" href="#" target="_blank" class="modal-btn">አሁን አውርድ</a>
+            <button id="dismissButton" class="modal-btn dismiss-btn">አሁን አያስፈልገኝም</button>
+        </div>
+    </div>
+
+    <script>
+        // *** ይህንን በሞባይል አፑ ውስጥ ካለው ቨርዥን ኮድ ጋር ያስተካክሉ!!! ***
+        const CURRENT_APP_VERSION_CODE = 2; 
+
+        // የቨርዥን መረጃ የሚገኝበት የJSON ፋይል መንገድ
+        const VERSION_CHECK_URL ='version_check.json'; 
+        //  !!!ማስጠንቀቂያ!!!: ይህንን ሊንክ ወደ ትክክለኛው የፋይልዎ ቦታ ይቀይሩት!
+
+        // ወደሚፈለገው ገጽ የሚዞረው ተግባር
+        const REDIRECT_TARGET = 'buyer_marketplace.html';
+        const REDIRECT_DELAY = 3000; // 3000 ሚሊሰከንድ = 3 ሰከንድ
+
+        /**
+         * የተወሰነ ጊዜ ከተጠበቀ በኋላ ወደ ዋናው አፕሊኬሽን ገጽ ይዞራል።
+         * @param {number} delay - የመጠበቂያ ጊዜ በ ሚሊሰከንድ። ነባሪው REDIRECT_DELAY ነው።
+         */
+        function startAppRedirect(delay = REDIRECT_DELAY) {
+            setTimeout(function() {
+                window.location.href = REDIRECT_TARGET;
+            }, delay);
+        }
+
+        /**
+         * አዲስ ማሻሻያ መኖሩን ከVERSION_CHECK_URL ያጣራል።
+         * @returns {Promise<boolean>} አስገዳጅ ማሻሻያ (true) ካለ ወይም ምንም ችግር (false) ከሌለ ይገልፃል።
+         */
+        async function checkForUpdate() {
+            try {
+                const response = await fetch(VERSION_CHECK_URL);
+                if (!response.ok) {
+                    console.error('የቨርዥን መረጃ ፋይሉ አልተገኘም:', response.status);
+                    return false; // ፍተሻው አልተሳካም - ወደ አፑ ለመቀጠል ይፈቀዳል
+                }
+                const updateInfo = await response.json();
+
+                const latestCode = updateInfo.latest_version_code;
+                const forceUpdate = updateInfo.force_update === true; 
+                const message = updateInfo.update_message || 'አዲስ ማሻሻያ ወጥቷል!';
+                const link = updateInfo.telegram_link;
+
+                // 1. የቨርዥን ንፅፅር
+                if (latestCode > CURRENT_APP_VERSION_CODE) {
+                    // ማሻሻያ አለ
+                    showUpdateModal(message, link, forceUpdate);
+                    // አስገዳጅ ከሆነ ወደ ቀጣዩ ፔጅ መሄዱን ይከላከላል
+                    return forceUpdate; 
+                }
+                
+                // 2. ማሻሻያ የለም (ትክክለኛው ቨርዥን ነው)
+                return false; 
+
+            } catch (error) {
+                console.error('የማሻሻያ ማጣሪያ ላይ ችግር ተፈጠረ:', error);
+                return false; // ችግር ቢፈጠርም አፑ እንዲቀጥል ይፈቅዳል
+            }
+        }
+
+        /**
+         * የማሻሻያ ሞዳልን ያሳያል እና አዝራሮችን ያስተካክላል።
+         */
+        function showUpdateModal(message, link, isForced) {
+            const modal = document.getElementById('updateModal');
+            const updateMessage = document.getElementById('updateMessage');
+            const updateButton = document.getElementById('updateButton');
+            const dismissButton = document.getElementById('dismissButton');
+
+            updateMessage.textContent = message;
+            updateButton.href = link;
+            
+            // ሞዳሉን ያሳያል
+            modal.style.display = 'flex'; 
+
+            if (isForced) {
+                // አስገዳጅ ማሻሻያ: የማለፊያ በተን ይደበቃል
+                dismissButton.style.display = 'none'; 
+            } else {
+                // አማራጭ ማሻሻያ: የማለፊያ በተን ይታያል
+                dismissButton.style.display = 'block'; 
+                
+                // የማለፊያ በተን ከተጫነ ወደ ዋናው አፕሊኬሽን እንዲሄድ ያደርጋል
+                dismissButton.onclick = () => {
+                    modal.style.display = 'none';
+                    // ወዲያውኑ ያስገባል (3 ሰከንድ ሳይጠብቅ)
+                    startAppRedirect(0); 
+                };
+            }
+        }
+        
+        // ዋናውን ሂደት የሚጀምር ተግባር
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isForceUpdateRequired = await checkForUpdate();
+            
+            // 1. አስገዳጅ ማሻሻያ ከሌለ (false ሲመለስ)
+            // ይህም የሚሆነው:
+            //   - ትክክለኛውን ቨርዥን ሲጠቀም
+            //   - ፍተሻው ችግር ሲገጥመው
+            //   - አማራጭ ማሻሻያ ሲኖር (እና ሞዳሉ ቀርቦ ስለሚጠብቅ) - እዚህ ላይ ማስተካከያ አድርገናል።
+            
+            // የድሮው ኮድ አማራጭ ማሻሻያ ሲኖር በራስ-ሰር 3 ሰከንድ ጠብቆ ይዞር ነበር።
+            // አሁን: አስገዳጅ ማሻሻያ ከሌለ (isForceUpdateRequired=false) እና ማሻሻያ ሞዳሉ ካልታየ ብቻ ወደ ቀጣዩ ገጽ እንዞራለን።
+            
+            // ትክክለኛውን ቨርዥን እየተጠቀመ ከሆነ ወይም ፍተሻው ካልተሳካ ሞዳል አይታይም።
+            if (!isForceUpdateRequired && document.getElementById('updateModal').style.display !== 'flex') {
+                startAppRedirect();
+            }
+            
+            // አማራጭ ማሻሻያ ሲኖር: 
+            // - isForceUpdateRequired false ይመልሳል።
+            // - ሞዳሉ ይታያል ('flex' ይሆናል።)
+            // - ስለዚህ `startAppRedirect()` አይጠራም። 
+            // - ተጠቃሚው 'አሁን አያስፈልገኝም' የሚለውን ሲጫን ብቻ ነው ወደ ቀጣዩ የሚሄደው።
+        });
+
+    </script>
+</body>
+</html>
