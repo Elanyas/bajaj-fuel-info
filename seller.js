@@ -42,6 +42,7 @@ const userPhoneDisplay = document.getElementById('userPhoneDisplay');
 const newListingForm = document.getElementById('newListingForm');
 const mainCategorySelect = document.getElementById('mainCategory');
 const subCategorySelect = document.getElementById('subCategory');
+const detailItemSelect = document.getElementById('detailItem'); // ✅ አዲስ
 const daysDurationSelect = document.getElementById('daysDuration');
 const coinCostDisplay = document.getElementById('coinCostDisplay');
 const itemImageInput = document.getElementById('itemImage');
@@ -50,8 +51,8 @@ const imagePlaceholder = document.getElementById('imagePlaceholder');
 const listingMessage = document.getElementById('listingMessage');
 const activeListingsGrid = document.getElementById('activeListingsGrid');
 const noActiveListings = document.getElementById('noActiveListings');
-const expiredListingsGrid = document.getElementById('expiredListingsGrid'); // ✅ አዲስ
-const noExpiredListings = document.getElementById('noExpiredListings'); // ✅ አዲስ
+const expiredListingsGrid = document.getElementById('expiredListingsGrid'); 
+const noExpiredListings = document.getElementById('noExpiredListings'); 
 const starRatingSelector = document.getElementById('starRatingSelector'); 
 const starRatingInput = document.getElementById('starRating'); 
 
@@ -80,7 +81,7 @@ function checkUserAuthentication() {
 }
 
 // ----------------------------------------------------------------------
-// 2. የተጠቃሚ መረጃዎችን መጫን (Load User Info) - ✅ ማስተካከያ: የሁለት ኮሌክሽን ባላንስ መደመር
+// 2. የተጠቃሚ መረጃዎችን መጫን (Load User Info) 
 // ----------------------------------------------------------------------
 async function loadUserInfo() {
     userNameDisplay.textContent = loggedInUserName;
@@ -118,35 +119,223 @@ async function loadUserInfo() {
 }
 
 // ----------------------------------------------------------------------
-// 3. የማስታወቂያ ምድቦችን መሙላት (Category Logic) - ✅ ማሻሻያ 5: የልብስ ምድብ መጨመር
+// 3. የማስታወቂያ ምድቦችን መሙላት (Category Logic) - ✅ ማሻሻያ: ሶስት ደረጃዎች
 // ----------------------------------------------------------------------
-const categories = {
-    vehicle: ["ባጃጅ", "ሞተር", "መኪና", "ሳይክል", "ሌሎች"],
-    spare_part: ["ጎማ/ቲዩብ", "ምንጣፍ", "የሞተር ክፍሎች", "የኤሌትሪክ ክፍሎች", "ቦዲ ፓርትስ", "ሌሎች"],
-    phone: ["አንድሮይድ", "አይፎን", "ቻርጅ", "ኤርፎን", "ሌሎች"],
-    clothes: ["ሱሪ", "ቲሸርት", "ጃኬት", "ሹራብ", "ጫማ", "ሌላ"], // ✅ አዲስ ምድብ
-    other: ["አገልግሎት (ጥገና, ቅባት)", "ሌላ እቃዎች", "ኪራይ/ሊዝ"]
+// ዋና ዘርፎች (Main Categories)
+const mainCategories = {
+    vehicle_and_parts: "ተሽከርካሪዎች እና መለዋወጫ",
+    phones_and_computers: "ስልኮች እና ኮምፒውተሮች",
+    home_appliances: "የቤት እቃዎች",
+    property_and_rent: "ቤት፣ ቦታ እና ኪራይ",
+    books_and_education: "መፅሀፍት እና የትምህርት መርጃ",
+    fashion_and_apparel: "ፋሽን እና አልባሳት",
+    construction_and_repair: "የግንባታ እና የጥገና እቃዎች",
+    services: "አገልግሎቶች",
+    others_main: "ሌሎች" 
 };
 
-function populateSubCategories() {
-    subCategorySelect.innerHTML = '<option value="">ንዑስ ምድብ ይምረጡ</option>';
-    const selectedCategory = mainCategorySelect.value;
+// ንዑስ ዘርፎች (Sub-Categories) እና የእቃ አይነቶች (Detail Items)
+const categories = {
+    vehicle_and_parts: {
+        bajaj: {
+            amharic: "ባለ 3-እግር (ባጃጅ/ቶክቶክ)",
+            details: ["አዲስ ባለ 3-እግር", "ያገለገለ ባለ 3-እግር", "የባጃጅ ሞተር መለዋወጫ", "የባጃጅ አካል መለዋወጫ (Body Parts)", "ጎማዎች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        motorcycles: {
+            amharic: "ሞተር ሳይክሎች",
+            details: ["አዲስ ሞተር ሳይክል", "ያገለገለ ሞተር ሳይክል", "የሞተር ሳይክል መለዋወጫ", "የሞተር መከላከያ (Helmet/Safety)", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        cars: {
+            amharic: "መኪናዎች",
+            details: ["ያገለገሉ መኪናዎች", "የጭነት መኪናዎች/ቫኖች", "የመኪና መለዋወጫዎች", "የመኪና ጎማ እና ባትሪ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች ተሽከርካሪ እና መለዋወጫ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    phones_and_computers: {
+        mobile_phones: {
+            amharic: "ሞባይል ስልኮች",
+            details: ["ስማርት ስልክ (32GB እና በታች)", "ስማርት ስልክ (64GB)", "ስማርት ስልክ (128GB)", "ስማርት ስልክ (256GB እና በላይ)", "ባር/ቀላል ስልኮች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        laptops_and_computers: {
+            amharic: "ላፕቶፕ እና ኮምፒውተር",
+            details: ["ላፕቶፕ (4GB RAM)", "ላፕቶፕ (8GB RAM)", "ላፕቶፕ (16GB RAM እና በላይ)", "ዴስክቶፕ ኮምፒውተር", "ታብሌቶች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        accessories: {
+            amharic: "አክሰሰሪዎች (Accessories)",
+            details: ["ቻርጀር እና ገመድ", "ማስታወሻ ሜሞሪ/Flash Disk", "የጆሮ ማዳመጫ (Earphone/Headset)", "የስልክ እስክሪን እና ከቨር", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች ስልኮች እና ኮምፒውተሮች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    home_appliances: {
+        large_appliances: {
+            amharic: "ትላልቅ መገልገያዎች",
+            details: ["ፍሪጅ/ማቀዝቀዣ", "ማጠቢያ ማሽን", "ጋዝ እና ኤሌክትሪክ ምድጃ", "ቲቪ (ቴሌቪዥን)", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        kitchen_items: {
+            amharic: "የኩሽና እቃዎች",
+            details: ["ድስቶች እና መጥበሻዎች", "ብልቃጥ እና የብርጭቆ እቃዎች", "ማይክሮዌቭ እና ኦቨን", "የቡና እና ጁስ ማሽኖች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        furniture: {
+            amharic: "ፈርኒቸር",
+            details: ["ሶፋ እና የሳሎን ወንበር", "አልጋ እና ፍራሽ", "ቁምሳጥን እና ሣጥን", "የመመገቢያ ጠረጴዛ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች የቤት እቃዎች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    property_and_rent: {
+        rent: {
+            amharic: "ኪራይ (Rent)",
+            details: ["የመኖሪያ ቤት ለኪራይ", "ሱቅ እና መጋዘን ለኪራይ", "የጋራ መኖሪያ (ክፍል ለተማሪ/ለነጠላ)", "የእንግዳ ማረፊያ (Guest House)", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        sale: {
+            amharic: "ሽያጭ (Sale)",
+            details: ["የመኖሪያ ቤት ሽያጭ", "የንግድ ቤት/ሕንፃ ሽያጭ", "ባዶ ቦታ (መሬት) ለሽያጭ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች ንብረት እና ኪራይ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    books_and_education: {
+        books: {
+            amharic: "መፅሀፍት",
+            details: ["የትምህርት ቤት መማሪያ መፅሀፍት", "ልቦለድ እና ታሪክ", "ሃይማኖታዊ መፅሀፍት", "የህፃናት መፅሀፍት", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        stationery: {
+            amharic: "የጽህፈት መሳሪያ (Stationery)",
+            details: ["ደብተር እና እስክሪብቶ", "ቦርሳዎች (የተማሪ/የላፕቶፕ)", "የቢሮ እቃዎች (ፋይል/ወረቀት)", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች መፅሀፍት እና ትምህርት", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    fashion_and_apparel: {
+        clothes: {
+            amharic: "ልብሶች",
+            details: ["የወንዶች ልብስ", "የሴቶች ልብስ", "የህፃናት ልብስ", "የባህል ልብሶች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        shoes: {
+            amharic: "ጫማዎች",
+            details: ["የወንዶች ጫማ", "የሴቶች ጫማ", "የስፖርት ጫማዎች", "የህፃናት ጫማ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        personal_adornment: {
+            amharic: "የግል ማስዋቢያ",
+            details: ["ሰዓት እና መነፅር", "ጌጣጌጥ (ብር/ወርቅ/Imitation)", "ሽቶ እና ኮስሞቲክስ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች ፋሽን እና አልባሳት", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    construction_and_repair: {
+        building_input: {
+            amharic: "የግንባታ ግብአት",
+            details: ["ሲሚንቶ እና አሸዋ", "ብረት እና ቆርቆሮ", "ቀለም እና ፕላስቲክ", "የመታጠቢያ ቤት እቃዎች (Ceramics/Sinks)", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        tools: {
+            amharic: "የእጅ መሳሪያዎች (Tools)",
+            details: ["የኤሌክትሪክ መሳሪያዎች (Drill, etc)", "መዶሻ/መፍቻ/ጉልበት", "የቧንቧ እቃዎች", "የኤሌክትሪክ ገመድ እና ሶኬት", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች ግንባታ እና ጥገና", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    services: {
+        repair_professional: {
+            amharic: "የጥገና ባለሙያ",
+            details: ["የኤሌክትሪክ ባለሙያ", "የቧንቧ ባለሙያ", "የዲሽ እና ቲቪ ባለሙያ", "የሞባይል/ኮምፒውተር ጥገና", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        other_services: {
+            amharic: "ሌሎች አገልግሎቶች",
+            details: ["የትምህርት ማስጠናቀቂያ (Tutor)", "የቤት ጽዳት እና ምግብ", "ትራንስፖርት እና እቃ ማጓጓዝ", "የህትመት እና ፎቶ ግራፊክስ", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        },
+        others_sub: { 
+            amharic: "ሌሎች",
+            details: ["ሌሎች አገልግሎቶች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    },
+    others_main: { 
+        others_sub_main: {
+            amharic: "ሌሎች",
+            details: ["ሌሎች እቃዎች እና አገልግሎቶች", "ሌሎች"] // ✅ የተጨመረ: ሌሎች
+        }
+    }
+};
 
-    if (selectedCategory && categories[selectedCategory]) {
-        categories[selectedCategory].forEach(sub => {
+// የንዑስ ምድቦችን መሙላት
+function populateSubCategories() {
+    // ንዑስ ምድብ ምርጫውን ባዶ ማድረግ
+    subCategorySelect.innerHTML = '<option value="">ንዑስ ምድብ ይምረጡ</option>';
+    // ዝርዝር እቃ ምርጫውን ባዶ ማድረግ
+    detailItemSelect.innerHTML = '<option value="">መጀመሪያ ንዑስ ምድብ ይምረጡ</option>';
+    detailItemSelect.disabled = true;
+
+    const selectedCategoryKey = mainCategorySelect.value;
+    
+    if (selectedCategoryKey && categories[selectedCategoryKey]) {
+        const subCategories = categories[selectedCategoryKey];
+
+        // ንዑስ ምድቦችን መጨመር
+        for (const subKey in subCategories) {
             const option = document.createElement('option');
-            option.value = sub;
-            option.textContent = sub;
+            option.value = subKey; // ቁልፉን ማስቀመጥ (e.g., 'bajaj')
+            option.textContent = subCategories[subKey].amharic; // የአማርኛ ስሙን ማሳየት
             subCategorySelect.appendChild(option);
-        });
+        }
+        
         subCategorySelect.disabled = false;
+        
     } else {
         subCategorySelect.disabled = true;
     }
-    calculateCoinCost(); // ምድብ ሲቀየር የኮይን ዋጋ እንዲሰላ
+    
+    // የንዑስ ምድብ ምርጫ ሲቀየር ዝርዝር እቃው ይሞላል
+    populateDetailItems(); 
+    // ዋና ምድብ ሲቀየር ዋጋው ይሰላል (ምንም እንኳን ንዑስ/ዝርዝር ባይመረጥም)
+    calculateCoinCost(); 
 }
-mainCategorySelect.addEventListener('change', populateSubCategories);
 
+// ✅ አዲስ ተግባር: ዝርዝር የእቃ አይነቶችን መሙላት
+function populateDetailItems() {
+    detailItemSelect.innerHTML = '<option value="">ዝርዝር እቃ ይምረጡ</option>';
+    const mainCategoryKey = mainCategorySelect.value;
+    const subCategoryKey = subCategorySelect.value;
+
+    if (mainCategoryKey && subCategoryKey && categories[mainCategoryKey] && categories[mainCategoryKey][subCategoryKey]) {
+        const detailItems = categories[mainCategoryKey][subCategoryKey].details;
+
+        detailItems.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item; // የአማርኛ ዝርዝር ስሙን እንደ Value መጠቀም
+            option.textContent = item;
+            detailItemSelect.appendChild(option);
+        });
+
+        detailItemSelect.disabled = false;
+    } else {
+        detailItemSelect.disabled = true;
+    }
+    
+    // ዝርዝር እቃ ሲቀየር ዋጋው እንዲሰላ
+    calculateCoinCost(); 
+}
+
+// የ Main Category ተቀባይ
+mainCategorySelect.addEventListener('change', populateSubCategories);
+// የ Sub Category ተቀባይ
+subCategorySelect.addEventListener('change', populateDetailItems); // ✅ ወደ አዲሱ ተግባር ተቀይሯል
+// የ Detail Item ተቀባይ
+detailItemSelect.addEventListener('change', calculateCoinCost); // ✅ አዲስ ተጨምሯል
 
 // ----------------------------------------------------------------------
 // የኮከብ መምረጫ UI ሎጂክ
@@ -180,32 +369,48 @@ function setupStarRatingSelector() {
 
 
 // ----------------------------------------------------------------------
-// 4. የኮይን ዋጋ ስሌት (Coin Cost Calculation) - ✅ ማሻሻያ 6: የቀን ስሌት ማስተካከል
+// 4. የኮይን ዋጋ ስሌት (Coin Cost Calculation) - ✅ ማሻሻያ: አዲሱን ምድብ ተከትሎ
 // ----------------------------------------------------------------------
 function calculateCoinCost() {
     const days = daysDurationSelect.value;
-    const mainCategory = mainCategorySelect.value;
-    const starRating = parseInt(starRatingInput.value) || 0; // የተመረጠውን ኮከብ ደረጃ ያግኙ
-    let baseCost = 5; // ነባሪ ዋጋ ለ 7 ቀን (ለተሽከርካሪ ካልሆነ)
+    const mainCategory = mainCategorySelect.value; // vehicle_and_parts, phones_and_computers, etc.
+    const starRating = parseInt(starRatingInput.value) || 0; 
+    let baseCost = 5; // ነባሪ ዋጋ ለ 7 ቀን (ለአብዛኞቹ)
     let starCost = 0; // የኮከብ ዋጋ
     
     // 1. የማስታወቂያው መሠረታዊ ዋጋ (Base Listing Cost) ስሌት
-    if (mainCategory === 'vehicle') {
+    
+    // "ተሽከርካሪዎች እና መለዋወጫ" (Tier 1 - ከፍተኛ ዋጋ)
+    if (mainCategory === 'vehicle_and_parts') {
         if (days === '7') {
             baseCost = 7;
         } else if (days === '14') {
             baseCost = 12; 
-        } else if (days === '21') { // ✅ አዲስ የቀን ስሌት
+        } else if (days === '21') { 
             baseCost = 18;
         } else if (days === '30') {
             baseCost = 25;
         }
-    } else { // spare_part, phone, clothes, other
+    } 
+    // "ቤት፣ ቦታ እና ኪራይ" (Tier 2 - መካከለኛ ከፍተኛ ዋጋ)
+    else if (mainCategory === 'property_and_rent') {
+        if (days === '7') {
+            baseCost = 6;
+        } else if (days === '14') {
+            baseCost = 10; 
+        } else if (days === '21') { 
+            baseCost = 15;
+        } else if (days === '30') {
+            baseCost = 21;
+        }
+    }
+    // ሌሎች ሁሉም ምድቦች (Tier 3 - መደበኛ ዋጋ)
+    else { 
         if (days === '7') {
             baseCost = 5;
         } else if (days === '14') {
             baseCost = 9; 
-        } else if (days === '21') { // ✅ አዲስ የቀን ስሌት
+        } else if (days === '21') { 
             baseCost = 13;
         } else if (days === '30') {
             baseCost = 18;
@@ -223,7 +428,7 @@ function calculateCoinCost() {
 }
 
 daysDurationSelect.addEventListener('change', calculateCoinCost);
-mainCategorySelect.addEventListener('change', calculateCoinCost); 
+
 
 // የምስል ቅድመ እይታ
 itemImageInput.addEventListener('change', function(event) {
@@ -243,7 +448,7 @@ itemImageInput.addEventListener('change', function(event) {
 });
 
 // ----------------------------------------------------------------------
-// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing) - ✅ ማሻሻያ 4: የምስል መጠን ገደብ
+// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing) 
 // ----------------------------------------------------------------------
 async function postNewListing(event) {
     event.preventDefault();
@@ -252,12 +457,19 @@ async function postNewListing(event) {
 
     const coinCost = parseInt(coinCostDisplay.textContent);
     const currentBalance = parseInt(coinBalanceDisplay.textContent);
-    const mainCategory = mainCategorySelect.value;
-    const subCategory = subCategorySelect.value;
+    const mainCategoryKey = mainCategorySelect.value;
+    const subCategoryKey = subCategorySelect.value;
+    const detailItemValue = detailItemSelect.value; // ✅ አዲስ: የተመረጠው የእቃ ዝርዝር
     const itemTitle = document.getElementById('itemTitle').value;
     const itemPrice = parseFloat(document.getElementById('itemPrice').value);
     const itemDescription = document.getElementById('itemDescription').value;
     const starRating = parseInt(starRatingInput.value) || 0; 
+    
+    // የምድብ ስሞችን ከአማርኛ ቁልፎች ማግኘት
+    const mainCategory = mainCategories[mainCategoryKey] || mainCategoryKey;
+    const subCategory = (categories[mainCategoryKey] && categories[mainCategoryKey][subCategoryKey]) 
+                        ? categories[mainCategoryKey][subCategoryKey].amharic 
+                        : subCategoryKey;
 
     if (currentBalance < coinCost) {
         listingMessage.style.color = '#f44336';
@@ -265,9 +477,10 @@ async function postNewListing(event) {
         return;
     }
 
-    if (!mainCategory || !subCategory) {
+    // ✅ የሶስቱን ምድቦች መመረጥ ማረጋገጥ
+    if (!mainCategoryKey || !subCategoryKey || !detailItemValue) {
         listingMessage.style.color = '#f44336';
-        listingMessage.textContent = "እባክዎ ዋና እና ንዑስ ምድቦችን ይምረጡ!";
+        listingMessage.textContent = "እባክዎ ዋና፣ ንዑስ እና ዝርዝር ምድቦችን ይምረጡ!";
         return;
     }
 
@@ -278,7 +491,7 @@ async function postNewListing(event) {
         return;
     }
     
-    // ✅ የምስል መጠን ማረጋገጫ (ከ2MB በታች መሆኑን)
+    // የምስል መጠን ማረጋገጫ (ከ2MB በታች መሆኑን)
     if (imageFile.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         listingMessage.style.color = '#f44336';
         listingMessage.textContent = `የምስሉ መጠን ከ ${MAX_IMAGE_SIZE_MB}MB በላይ መሆን የለበትም።`;
@@ -305,14 +518,16 @@ async function postNewListing(event) {
         const imageUrl = data.secure_url; 
 
         // 2. ማስታወቂያውን ወደ Firestore ማስቀመጥ
-        // ✅ ማሻሻያ 1: የለጣፊው ስም ከሎካል ስቶሬጅ ተወስዶ ይሰቀል (አስቀድሞ ነበረ)
         const itemData = {
             seller_id: sellerDocumentId,
-            seller_name: loggedInUserName, // ✅ ከሎካል ስቶሬጅ
+            seller_name: loggedInUserName, 
             seller_phone: loggedInUserPhone,
             itemTitle: itemTitle,
-            mainCategory: mainCategory,
-            subCategory: subCategory,
+            mainCategory: mainCategory, // የአማርኛ ስም
+            mainCategoryKey: mainCategoryKey, // የዳታቤዝ ቁልፍ
+            subCategory: subCategory, // የአማርኛ ስም
+            subCategoryKey: subCategoryKey, // የዳታቤዝ ቁልፍ
+            detailItem: detailItemValue, // ✅ አዲስ: ዝርዝር የእቃ አይነት
             itemPrice: itemPrice,
             itemDescription: itemDescription,
             days_duration: parseInt(daysDurationSelect.value),
@@ -328,7 +543,7 @@ async function postNewListing(event) {
         const listingDocRef = await addDoc(collection(db, "listings"), itemData); 
         const listingId = listingDocRef.id;
 
-        // 3. የሻጩን የኮይን ባላንስ መቀነስ (Update) - በየትኛው ኮሌክሽን እንደተመዘገበ በመፈለግ መቀነስ
+        // 3. የሻጩን የኮይን ባላንስ መቀነስ (Update) 
         const collectionsToUpdate = ["users", "HararGebeyaUsers"]; 
         let updated = false;
 
@@ -340,38 +555,19 @@ async function postNewListing(event) {
                  const data = userSnapshot.data();
                  const currentCoin = data.ds_coin_balance !== undefined ? parseInt(data.ds_coin_balance) : 0;
                  
-                 // ኮይን ባላንሱን ማዘመን የሚቻለው በዚያ ኮሌክሽን ውስጥ ባላንስ ካለ ብቻ ነው
                  if (currentCoin >= coinCost) {
                     const newBalance = currentCoin - coinCost;
                     await updateDoc(userDocRef, {
                         ds_coin_balance: newBalance
                     });
                     updated = true;
-                    // ከአንድ ኮሌክሽን ላይ ኮይኑ ከተቀነሰ ከሌላው ላይ መቀነስ አያስፈልግም
                     break; 
-                 } else if (currentCoin > 0) {
-                     // በከፊል ቢኖርም ግን በቂ ካልሆነ: በዚህ ኮሌክሽን ላይ ብቻ መቀነስ አይቻልም
-                     // (የተጨማሪ ኮሌክሽኖች ባላንስ ለመጠቀም ደምረን ስለተጠቀምን፣ አሁን መቀነሱ አንድ ላይ መሆን አለበት)
-                     // አሁን ግን ኮይኑን በድምሩ ስለያዝነው፣ የትኛውን ኮሌክሽን ማዘመን እንዳለብን ማወቅ አለብን
-                     // ለዚህ ማስተካከያ ሲባል፣ ኮይኑን ከሁለቱም ኮሌክሽኖች ላይ ደምረን ስለሰራን፣ 
-                     // አሁን ባላንሱ ከሚቀንስበት ኮሌክሽን ላይ ብቻ ማዘመን አለብን (ይህ ውስብስብ ይሆናል)
-                     // ቀላል ለማድረግ: አሁን ያለው አሠራር የሚቀንስበት ኮሌክሽን ብቻ እንዲያዝ 
-                     // (እባክዎ አብዛኛውን ጊዜ ተጠቃሚው በአንዱ ብቻ ይመዘገባል ስላልከኝ ይህንን አሠራር እጠቀማለሁ)
                  }
             }
         }
-
-        // ማሳሰቢያ: ኮይኑ በሁለቱም ኮሌክሽን ውስጥ ከተከፋፈለ እና ለመለጠፍ የሚያስፈልገው
-        // ከሁለቱም ድምር ብቻ የሚበቃ ከሆነ, እያንዳንዱን ኮሌክሽን መፈተሽ እና 
-        // ቅነሳውን በቅደም ተከተል መፈጸም ያስፈልጋል።
-        // አሁን ባለው ኮድ ውስጥ፣ ከሁለቱም ኮሌክሽኖች ውስጥ የትኛው ኮይን እንዳለ መጀመሪያ ያገኘው
-        // ኮሌክሽን በቂ ባላንስ ካለው ከዚያ ይቀንሳል። ይህ ተጠቃሚው በአንዱ ብቻ ከተመዘገበ ይሰራል።
         
-        // ሙሉ የድምር ባላንስን የሚጠቀሙ ከሆነ ከሁለቱም የመቀነስ ኮዱን ማወሳሰብ ያስፈልጋል
-        // ለጊዜው በቂ ባላንስ ያለው የመጀመሪያው ኮሌክሽን እንዲያዘምን አድርጌያለሁ
         if (!updated) {
              console.error("Warning: Listing posted, but balance update could not be attributed to a single collection properly. Total balance might have been sufficient, but no single collection held enough to cover the cost, or balance logic is complex.");
-             // ለጊዜው እዚህ ላይ ዝም ብለን እንቀጥላለን - የተፈጠረውን ችግር በኋላ መፍታት ይችላሉ
         }
 
 
@@ -398,24 +594,10 @@ newListingForm.addEventListener('submit', postNewListing);
 // 6.1. የካርድ ድርጊቶች ተግባራት (Card Action Functions) 
 // ----------------------------------------------------------------------
 
-// ማስታወቂያውን ለማዘመን የሚያስፈልገው ተግባር (Edit) - ✅ ማሻሻያ 2: አይጠራም
-function handleEditListing(listingId) {
-    // ይህ ተግባር እንዲወገድ ተጠይቋል (በካርዱ ላይ የለም)
-    alert(`የማስታወቂያ መታወቂያ (ID): ${listingId} ለማዘመን (Edit) ተመርጧል!`);
-    console.log("Edit request for listing ID:", listingId);
-}
-
-// የማስታወቂያ መግለጫን ማሳየት 
-function handleViewDescription(description) {
-    alert(`የእቃው ዝርዝር መግለጫ:\n\n${description}`);
-}
-
-
 // ማስታወቂያውን ለመክፈል/ለማደስ የሚያስፈልገው ተግባር (Pay/Renew)
 async function handleRepostListing(listingId) {
     const renewDays = 7; // ለ 7 ቀን ማደስ
-    // ለ 7 ቀን ማደስ የሚሆን ዋጋ ማስላት (በአሁኑ ምድብ ላይ በመመስረት - ኮከብ ሳይጨምር)
-    let renewCost = 5; 
+    let renewCost = 5; // ነባሪ
     
     // ማስታወቂያውን መጀመሪያ ማምጣት
     try {
@@ -429,11 +611,15 @@ async function handleRepostListing(listingId) {
 
         const listingData = listingSnapshot.data();
         
-        // መሰረታዊ የማደሻ ዋጋ (ለ 7 ቀን)
-        if (listingData.mainCategory === 'vehicle') {
+        // መሰረታዊ የማደሻ ዋጋ (ለ 7 ቀን) - ከአዲሱ የዋጋ ስሌት ጋር ይጣጣማል
+        const mainCategoryKey = listingData.mainCategoryKey || mainCategorySelect.value;
+        
+        if (mainCategoryKey === 'vehicle_and_parts') {
             renewCost = 7;
+        } else if (mainCategoryKey === 'property_and_rent') {
+             renewCost = 6;
         } else {
-             // clothes, spare_part, phone, other
+             // ሌሎች
             renewCost = 5;
         }
 
@@ -496,9 +682,7 @@ async function handleRepostListing(listingId) {
                 }
             }
         }
-        // ማሳሰቢያ: remainingCost ዜሮ መሆን አለበት። ካልሆነ ግን
-        // ከላይ ያለው የባላንስ ማረጋገጫ (if (currentBalance < totalRenewCost)) ስህተት አለ ማለት ነው።
-
+        
         alert(`ማስታወቂያው በተሳካ ሁኔታ ታድሷል! የኮይን ሂሳብዎ ${totalRenewCost} ኮይን ተቀንሷል።`);
         
         // UI እና ዝርዝሩን ማደስ
@@ -510,6 +694,11 @@ async function handleRepostListing(listingId) {
         console.error("Error renewing listing or updating balance:", error);
         alert("ማስታወቂያውን ማደስ ወይም ኮይን መቀነስ አልተቻለም: " + error.message);
     }
+}
+
+// የማስታወቂያ መግለጫን ማሳየት 
+function handleViewDescription(description) {
+    alert(`የእቃው ዝርዝር መግለጫ:\n\n${description}`);
 }
 
 // ማስታወቂያውን ለመሰረዝ የሚያስፈልገው ተግባር (Delete)
@@ -567,15 +756,11 @@ async function renderActiveListings() {
                 const daysLeftText = daysLeft > 0 ? `${daysLeft} ቀን ቀርቷል` : "ጊዜው አብቅቷል";
                 const daysLeftStyle = daysLeft <= 3 ? 'style="color: #f44336;"' : ''; 
                 
-                // የዋና ምድብ ስም ለማግኘት (ከእንግሊዝኛ ወደ አማርኛ)
-                const mainCategoryMap = {
-                    vehicle: 'ተሽከርካሪ',
-                    spare_part: 'መለዋወጫ',
-                    phone: 'ስልክ',
-                    clothes: 'ልብስ', // ✅ አዲስ
-                    other: 'ሌላ'
-                };
-                const displayMainCategory = mainCategoryMap[listing.mainCategory] || listing.mainCategory;
+                // የዋና ምድብ ስም ለማግኘት (ከእንግሊዝኛ ወደ አማርኛ - ከተቀየረው መረጃ)
+                const displayMainCategory = listing.mainCategory;
+                // ✅ አዲስ: የእቃ ዝርዝርን መጨመር
+                const detailItemText = listing.detailItem ? `<p class="card-meta">ዝርዝር: ${listing.detailItem}</p>` : '';
+
 
                 // የኮከብ ማሳያ
                 const starRating = listing.star_rating || 0;
@@ -597,6 +782,7 @@ async function renderActiveListings() {
                                 <h3 class="card-title">${listing.itemTitle}</h3>
                                 <p class="card-meta">ዋና ምድብ: ${displayMainCategory}</p>
                                 <p class="card-meta">ንዑስ ምድብ: ${listing.subCategory}</p>
+                                ${detailItemText}
                                 <p class="card-meta">ዋጋ: ${listing.itemPrice.toLocaleString()} ብር</p>
                                 ${starsHTML} </div>
                             <div class="days-left-info" ${daysLeftStyle}>
@@ -625,7 +811,7 @@ async function renderActiveListings() {
 }
 
 // ----------------------------------------------------------------------
-// 7. ያበቁ ማስታወቂያዎችን ማሳየት (Render Expired Listings) - ✅ ማሻሻያ 3: ያበቁ ማስታወቂያዎች
+// 7. ያበቁ ማስታወቂያዎችን ማሳየት (Render Expired Listings)
 // ----------------------------------------------------------------------
 async function renderExpiredListings() {
     expiredListingsGrid.innerHTML = ''; 
@@ -658,15 +844,11 @@ async function renderExpiredListings() {
                 const daysLate = Math.ceil((new Date() - expiresAt) / (1000 * 60 * 60 * 24));
                 const daysLateText = `${daysLate} ቀን አልፎታል`;
                 
-                // የዋና ምድብ ስም ለማግኘት (ከእንግሊዝኛ ወደ አማርኛ)
-                const mainCategoryMap = {
-                    vehicle: 'ተሽከርካሪ',
-                    spare_part: 'መለዋወጫ',
-                    phone: 'ስልክ',
-                    clothes: 'ልብስ',
-                    other: 'ሌላ'
-                };
-                const displayMainCategory = mainCategoryMap[listing.mainCategory] || listing.mainCategory;
+                // የዋና ምድብ ስም ለማግኘት (ከተቀየረው መረጃ)
+                const displayMainCategory = listing.mainCategory;
+                // ✅ አዲስ: የእቃ ዝርዝርን መጨመር
+                const detailItemText = listing.detailItem ? `<p class="card-meta">ዝርዝር: ${listing.detailItem}</p>` : '';
+
 
                 // የኮከብ ማሳያ
                 const starRating = listing.star_rating || 0;
@@ -688,6 +870,7 @@ async function renderExpiredListings() {
                                 <h3 class="card-title">${listing.itemTitle}</h3>
                                 <p class="card-meta">ዋና ምድብ: ${displayMainCategory}</p>
                                 <p class="card-meta">ንዑስ ምድብ: ${listing.subCategory}</p>
+                                ${detailItemText}
                                 <p class="card-meta">ዋጋ: ${listing.itemPrice.toLocaleString()} ብር</p>
                                 ${starsHTML} </div>
                             <div class="days-left-info" style="color: #f44336; font-weight: bold;">
@@ -717,7 +900,7 @@ async function renderExpiredListings() {
 
 
 // ----------------------------------------------------------------------
-// 8. የአሰሳ ተግባር (Navigation Logic) - ✅ ማሻሻያ 3: ያበቁ ማስታወቂያዎችን መጥራት
+// 8. የአሰሳ ተግባር (Navigation Logic) 
 // ----------------------------------------------------------------------
 function setupNavigation() {
     const sections = {
@@ -740,11 +923,17 @@ function setupNavigation() {
             }
             
             if (targetSection) {
+                // ለስሙዝ ሽግግር የ Fade ውጤት
+                targetSection.style.opacity = '0';
                 targetSection.style.display = 'block';
+                setTimeout(() => {
+                    targetSection.style.opacity = '1';
+                }, 10); // ትንሽ መዘግየት
+
                 if (button.id === 'viewActiveListingsBtn') {
                     renderActiveListings(); 
                 } else if (button.id === 'viewExpiredListingsBtn') {
-                    renderExpiredListings(); // ✅ ያበቁ ማስታወቂያዎችን ይጭናል
+                    renderExpiredListings(); 
                 }
             }
 
@@ -758,16 +947,18 @@ function setupNavigation() {
         });
     });
 
+    // የመነሻ ጭነት
     document.getElementById('newListingSection').style.display = 'none';
     document.getElementById('expiredListingsSection').style.display = 'none';
     document.getElementById('activeListingsSection').style.display = 'block';
+    document.getElementById('activeListingsSection').style.opacity = '1';
     document.getElementById('viewActiveListingsBtn').classList.add('active');
     newListingForm.classList.remove('active'); 
 }
 
 
 // ----------------------------------------------------------------------
-// 9. የንቁ/ያለቁ ማስታወቂያ በተን ክሊኮችን ማስተናገድ (Handle Listing Button Clicks) - ✅ ማሻሻያ 2: Edit ተወግዷል
+// 9. የንቁ/ያለቁ ማስታወቂያ በተን ክሊኮችን ማስተናገድ (Handle Listing Button Clicks)
 // ----------------------------------------------------------------------
 function setupListingActionListeners() {
     // ንቁ ማስታወቂያዎች
@@ -782,7 +973,6 @@ function handleListingActions(event) {
 
     const listingId = button.getAttribute('data-id');
 
-    // ✅ የEdit (edit-btn) ማጣሪያ ተወግዷል
     if (button.classList.contains('repost-btn')) {
         handleRepostListing(listingId);
     } else if (button.classList.contains('delete-btn')) {
