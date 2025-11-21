@@ -7,6 +7,72 @@
     <link rel="stylesheet" href="buyers_style.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ራዲዮ ቁልፎችን ሙሉ በሙሉ መደበቅ */
+        .toggle-radio {
+            display: none;
+        }
+
+        /* ርዕሶቹ ላይ የመንካት ችሎታ እንዲኖር */
+        .section-title {
+            cursor: pointer; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 1. የይዘት መክፈቻ (Content Collapse/Expand) አኒሜሽን */
+        /* ---------------------------------------------------- */
+
+        /* ሁሉንም የምድብ ይዘቶች በነባሪነት መደበቅ */
+        .category-selection-area .main-categories-grid,
+        .subcategory-selection-area .sub-categories-list,
+        .detailitem-selection-area .detail-items-list {
+            overflow: hidden; 
+            max-height: 0; /* መጀመሪያ ላይ ዝግ ነው */
+            
+            /* ✅ አኒሜሽን - መክፈቻና መዝጊያ ላይ እንዲኖር */
+            transition: max-height 0.4s ease-in-out; 
+            padding: 0; 
+        }
+        
+        /* main category */
+        #toggle_main_category:checked ~ .category-selection-area .main-categories-grid {
+            max-height: 500px; /* በቂ ከፍታ በመስጠት ይከፈታል */
+            padding-bottom: 10px; 
+        }
+
+        /* sub category */
+        #toggle_sub_category:checked ~ .subcategory-selection-area .sub-categories-list {
+            max-height: 500px; 
+            padding-bottom: 10px;
+        }
+
+        /* detail item */
+        #toggle_detail_item:checked ~ .detailitem-selection-area .detail-items-list {
+            max-height: 500px; 
+            padding-bottom: 10px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 2. የቀስት ምልክት (Chevron Icon) አኒሜሽን */
+        /* ---------------------------------------------------- */
+
+        .section-title .chevron-icon {
+            /* ✅ አኒሜሽን - ለስላሳ መገለባበጥ */
+            transition: transform 0.3s ease;
+            transform: rotate(0deg); /* መጀመሪያ ላይ ወደታች */
+        }
+
+        /* ራዲዮው ሲመረጥ (ክፍሉ ሲከፈት) ቀስቱን 180 ዲግሪ መገልበጥ */
+        #toggle_main_category:checked ~ .category-selection-area .section-title .chevron-icon,
+        #toggle_sub_category:checked ~ .subcategory-selection-area .section-title .chevron-icon,
+        #toggle_detail_item:checked ~ .detailitem-selection-area .section-title .chevron-icon {
+            transform: rotate(180deg); /* ወደላይ ይመለከታል */
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -20,29 +86,34 @@
             <button onclick="filterItems()">ፈልግ</button>
         </div>
 
-        <section class="category-selection-area" id="mainCategoryArea">
-            <h2 class="section-title" onclick="toggleSection('mainCategoryArea')">
+        <input type="radio" id="toggle_main_category" name="category_toggle" class="toggle-radio">
+        <input type="radio" id="toggle_sub_category" name="category_toggle" class="toggle-radio">
+        <input type="radio" id="toggle_detail_item" name="category_toggle" class="toggle-radio">
+
+
+        <section class="category-selection-area" id="mainCategoryArea"> 
+            <div class="section-title" onclick="customToggle('toggle_main_category')"> 
                 <span>ዋና የእቃ ዘርፍ ይምረጡ</span>
                 <i class="fas fa-chevron-down chevron-icon"></i>
-            </h2>
+            </div>
             <div class="main-categories-grid" id="mainCategoryGrid">
                 </div>
         </section>
 
-        <section class="subcategory-selection-area collapsed" id="subCategoryArea">
-            <h4 class="section-title" onclick="toggleSection('subCategoryArea')">
+        <section class="subcategory-selection-area" id="subCategoryArea">
+            <div class="section-title" onclick="customToggle('toggle_sub_category')">
                 <span>ንዑስ ዘርፍ ይምረጡ</span>
                 <i class="fas fa-chevron-down chevron-icon"></i>
-            </h4>
+            </div>
             <div class="sub-categories-list" id="subCategoryList">
                 </div>
         </section>
         
-        <section class="detailitem-selection-area collapsed" id="detailItemArea">
-            <h4 class="section-title" onclick="toggleSection('detailItemArea')">
+        <section class="detailitem-selection-area" id="detailItemArea">
+            <div class="section-title" onclick="customToggle('toggle_detail_item')">
                 <span>ዝርዝር እቃ ይምረጡ</span>
                 <i class="fas fa-chevron-down chevron-icon"></i>
-            </h4>
+            </div>
             <div class="detail-items-list" id="detailItemList">
                 </div>
         </section>
@@ -62,6 +133,24 @@
         </div>
     </div>
 
+    <script>
+        /**
+         * የተነካው ራዲዮ ቁልፍ አስቀድሞ ከተመረጠ (Checked) እንዲዘጋ ያደርጋል።
+         * @param {string} radioId - የምንነካው የራዲዮ ቁልፍ ID
+         */
+        function customToggle(radioId) {
+            const radio = document.getElementById(radioId);
+            
+            // የራዲዮ ቁልፉ አስቀድሞ ተመርጦ ከሆነ (ክፍት ከሆነ)
+            if (radio.checked) {
+                // ይዝጉ (Uncheck)
+                radio.checked = false; 
+            } else {
+                // ካልተመረጠ, ይምረጡት (Check) - ይህ ደግሞ ሌሎቹን በአንድ ጊዜ ይዘጋል (Exclusive Toggle)
+                radio.checked = true;
+            }
+        }
+    </script>
     <script type="module" src="Buyers.js"></script>
 </body>
 </html>

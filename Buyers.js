@@ -40,6 +40,9 @@ const searchInput = document.getElementById('searchInput');
 const loadingMessage = document.getElementById('loadingMessage');
 const noListingsFound = document.getElementById('noListingsFound');
 
+// ✅ አዲስ DOM Elements ለ Toggle (ለማስተካከያ የተጨመሩ)
+const mainCategoryArea = document.getElementById('mainCategoryArea'); // ከ html ተወስዷል
+
 // የአሁኑ ሁኔታ መረጃ
 let currentFilter = {
     mainCategoryKey: null, // የእንግሊዝኛ ቁልፍ
@@ -223,7 +226,7 @@ function renderMainCategories() {
     
     // የመጀመሪያውን ምድብ በነባሪነት መምረጥ
     if (Object.keys(mainCategories).length > 0) {
-         selectMainCategory(Object.keys(mainCategories)[0]);
+         // selectMainCategory(Object.keys(mainCategories)[0]); // ✅ ተወግዷል: መጀመሪያ ላይ እንዳይመረጥ
     }
 }
 
@@ -242,12 +245,26 @@ function selectMainCategory(mainCategoryKey) {
     
     renderSubCategories(mainCategoryKey);
     filterItems(true); // ✅ ማስተካከያ: አዲስ ማጣሪያ ሲሆን ገጹን ሪሴት አድርግ
+    
+    // ✅ ማስተካከያ: (Sequential Flow) ዋና ዘርፍ ከተመረጠ በኋላ ንዑስ ዘርፍ መክፈትና ራሱን መዝጋት
+    if (mainCategoryKey) {
+        // ንዑስ ምድቦች ካሉ ብቻ ንዑስ ምድብ ራዲዮ ቁልፍን መምረጥ
+        if (categories[mainCategoryKey] && Object.keys(categories[mainCategoryKey]).length > 0) {
+            document.getElementById('toggle_sub_category').checked = true; // ንዑስ ዘርፍ ይክፈቱ
+            // ሌሎቹ በ CSS ስለሚዘጋ ሌላ መዝጊያ አያስፈልግም
+        } else {
+            document.getElementById('toggle_sub_category').checked = false; 
+            document.getElementById('toggle_main_category').checked = false; // ዋናው ዝግ ይሁን
+        }
+        
+        document.getElementById('toggle_detail_item').checked = false; // ዝርዝር እቃ ይዝጉ
+    }
 }
 
 function renderSubCategories(mainCategoryKey) {
     subCategoryList.innerHTML = ''; 
     detailItemList.innerHTML = '';
-    detailItemArea.classList.add('collapsed');
+    // detailItemArea.classList.add('collapsed'); // ✅ ተወግዷል: በ HTML ራዲዮ ቁጥጥር ይደረግበታል
 
     if (mainCategoryKey && categories[mainCategoryKey] && Object.keys(categories[mainCategoryKey]).length > 0) {
         const subCategories = categories[mainCategoryKey];
@@ -266,14 +283,15 @@ function renderSubCategories(mainCategoryKey) {
             subCategoryList.appendChild(subBtn);
         }
         
-        subCategoryArea.classList.remove('collapsed');
+        // subCategoryArea.classList.remove('collapsed'); // ✅ ተወግዷል
         // የመጀመሪያውን ንዑስ ምድብ በነባሪነት መምረጥ
         if (firstSubCategoryKey) {
-            selectSubCategory(firstSubCategoryKey);
+            // selectSubCategory(firstSubCategoryKey); // ✅ ተወግዷል: መጀመሪያ ላይ እንዳይመረጥ
         }
     } else {
-        // ንዑስ ምድብ ከሌለ መዝጋት
-        subCategoryArea.classList.add('collapsed');
+        // ንዑስ ምድብ ከሌለ ንዑስ ምድብ ራዲዮ ቁልፍን መንቀል
+        document.getElementById('toggle_sub_category').checked = false;
+        document.getElementById('toggle_main_category').checked = false; // ዋናውንም ይዝጋ
     }
 }
 
@@ -287,6 +305,21 @@ function selectSubCategory(subCategoryKey) {
     
     renderDetailItems(currentFilter.mainCategoryKey, subCategoryKey);
     filterItems(true); // ✅ ማስተካከያ: አዲስ ማጣሪያ ሲሆን ገጹን ሪሴት አድርግ
+    
+    // ✅ ማስተካከያ: (Sequential Flow) ንዑስ ዘርፍ ከተመረጠ በኋላ ዝርዝር እቃ መክፈትና ራሱን መዝጋት
+    if (subCategoryKey) {
+        
+        // ዝርዝር እቃዎች ካሉ ብቻ ዝርዝር እቃ ራዲዮ ቁልፍን መምረጥ
+        if (categories[currentFilter.mainCategoryKey] && categories[currentFilter.mainCategoryKey][subCategoryKey] && categories[currentFilter.mainCategoryKey][subCategoryKey].details.length > 0) {
+            document.getElementById('toggle_detail_item').checked = true; // ዝርዝር እቃ ይክፈቱ
+            document.getElementById('toggle_sub_category').checked = false; // ንዑስ ዘርፉን ይዝጉ
+        } else {
+            document.getElementById('toggle_detail_item').checked = false; // ዝርዝር እቃ ይዝጉ
+            document.getElementById('toggle_sub_category').checked = false; // ንዑስ ዘርፉን ይዝጉ
+        }
+        
+        document.getElementById('toggle_main_category').checked = false; // ዋናውን ይዝጉ
+    }
 }
 
 function renderDetailItems(mainCategoryKey, subCategoryKey) {
@@ -301,8 +334,6 @@ function renderDetailItems(mainCategoryKey, subCategoryKey) {
             
             const detailBtn = document.createElement('button');
             // ✅ ማስተካከያ: የ detail-item-btn ስታይል ከ sub-category-btn ጋር እንዲመሳሰል
-            // በ buyers_style.css ውስጥ ያለው '.sub-categories-list .sub-category-btn' ስታይል እንዲሰራ 'sub-category-btn' የሚለውን ክላስ እንጠቀማለን።
-            // 'detail-item-btn' የሚለውን ትቼዋለሁ ነገር ግን ከነባሩ ጋር እንዲመሳሰል sub-category-btn የሚለውን ክላስ እጨምራለሁ።
             detailBtn.className = 'sub-category-btn detail-item-btn'; // ✅ የስታይል ማመሳሰያ
             detailBtn.textContent = item;
             detailBtn.setAttribute('data-detail-item', item);
@@ -310,12 +341,12 @@ function renderDetailItems(mainCategoryKey, subCategoryKey) {
             detailItemList.appendChild(detailBtn);
         });
 
-        detailItemArea.classList.remove('collapsed');
+        // detailItemArea.classList.remove('collapsed'); // ✅ ተወግዷል
         if (firstDetailItem) {
-            selectDetailItem(firstDetailItem);
+            // selectDetailItem(firstDetailItem); // ✅ ተወግዷል: መጀመሪያ ላይ እንዳይመረጥ
         }
     } else {
-        detailItemArea.classList.add('collapsed');
+        // detailItemArea.classList.add('collapsed'); // ✅ ተወግዷል
         currentFilter.detailItem = null;
     }
 }
@@ -328,6 +359,13 @@ function selectDetailItem(detailItemName) {
 
     currentFilter.detailItem = detailItemName;
     filterItems(true); // ✅ ማስተካከያ: አዲስ ማጣሪያ ሲሆን ገጹን ሪሴት አድርግ
+    
+    // ✅ ማስተካከያ: (Sequential Flow) ዝርዝር እቃ ከተመረጠ በኋላ ሁሉንም ራዲዮዎች መንቀል (መዝጋት)
+    if (detailItemName) {
+        document.getElementById('toggle_detail_item').checked = false; 
+        document.getElementById('toggle_sub_category').checked = false; 
+        document.getElementById('toggle_main_category').checked = false; 
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -343,7 +381,10 @@ async function filterItems(isNewFilter = false) {
         itemsGrid.innerHTML = '';
         lastVisible = null;
         allListingsLoaded = false;
+        // ✅ ማስተካከያ 2: በመጀመሪያው ገጽ ጭነት ላይ መልዕክቱን መደበቅ
         noListingsFound.style.display = 'none';
+        // ✅ ማሻሻያ 2: የፍለጋ መልእክት ለውጥ
+        noListingsFound.textContent = 'በተመረጠው ማጣሪያ ምንም እቃ አልተገኘም።'; 
     }
     
     // የፍለጋ ቃል ካለ ሪሴት አድርጎ እንዲጀምር
@@ -356,6 +397,8 @@ async function filterItems(isNewFilter = false) {
             allListingsLoaded = false;
             noListingsFound.style.display = 'none';
         }
+         // ✅ ማሻሻያ 2: የፍለጋ መልእክት ለውጥ
+        noListingsFound.textContent = `ለፍለጋ ቃሉ ("${currentFilter.searchTerm}") ምንም እቃ አልተገኘም።`;
     }
 
     // ✅ የ Client-Side Ordering ሙሉ በሙሉ ማስወገድ (የነበረው የ sort ተግባር ተወግዷል)
@@ -396,49 +439,59 @@ async function fetchNextListings() {
             baseQuery = query(baseQuery, where("detailItem", "==", currentFilter.detailItem));
         }
 
-        // ✅ ውስብስብ ቅደም ተከተል ለማግኘት የተከፋፈለ Query:
-        // 1. 3-Star: በኮከብ ደረጃ DESC, ከዚያም በExpires_at ASC (ሊያልቅ የተቃረበ)
-        // 2. 2-Star: በኮከብ ደረጃ DESC, ከዚያም በExpires_at ASC (ሊያልቅ የተቃረበ)
-        // 3. 1-Star: በኮከብ ደረጃ DESC, ከዚያም በPosted_at DESC (አዲስ)
-        // 4. 0-Star: በPosted_at DESC (አዲስ)
-
-        // ማስታወሻ: Firestore ለ StartAfter የሚያስፈልገው orderBy መጀመሪያ ላይ መሆን አለበት.
-        // ውስብስብ ቅደም ተከተልን በ StartAfter ለመጠቀም አስቸጋሪ ስለሆነ፣
-        // ያለፍለጋ ቃል ከሆነ ሁሉንም በ 4 ቅደም ተከተል እንጭናለን። በፍለጋ ቃል ከሆነ ሁሉንም መረጃ እናመጣለን።
-        
         let queries = [];
-
-        // ✅ ቅደም ተከተል 1: 3-ኮከብ (በExpires_at ASC)
-        queries.push(query(baseQuery, 
-            where("star_rating", "==", 3),
-            orderBy("expires_at", "asc"),
-            limit(LISTINGS_PER_PAGE) // ከሁሉም 3-star አውጣ
-        ));
-
-        // ✅ ቅደም ተከተል 2: 2-ኮከብ (በExpires_at ASC)
-        queries.push(query(baseQuery, 
-            where("star_rating", "==", 2),
-            orderBy("expires_at", "asc"),
-            limit(LISTINGS_PER_PAGE) // ከሁሉም 2-star አውጣ
-        ));
-
-        // ✅ ቅደም ተከተል 3: 1-ኮከብ (በPosted_at DESC)
-        queries.push(query(baseQuery, 
-            where("star_rating", "==", 1),
-            orderBy("posted_at", "desc"),
-            limit(LISTINGS_PER_PAGE) // ከሁሉም 1-star አውጣ
-        ));
         
-        // ✅ ቅደም ተከተል 4: 0-ኮከብ (በPosted_at DESC)
-        // ማስታወሻ: Firestore '!=' ኦፕሬተርን ወይም NOT INን አይደግፍም, ስለዚህ '==' 0 እንጠቀማለን።
-        queries.push(query(baseQuery, 
-            where("star_rating", "==", 0),
-            orderBy("posted_at", "desc"),
-            limit(LISTINGS_PER_PAGE) // ከሁሉም 0-star አውጣ
-        ));
+        // ✅ ማስተካከያ 1: ገጹ ገና ሲጫን (ምንም ማጣሪያ ሳይመረጥ) ባለ 3-ኮከብ ብቻ እንዲያመጣ
+        const isInitialLoad = !currentFilter.mainCategoryKey && !currentFilter.searchTerm && itemsGrid.children.length === 0;
 
-        // የፍለጋ ቃል (Search Term) ካለ:
-        if (currentFilter.searchTerm) {
+        if (isInitialLoad || !currentFilter.searchTerm) {
+             // ✅ ቅደም ተከተል 1: 3-ኮከብ (በ Star DESC, ከዚያም በ Expires_at ASC)
+             // ✅ ስህተት ማስተካከያ: ሁለተኛውን orderBy ከመጠቀምዎ በፊት star_rating ን የመጀመሪያው orderBy አድርጎ ማስቀመጥ
+             if (isInitialLoad) {
+                // መጀመሪያ ላይ 3-star ብቻ
+                queries.push(query(baseQuery, 
+                   where("star_rating", "==", 3),
+                   orderBy("star_rating", "desc"), // ✅ መፍትሄ: መጀመሪያ በ star_rating ማስተካከል
+                   orderBy("expires_at", "asc"),
+                   limit(LISTINGS_PER_PAGE) 
+               ));
+            } else if (!currentFilter.searchTerm) { // ማጣሪያ ተመርጧል (ማንኛውም ማጣሪያ)
+                
+                // ✅ ቅደም ተከተል 1: 3-ኮከብ (በ Expires_at ASC)
+                queries.push(query(baseQuery, 
+                    where("star_rating", "==", 3),
+                    orderBy("star_rating", "desc"), // ✅ መፍትሄ: መጀመሪያ በ star_rating ማስተካከል
+                    orderBy("expires_at", "asc"),
+                    limit(LISTINGS_PER_PAGE)
+                ));
+
+                // ✅ ቅደም ተከተል 2: 2-ኮከብ (በ Expires_at ASC)
+                queries.push(query(baseQuery, 
+                    where("star_rating", "==", 2),
+                    orderBy("star_rating", "desc"), // ✅ መፍትሄ: መጀመሪያ በ star_rating ማስተካከል
+                    orderBy("expires_at", "asc"),
+                    limit(LISTINGS_PER_PAGE)
+                ));
+
+                // ✅ ቅደም ተከተል 3: 1-ኮከብ (በ Posted_at DESC)
+                queries.push(query(baseQuery, 
+                    where("star_rating", "==", 1),
+                    orderBy("star_rating", "desc"), // ✅ መፍትሄ: መጀመሪያ በ star_rating ማስተካከል
+                    orderBy("posted_at", "desc"),
+                    limit(LISTINGS_PER_PAGE)
+                ));
+                
+                // ✅ ቅደም ተከተል 4: 0-ኮከብ (በ Posted_at DESC)
+                queries.push(query(baseQuery, 
+                    where("star_rating", "==", 0),
+                    orderBy("star_rating", "asc"), // ✅ መፍትሄ: መጀመሪያ በ star_rating ማስተካከል
+                    orderBy("posted_at", "desc"),
+                    limit(LISTINGS_PER_PAGE)
+                ));
+            }
+             
+        } else if (currentFilter.searchTerm) {
+            // የፍለጋ ቃል (Search Term) ካለ:
             // ከላይ ባሉት 4 queries ላይ የፍለጋ ቃል ማጣሪያ ማከል አይቻልም።
             // ስለዚህ, ፍለጋ ካለ, ሁሉንም ንቁ እና የተጣሩ ማስታወቂያዎችን ያለ pagination እናመጣለን, ከዚያም በClient-Side በፍለጋ ቃል እናጣራለን.
             queries = [query(baseQuery)]; // ሁሉንም አምጣ
@@ -485,7 +538,6 @@ async function fetchNextListings() {
             // ✅ ውስብስብ የ Client-Side ቅደም ተከተል (በተከፋፈለው query ምክንያት ቅደም ተከተሉ ተጠብቋል)
             // የመጨረሻው የማሳያ ቅደም ተከተል (የተፈለገው): 3-star (Expires_at ASC), 2-star (Expires_at ASC), 1-star (Posted_at DESC), 0-star (Posted_at DESC)
             
-            const finalSortedList = [];
             const listsByStar = {
                 3: uniqueListings.filter(l => l.star_rating === 3).sort((a, b) => a.expires_at.toDate().getTime() - b.expires_at.toDate().getTime()),
                 2: uniqueListings.filter(l => l.star_rating === 2).sort((a, b) => a.expires_at.toDate().getTime() - b.expires_at.toDate().getTime()),
@@ -494,7 +546,14 @@ async function fetchNextListings() {
             };
             
             // በቅደም ተከተል ወደ መጨረሻው ዝርዝር መጨመር
-            finalSortedList.push(...listsByStar[3], ...listsByStar[2], ...listsByStar[1], ...listsByStar[0]);
+            let finalSortedList = [];
+            
+            // ✅ ማስተካከያ 1: በመጀመሪያው ጭነት 3-star ብቻ
+            if (isInitialLoad) {
+                finalSortedList.push(...listsByStar[3]);
+            } else {
+                finalSortedList.push(...listsByStar[3], ...listsByStar[2], ...listsByStar[1], ...listsByStar[0]);
+            }
             
             allListings = finalSortedList;
             
@@ -513,9 +572,16 @@ async function fetchNextListings() {
         isFetching = false;
         
         if (itemsGrid.children.length === 0 && allListings.length === 0) {
+            // ✅ ማሻሻያ 2: 'በተመረጠው ማጣሪያ ምንም እቃ አልተገኘም' የሚል ማሳወቂያ መስጠት
             noListingsFound.style.display = 'block';
         } else {
             renderListings(allListings);
+            // ✅ ማስተካከያ 1: ከመጀመሪያው ጭነት በኋላ ወደ ተለመደው ቅደም ተከተል መሄድ
+            if (isInitialLoad && allListings.length < LISTINGS_PER_PAGE) {
+                // የመጀመሪያው 3-ኮከብ ሙሉ ካልሆነ፣ ሁሉንም ወደ ተለመደው ሎድ መቀየር
+                allListingsLoaded = false;
+                // fetchNextListings(); // ❌ ይህ Recurssion ሊፈጥር ስለሚችል በ scroll ላይ እንተማመናለን
+            }
         }
 
     } catch (error) {
@@ -532,6 +598,8 @@ async function fetchNextListings() {
 function renderListings(listings) {
     if (listings.length === 0 && itemsGrid.children.length === 0) {
         noListingsFound.style.display = 'block';
+    } else {
+        noListingsFound.style.display = 'none'; // አዲስ እቃዎች ሲጫኑ መደበቅ
     }
 
     listings.forEach(listing => {
@@ -594,11 +662,8 @@ function renderListings(listings) {
 // ----------------------------------------------------------------------
 // 5. የተጠቃሚ በይነገጽ (UI) ተግባራት
 // ----------------------------------------------------------------------
-function toggleSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    section.classList.toggle('collapsed');
-}
-window.toggleSection = toggleSection; 
+
+// ✅ የተሰረዘ: የ Toggle ተግባራት (handleCategoryToggle, toggleCategorySection) በ HTML/CSS ተተክቷል።
 
 // ✅ ማሻሻያ 2: ስልክ ቁጥርን በአለርት ማሳየት እና መደወል
 function promptCall(phone) {
@@ -658,6 +723,9 @@ function closeModal() {
 }
 window.closeModal = closeModal;
 
+window.filterItems = filterItems; 
+window.fetchNextListings = fetchNextListings; 
+
 // ----------------------------------------------------------------------
 // 6. ገጹ ሲጫን መጀመሪያ የሚሰሩ ተግባራት
 // ----------------------------------------------------------------------
@@ -684,4 +752,12 @@ document.addEventListener('DOMContentLoaded', () => {
             filterItems(true);
         }
     });
+    
+    // ✅ ማስተካከያ (ሀ): ገጹ ሲጫን ሁሉም ምድቦች ተዘግተው እንዲቆዩ ለማድረግ ሁሉንም ራዲዮዎች ነቅል
+    document.getElementById('toggle_main_category').checked = false;
+    document.getElementById('toggle_sub_category').checked = false;
+    document.getElementById('toggle_detail_item').checked = false;
+    
+    // ✅ ማስተካከያ: የመጀመሪያ ማስታወቂያዎችን መጫን (ያለ ምንም ማጣሪያ)
+    filterItems(true); 
 });
