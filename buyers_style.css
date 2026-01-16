@@ -567,3 +567,29 @@ body {
         width: 80%; /* በትልቅ ስክሪን ላይ ስፋቱን ወደ 80% መለስነው */
     }
 }
+
+/* የሎዲንግ ማሳያ መያዣ */
+#loadingMessage {
+    display: none; /* መጀመሪያ ተደብቆ ይቆያል */
+    width: 100%;
+    padding: 15px 0;
+    text-align: center; /* በሁሉም ስክሪን መሃል እንዲሆን */
+    clear: both;
+}
+
+/* በጣም ትንሽ እና ሲያን ስፒነር */
+.spinner {
+    display: inline-block;
+    width: 24px; /* በጣም ትንሽ መጠን */
+    height: 24px;
+    border: 3px solid rgba(0, 255, 255, 0.2); /* ቀለል ያለ ሲያን ዳራ */
+    border-top: 3px solid #00ffff; /* ደማቅ ሲያን (Cyan) የሚሽከረከር ክፍል */
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite; /* ፈጠን ያለ መሽከርከር */
+    vertical-align: middle;
+}
+
+/* የመሽከርከር አኒሜሽን */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

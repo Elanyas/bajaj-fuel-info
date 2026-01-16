@@ -9,8 +9,9 @@ const firebaseConfig = {
     measurementId: "G-2XX2B3RSGP"
 };
 
-// ወሳኝ የFirebase ሞዱሎችን ማስመጣት
+// 1. የFirebase ሞዱሎችን ማስመጣት (ሁሉንም በአንድ ላይ)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+
 import { 
     getFirestore, 
     collection, 
@@ -25,15 +26,22 @@ import {
     getDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
+import { 
+    getStorage, 
+    ref, 
+    uploadBytes, 
+    getDownloadURL,
+    deleteObject
+} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+
 // Firebase App እና Firestore Database ማስጀመር
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); 
+const storage = getStorage(app);
 
-// አዲሱ የCloudinary Config 
-const CLOUDINARY_CLOUD_NAME = "dddyppnhp"; 
-const CLOUDINARY_UPLOAD_PRESET = "bajaj_upload_preset"; 
-const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-const MAX_IMAGE_SIZE_MB = 2; // ✅ አዲስ: ከፍተኛ የምስል መጠን በ MB
+// አዲሱ የCloudinary Config  ተሰርዟል
+
+const MAX_IMAGE_SIZE_MB = 4; // ✅ አዲስ: ከፍተኛ የምስል መጠን በ MB
 
 // DOM Elements
 const coinBalanceDisplay = document.getElementById('coinBalanceDisplay');
@@ -448,7 +456,21 @@ itemImageInput.addEventListener('change', function(event) {
 });
 
 // ----------------------------------------------------------------------
-// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing) 
+// ✅ ደረጃ 1: ምስሉን ወደ Firebase Storage መጫኛ ረዳት ተግባር (ከ postNewListing ውጭ ቢሆን ይመረጣል)
+async function uploadImageToFirebase(imageFile) {
+    const phone = loggedInUserPhone;
+    // የፋይል ስሙ ልዩ እንዲሆን (ስልክ + ሰዓት + ስም)
+    const fileName = `listing_images/${phone}_${Date.now()}_${imageFile.name}`;
+    const storageRef = ref(storage, fileName);
+
+    // ምስሉን መጫን
+    const snapshot = await uploadBytes(storageRef, imageFile);
+    // የተጫነበትን ሊንክ (URL) ማምጣት
+    return await getDownloadURL(snapshot.ref);
+}
+
+// ----------------------------------------------------------------------
+// 5. አዲስ ማስታወቂያ መለጠፍ (Post New Listing) - የተስተካከለ
 // ----------------------------------------------------------------------
 async function postNewListing(event) {
     event.preventDefault();
@@ -459,7 +481,7 @@ async function postNewListing(event) {
     const currentBalance = parseInt(coinBalanceDisplay.textContent);
     const mainCategoryKey = mainCategorySelect.value;
     const subCategoryKey = subCategorySelect.value;
-    const detailItemValue = detailItemSelect.value; // ✅ አዲስ: የተመረጠው የእቃ ዝርዝር
+    const detailItemValue = detailItemSelect.value; 
     const itemTitle = document.getElementById('itemTitle').value;
     const itemPrice = parseFloat(document.getElementById('itemPrice').value);
     const itemDescription = document.getElementById('itemDescription').value;
@@ -471,19 +493,21 @@ async function postNewListing(event) {
                         ? categories[mainCategoryKey][subCategoryKey].amharic 
                         : subCategoryKey;
 
+    // ቼክ 1: የባላንስ ማረጋገጫ
     if (currentBalance < coinCost) {
         listingMessage.style.color = '#f44336';
         listingMessage.textContent = `ቂንትሮስ የ DS Coin ባላንስ የለዎትም። ${coinCost} ኮይን ያስፈልግዎታል። እባክዎ ይሙሉ።`;
         return;
     }
 
-    // ✅ የሶስቱን ምድቦች መመረጥ ማረጋገጥ
+    // ቼክ 2: የምድቦች መመረጥ
     if (!mainCategoryKey || !subCategoryKey || !detailItemValue) {
         listingMessage.style.color = '#f44336';
         listingMessage.textContent = "እባክዎ ዋና፣ ንዑስ እና ዝርዝር ምድቦችን ይምረጡ!";
         return;
     }
 
+    // ቼክ 3: ምስል መኖሩን
     const imageFile = itemImageInput.files[0];
     if (!imageFile) {
         listingMessage.style.color = '#f44336';
@@ -491,49 +515,34 @@ async function postNewListing(event) {
         return;
     }
     
-    // የምስል መጠን ማረጋገጫ (ከ2MB በታች መሆኑን)
+    // ቼክ 4: የምስል መጠን
     if (imageFile.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
         listingMessage.style.color = '#f44336';
-        listingMessage.textContent = `የምስሉ መጠን ከ ${MAX_IMAGE_SIZE_MB}MB በላይ መሆን የለበትም።`;
+        listingMessage.textContent = `የምስሉ መጠን ከ ${MAX_IMAGE_SIZE_MB}MB በላይ መሆን የለበት።`;
         return;
     }
 
     try {
-        // 1. ምስሉን ወደ Cloudinary መስቀል (Upload Image)
-        const formData = new FormData();
-        formData.append('file', imageFile);
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-        formData.append('folder', 'bajaj_listings'); 
+        // ✅ ሀ. ምስሉን ወደ Firebase Storage መጫን እና ሊንኩን መቀበል
+        const imageUrl = await uploadImageToFirebase(imageFile);
 
-        const response = await fetch(CLOUDINARY_UPLOAD_URL, {
-            method: 'POST',
-            body: formData
-        });
-        
-        if (!response.ok) {
-            throw new Error("Cloudinary upload failed: " + response.statusText);
-        }
-
-        const data = await response.json();
-        const imageUrl = data.secure_url; 
-
-        // 2. ማስታወቂያውን ወደ Firestore ማስቀመጥ
+        // ✅ ለ. ማስታወቂያውን ወደ Firestore ማስቀመጥ
         const itemData = {
             seller_id: sellerDocumentId,
             seller_name: loggedInUserName, 
             seller_phone: loggedInUserPhone,
             itemTitle: itemTitle,
-            mainCategory: mainCategory, // የአማርኛ ስም
-            mainCategoryKey: mainCategoryKey, // የዳታቤዝ ቁልፍ
-            subCategory: subCategory, // የአማርኛ ስም
-            subCategoryKey: subCategoryKey, // የዳታቤዝ ቁልፍ
-            detailItem: detailItemValue, // ✅ አዲስ: ዝርዝር የእቃ አይነት
+            mainCategory: mainCategory,
+            mainCategoryKey: mainCategoryKey,
+            subCategory: subCategory,
+            subCategoryKey: subCategoryKey,
+            detailItem: detailItemValue,
             itemPrice: itemPrice,
             itemDescription: itemDescription,
             days_duration: parseInt(daysDurationSelect.value),
             coin_cost: coinCost,
             star_rating: starRating, 
-            image_url: imageUrl, 
+            image_url: imageUrl, // አዲሱ የFirebase Storage ሊንክ እዚህ ገባ
             posted_at: serverTimestamp(), 
             expires_at: new Date(Date.now() + parseInt(daysDurationSelect.value) * 24 * 60 * 60 * 1000), 
             is_active: true,
@@ -541,9 +550,8 @@ async function postNewListing(event) {
         };
 
         const listingDocRef = await addDoc(collection(db, "listings"), itemData); 
-        const listingId = listingDocRef.id;
 
-        // 3. የሻጩን የኮይን ባላንስ መቀነስ (Update) 
+        // ✅ ሐ. የሻጩን የኮይን ባላንስ መቀነስ
         const collectionsToUpdate = ["users", "HararGebeyaUsers"]; 
         let updated = false;
 
@@ -567,24 +575,24 @@ async function postNewListing(event) {
         }
         
         if (!updated) {
-             console.error("Warning: Listing posted, but balance update could not be attributed to a single collection properly. Total balance might have been sufficient, but no single collection held enough to cover the cost, or balance logic is complex.");
+             console.warn("ባላንስ አልተቀነሰም - ተጠቃሚው ዳታቤዝ ውስጥ አልተገኘም ወይም በቂ ባላንስ የለም።");
         }
 
-
-        // ስኬታማ ከሆነ
+        // ስኬታማ ከሆነ UI ማጽዳት
         listingMessage.style.color = '#4caf50';
         listingMessage.textContent = "ማስታወቂያዎ በተሳካ ሁኔታ ተለጥፏል! የኮይን ሂሳብዎ ተቀንሷል።";
         newListingForm.reset(); 
         imagePreview.style.display = 'none';
         imagePlaceholder.style.display = 'block';
-        starRatingInput.value = 0; // ኮከብ ሪሴት
-        setupStarRatingSelector(); // ኮከብ UI ሪሴት
+        starRatingInput.value = 0; 
+        setupStarRatingSelector(); 
         loadUserInfo(); 
         renderActiveListings(); 
+
     } catch (error) {
-        console.error("Error posting listing or updating balance:", error);
+        console.error("Error:", error);
         listingMessage.style.color = '#f44336';
-        listingMessage.textContent = "ማስታወቂያ በመለጠፍ ላይ ያልተጠበቀ ችግር ተፈጥሯል: " + error.message;
+        listingMessage.textContent = "ችግር ተፈጥሯል: " + error.message;
     }
 }
 
@@ -703,17 +711,37 @@ function handleViewDescription(description) {
 
 // ማስታወቂያውን ለመሰረዝ የሚያስፈልገው ተግባር (Delete)
 async function handleDeleteListing(listingId) {
-    if (!confirm("ይህንን ማስታወቂያ በእርግጥ መሰረዝ ይፈልጋሉ? ከ Firestore ላይ ሙሉ በሙሉ ይወገዳል!")) {
+    if (!confirm("ይህንን ማስታወቂያ በእርግጥ መሰረዝ ይፈልጋሉ? ምስሉና መረጃው ሙሉ በሙሉ ይወገዳል!")) {
         return;
     }
     
     try {
+        // 1. መጀመሪያ የማስታወቂያውን መረጃ እናመጣለን (የምስሉን ሊንክ ለማግኘት)
         const listingDocRef = doc(db, "listings", listingId); 
+        const listingSnap = await getDoc(listingDocRef);
+
+        if (listingSnap.exists()) {
+            const data = listingSnap.data();
+            const imageUrl = data.image_url;
+
+            // 2. ምስሉ በ Storage ውስጥ ካለ እናጠፋዋለን
+            if (imageUrl) {
+                try {
+                    const imageRef = ref(storage, imageUrl);
+                    await deleteObject(imageRef);
+                    console.log("ምስሉ ከ Storage ተሰርዟል");
+                } catch (imgError) {
+                    console.error("ምስሉን ከ Storage ሲሰርዙ ስህተት አጋጠመ (ምናልባት ቀድሞ ተሰርዞ ሊሆን ይችላል):", imgError);
+                }
+            }
+        }
+
+        // 3. በመጨረሻ የFirestore መረጃውን መሰረዝ
         await deleteDoc(listingDocRef); 
 
-        alert("ማስታወቂያው በተሳካ ሁኔታ ተሰርዟል! (ከ Firestore ተወግዷል)");
-        renderActiveListings(); // ንቁ ዝርዝሩን ማደስ
-        renderExpiredListings(); // ያበቁ ዝርዝሩን ማደስ
+        alert("ማስታወቂያውና ምስሉ በተሳካ ሁኔታ ተሰርዘዋል!");
+        renderActiveListings(); 
+        renderExpiredListings(); 
     } catch (error) {
         console.error("Error deleting listing:", error);
         alert("ማስታወቂያውን መሰረዝ አልተቻለም: " + error.message);

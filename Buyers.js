@@ -22,10 +22,17 @@ import {
     startAfter, // ✅ አዲስ: ለ Pagination
     Timestamp 
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+import { 
+    getStorage, 
+    ref, 
+    uploadBytes, 
+    getDownloadURL,
+} from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
 
 // ✅ Firebase አገልግሎቶችን ማስጀመር: app እና db
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // DOM Elements
 const mainCategoryGrid = document.getElementById('mainCategoryGrid');

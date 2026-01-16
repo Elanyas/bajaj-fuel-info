@@ -120,10 +120,17 @@
         
         <section class="items-display-area">
             <h2 class="section-title">የቅርብ ጊዜ ማስታወቂያዎች</h2>
-            <div class="items-grid" id="itemsGrid">
-                <p id="loadingMessage" style="text-align: center; color: var(--accent-color);">እቃዎቹ እየተጫኑ ነው...</p>
-                <p id="noListingsFound" style="display: none; text-align: center; color: var(--sub-text-color);">በተመረጠው ማጣሪያ ምንም እቃ አልተገኘም።</p>
-            </div>
+            <div id="itemsGrid"></div>
+
+<div id="loadingMessage">
+    <div class="loading-container">
+        <div class="spinner"></div>
+       
+    </div>
+</div>
+
+<div id="noListingsFound" style="display:none;"></div>
+
         </section>
         
         <div id="imageModal" class="modal">

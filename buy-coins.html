@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Coin ይግዙ</title>
+    <link rel="stylesheet" href="buy-style.css">
+</head>
+<body class="dark-theme">
+    <div class="container">
+        <header class="header">
+            <div class="user-info">
+                <p id="userName" class="small-text">ኢሊያስ</p>
+                <div class="balance-container">
+                    <span id="currentCoins">0.00</span> <span class="coin-label">DS</span>
+                </div>
+            </div>
+        </header>
+
+        <div id="selectionPage">
+            <h2 class="main-title">የኮይን መጠን ይምረጡ</h2>
+            <div class="coin-grid" id="coinGrid">
+                </div>
+        </div>
+
+        <div id="paymentPage" class="hidden">
+            <div class="payment-card">
+                <h3>ክፍያ ያረጋግጡ</h3>
+                <p class="summary-text">የመረጡት መጠን: <span id="selectedPrice">0</span> ETB</p>
+                <p class="summary-text">የሚያገኙት: <span id="expectedCoins">0</span> DS</p>
+                
+                <div class="upload-area">
+                    <input type="file" id="screenshotInput" hidden accept="image/*">
+                    <label for="screenshotInput" class="upload-label">
+                        <i class="icon">📷</i> የክፍያ ስክሪንሻት ይጫኑ
+                    </label>
+                    <p id="fileName" class="small-text"></p>
+                </div>
+
+                <button id="submitBtn" class="confirm-btn">ላክ (Submit)</button>
+                <button onclick="goBack()" class="back-btn">ተመለስ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script src="buy-coins.js"></script>
+</body>
+</html>

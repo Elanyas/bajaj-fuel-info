@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ክፍያ ማጽደቂያ | Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #0ea5e9;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .request-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #334155;
+        }
+
+        .user-details { flex: 1; min-width: 250px; }
+        
+        .user-details h3 { margin: 0 0 10px 0; color: var(--accent); }
+
+        .payment-info {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .screenshot-box {
+            width: 200px;
+            height: 250px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #334155;
+        }
+
+        .screenshot-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .action-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input[type="number"] {
+            background: #0f172a;
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            width: 120px;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .approve-btn { background: var(--success); color: white; }
+        .reject-btn { background: var(--danger); color: white; }
+        .approve-btn:disabled { background: #64748b; cursor: not-allowed; }
+
+        #imgModal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #imgModal img { max-width: 90%; max-height: 90%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><i class="fas fa-shield-check"></i> የክፍያ ማጽደቂያ (Admin)</h1>
+    <div id="requestsList">
+        <p style="text-align: center; color: var(--text-dim);">በመጠባበቅ ላይ ያለ ክፍያ የለም...</p>
+    </div>
+</div>
+
+<div id="imgModal" onclick="this.style.display='none'">
+    <img id="modalImg" src="">
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+        authDomain: "elanyas-info.firebaseapp.com",
+        projectId: "elanyas-info",
+        storageBucket: "elanyas-info.firebasestorage.app",
+        messagingSenderId: "769306910360",
+        appId: "1:769306910360:web:70988eed5b1da8ffa0faed"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    const requestsList = document.getElementById('requestsList');
+
+    db.collection("CoinRequests").where("status", "==", "pending")
+    .onSnapshot((snapshot) => {
+        requestsList.innerHTML = "";
+        if (snapshot.empty) {
+            requestsList.innerHTML = '<p style="text-align: center; color: var(--text-dim);">በመጠባበቅ ላይ ያለ ክፍያ የለም...</p>';
+            return;
+        }
+
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const card = document.createElement('div');
+            card.className = 'request-card';
+            card.innerHTML = `
+                <div class="screenshot-box" onclick="showImg('${data.screenshotUrl}')">
+                    <img src="${data.screenshotUrl}" alt="Payment Screenshot">
+                </div>
+                <div class="user-details">
+                    <h3>${data.userName}</h3>
+                    <p><i class="fas fa-phone"></i> ${data.userPhone}</p>
+                    <div class="payment-info">
+                        <p>የመረጠው መጠን: <b>${data.amountETB} ETB</b></p>
+                        <p>የሚጠበቅ ኮይን: <b>${data.requestedCoins} DS</b></p>
+                    </div>
+                    <label>የሚጨመር ኮይን:</label><br>
+                    <input type="number" id="coin_input_${doc.id}" value="${data.requestedCoins}">
+                </div>
+                <div class="action-area">
+                    <button class="btn approve-btn" id="btn_${doc.id}" onclick="approvePayment('${doc.id}', '${data.userPhone}', '${data.screenshotUrl}')">
+                        <i class="fas fa-check"></i> አጽድቅ
+                    </button>
+                    <button class="btn reject-btn" onclick="rejectPayment('${doc.id}', '${data.screenshotUrl}')">
+                        <i class="fas fa-times"></i> ሰርዝ
+                    </button>
+                </div>
+            `;
+            requestsList.appendChild(card);
+        });
+    });
+
+    async function approvePayment(requestId, userPhone, imageUrl) {
+        const finalCoins = parseFloat(document.getElementById(`coin_input_${requestId}`).value);
+        const btn = document.getElementById(`btn_${requestId}`);
+        
+        if (confirm(`${finalCoins} DS ኮይን ለ ${userPhone} ይጨመር?`)) {
+            try {
+                btn.disabled = true;
+                btn.innerText = "በማጽደቅ ላይ...";
+
+                // 1. መጀመሪያ ለተጠቃሚው ኮይኑን መጨመር
+                const userRef = db.collection("HararGebeyaUsers").doc(userPhone);
+                await userRef.update({
+                    ds_coin_balance: firebase.firestore.FieldValue.increment(finalCoins)
+                });
+
+                // 2. የጥያቄውን ሁኔታ ወደ 'approved' መቀየር
+                await db.collection("CoinRequests").doc(requestId).update({
+                    status: "approved",
+                    finalCoinsAdded: finalCoins,
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // 3. ሁለቱ ሂደቶች ካለቁ በኋላ ብቻ ምስሉን ከ Storage ማጥፋት
+                if (imageUrl && imageUrl.startsWith('http')) {
+                    const storageRef = storage.refFromURL(imageUrl);
+                    await storageRef.delete();
+                }
+
+                alert("ክፍያው ጸድቋል፣ ኮይኑ ተጨምሯል፣ ምስሉም ጸድቷል!");
+            } catch (error) {
+                console.error("Error:", error);
+                alert("ስህተት ተፈጥሯል! ኮይኑ አልተጨመረም፣ ምስሉም አልጠፋም።");
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> አጽድቅ';
+            }
+        }
+    }
+
+    async function rejectPayment(requestId, imageUrl) {
+        if (confirm("ይህንን የክፍያ ጥያቄ መሰረዝ ይፈልጋሉ? (ምስሉም አብሮ ይጠፋል)")) {
+            try {
+                await db.collection("CoinRequests").doc(requestId).update({
+                    status: "rejected",
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                if (imageUrl && imageUrl.startsWith('http')) {
+                    const storageRef = storage.refFromURL(imageUrl);
+                    await storageRef.delete();
+                }
+                alert("ጥያቄው ተሰርዟል!");
+            } catch (e) {
+                alert("ስህተት ተፈጥሯል!");
+            }
+        }
+    }
+
+    function showImg(url) {
+        document.getElementById('modalImg').src = url;
+        document.getElementById('imgModal').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
