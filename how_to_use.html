@@ -3,302 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የድራይቨር ገበያ | የአጠቃቀም መመሪያ</title>
+    <title>How to Use | ሐረር ገበያ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* ========================================= */
-        /* 1. የዲዛይን መሰረታዊ ቀለሞችና ቅርጾች (Theme) */
-        /* በሌሎቹ ፋይሎችዎ (ለምሳሌ marketplace_style.css) ላይ የተመሰረተ ነው */
-        /* ========================================= */
         :root {
-            --primary-color: #0d0d0d; /* ጥቁር ዳራ */
-            --secondary-color: #1a1a1a; /* ለዋና ፓነል */
-            --card-background: #242424; /* ለካርዶች */
-            --accent-color: #00bcd4; /* ዋናው የሲስተም ቀለም (Cyan/Turquoise) */
-            --text-color: #f0f0f0; /* ዋናው ጽሁፍ */
-            --sub-text-color: #b0b0b0; /* ለንዑስ ጽሁፎች */
-            --thin-border-color: #383838;
-            --money-color: #ffeb3b; /* ለገንዘብ ነክ ጉዳዮች */
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --accent-color: #00bcd4;
+            --text-main: #f0f0f0;
+            --text-dim: #b0b0b0;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Noto Sans Ethiopic', sans-serif;
-            background-color: var(--primary-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
+            font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            font-size: 14px;
         }
 
-        .main-header {
-            background-color: var(--secondary-color);
-            padding: 20px 10px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        .wrapper {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            margin-bottom: 50px;
         }
 
-        .main-header h1 {
-            margin: 0;
-            font-size: 1.6em;
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            z-index: 100;
+        }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--accent-color);
         }
-        
-        .main-header p {
-            margin: 5px 0 0 0;
-            color: var(--sub-text-color);
-            font-size: 0.9em;
+
+        .lang-switch {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3px;
+            border: 1px solid var(--border-color);
         }
 
-        .guide-container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: 0.3s;
         }
 
-        /* ========================================= */
-        /* 2. የአኮርዲዮን (Accordion) ስታይል */
-        /* ========================================= */
-        .accordion-item {
+        .lang-btn.active {
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .content-container { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-size: 1.3rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+        .faq-item {
+            background: var(--card-bg);
+            border-radius: 10px;
             margin-bottom: 10px;
-            border: 1px solid var(--thin-border-color);
-            border-radius: 8px;
+            border: 1px solid var(--border-color);
             overflow: hidden;
-            background-color: var(--card-background);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .accordion-header {
-            background-color: var(--secondary-color);
-            padding: 15px;
+        .faq-header {
+            padding: 12px 15px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: bold;
-            font-size: 1.1em;
-            transition: background-color 0.3s;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
         }
-        
-        .accordion-header:hover {
-            background-color: #2a2a2a; /* ትንሽ ጥቁር ሲሆን */
-        }
-        
-        .accordion-header.active {
+
+        .faq-header i {
+            font-size: 0.8rem;
+            transition: 0.3s;
             color: var(--accent-color);
         }
 
-        .accordion-header i {
-            transition: transform 0.3s;
-            color: var(--sub-text-color);
-            font-size: 0.9em;
-        }
-        
-        .accordion-header.active i {
-            transform: rotate(180deg);
-            color: var(--accent-color);
-        }
+        .faq-header.active i { transform: rotate(180deg); }
 
-        .accordion-content {
-            padding: 0 15px;
-            background-color: var(--card-background);
-            max-height: 0; /* መጀመሪያ ላይ ይደበቃል */
+        .faq-body {
+            max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
-            color: var(--sub-text-color);
-            font-size: 0.95em;
+            transition: max-height 0.3s ease-out;
+            background: #222;
         }
 
-        .accordion-content.show {
+        .faq-body-content {
             padding: 15px;
-            /* ከፍ ያለ ቁጥር በመስጠት ይከፈታል - ይህን ቁጥር እንደ ይዘቱ መጠን ማስተካከል ሊያስፈልግ ይችላል */
-            max-height: 500px; 
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border-color);
         }
 
-        .accordion-content p {
-            margin-top: 0;
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-bottom: 20px;
         }
 
-        .accordion-content ul {
-            padding-left: 25px;
-        }
-        
-        .tip-box {
-            background-color: #2c2c2c;
-            border-left: 5px solid var(--accent-color);
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        
-        .money-highlight {
-            color: var(--money-color);
-            font-weight: bold;
+        .back-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        /* ========================================= */
-        /* 3. ለትንሽ ስክሪን ማስተካከያ (Mobile Responsive) */
-        /* ========================================= */
-        @media (max-width: 600px) {
-            .main-header {
-                padding: 15px 10px;
-            }
-            
-            .main-header h1 {
-                font-size: 1.4em;
-            }
-            
-            .accordion-header {
-                font-size: 1em;
-                padding: 12px;
-            }
-            
-            .accordion-content {
-                font-size: 0.9em;
-            }
-        }
-
+        .lang-content { display: none; }
+        .lang-content.visible { display: block; }
     </style>
 </head>
 <body>
-    
-    <header class="main-header">
-        <h1><i class="fas fa-question-circle"></i> የአጠቃቀም መመሪያ እና የተለመዱ ጥያቄዎች</h1>
-        <p>በድራይቨር ገበያ ላይ እቃዎችን እንዴት እንደሚገዙ ወይም እንደሚሸጡ ዝርዝር መረጃ</p>
+
+<div class="wrapper">
+    <header>
+        <div class="brand-name">ሐረር ገበያ</div>
+        <div class="lang-switch">
+            <button id="btnAm" class="lang-btn active" onclick="switchLang('am')">አማርኛ</button>
+            <button id="btnEn" class="lang-btn" onclick="switchLang('en')">English</button>
+        </div>
     </header>
 
-    <div class="guide-container">
+    <!-- Amharic Content -->
+    <div id="contentAm" class="content-container lang-content visible">
+        <h1><i class="fas fa-book-open"></i> የአጠቃቀም መመሪያ</h1>
         
-        <h2 style="color: var(--accent-color); margin-top: 30px;"><i class="fas fa-shopping-cart"></i> ገዢዎች (Buyers)</h2>
-        
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                እቃ እንዴት መፈለግ እችላለሁ?
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>1. እንዴት መመዝገብ እችላለሁ?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
-            <div class="accordion-content">
-                <p>እቃዎችን ለመፈለግ ሶስት ዋና መንገዶች አሉ:</p>
-                <ul>
-                    <li>**የፍለጋ መስኩን መጠቀም:** በገጹ አናት ላይ ባለው የፍለጋ መስክ የእቃውን ስም (ለምሳሌ፡ TVS) በመጻፍ መፈለግ።</li>
-                    <li>**ዋና የእቃ ዘርፍ (Main Category):** መጀመሪያ ዋናውን ዘርፍ (ለምሳሌ፡ ባለ 3-እግር ተሽከርካሪ) በመምረጥ።</li>
-                    <li>**ንዑስ ዘርፍ (Sub-Category):** ከዋናው ዘርፍ ውስጥ ንዑስ ዘርፍ (ለምሳሌ፡ TVS King) በመምረጥ ፍለጋውን ማጥበብ ይቻላል።</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                ሻጩን እንዴት ማግኘት እችላለሁ?
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="accordion-content">
-                <p>በእያንዳንዱ ማስታወቂያ ግርጌ ላይ የሚገኙትን የባለቤቱን ስልክ ቁጥር በመጠቀም ወይም የሚከተሉትን በተኖች በመጫን ማግኘት ይችላሉ:</p>
-                <ul>
-                    <li><i class="fas fa-phone-alt"></i> **'ይደውሉ' በተን:** ቀጥታ የስልክ ጥሪ ለማድረግ።</li>
-                    <li><i class="fab fa-telegram-plane"></i> **'ቴሌግራም' በተን:** ከሻጩ ጋር በቴሌግራም ለመወያየት።</li>
-                </ul>
-                <div class="tip-box">
-                    **አንገብጋቢ ማሳሰቢያ:** ማንኛውንም ክፍያ ከመፈጸምዎ በፊት እቃውን በአካል አይተውና አረጋግጠው ይግዙ። ገበያችን ከሻጩ ጋር በሚደረግ የዋጋ ውል ውስጥ ጣልቃ አይገባም።
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    የምዝገባ ገጹ ላይ በመሄድ ስምዎን፣ ስልክ ቁጥርዎንና የይለፍ ቃል በማስገባት መመዝገብ ይችላሉ። ሲመዘገቡ የ 50 ኮይን ስጦታ ወዲያውኑ ያገኛሉ።
                 </div>
             </div>
         </div>
-        
-        
-        <h2 style="color: var(--accent-color); margin-top: 30px;"><i class="fas fa-store"></i> ሻጮች (Sellers)</h2>
-        
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                ማስታወቂያ እንዴት መለጠፍ እችላለሁ?
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="accordion-content">
-                <p>በሻጭ ማዕከል (Seller Dashboard) ውስጥ ማስታወቂያ መለጠፍ ቀላል ነው። እነዚህን ደረጃዎች ይከተሉ:</p>
-                <ol>
-                    <li>በሂሳብዎ ውስጥ በቂ **DS Coin** እንዳለዎት ያረጋግጡ።</li>
-                    <li>በ 'አዲስ ማስታወቂያ ይለጥፉ' ክፍል ስር ያሉትን ሁሉንም መስኮች ይሙሉ (የእቃ ስም፣ መግለጫ፣ ዋጋ፣ ወዘተ)።</li>
-                    <li>አንድ ግልጽ የሆነ የእቃውን ምስል ይጫኑ።</li>
-                    <li>የማስታወቂያውን የቆይታ ጊዜ ይምረጡ። (ለምሳሌ፡ የ30 ቀን ማስታወቂያ **X** DS Coin ያስከፍላል)</li>
-                    <li>'ማስታወቂያውን ይለጥፉ' የሚለውን በተን ሲጫኑ፣ ከተቀረው የDS Coin ሂሳብዎ ላይ ክፍያው ይቆረጣል።</li>
-                </ol>
-            </div>
-        </div>
 
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                DS Coin ምንድነው? እንዴትስ ማግኘት ይቻላል?
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>2. ዕቃ እንዴት መሸጥ/መለጠፍ እችላለሁ?</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
-            <div class="accordion-content">
-                <p>DS Coin ማስታወቂያ ለመለጠፍ የምንጠቀምበት የውስጥ ክፍያ/ሂሳብ ነው።</p>
-                <p class="money-highlight"><i class="fas fa-money-bill-wave"></i> ዋጋ: $1$ DS Coin = $1$ ኢትዮጵያ ብር።</p>
-                <p>DS Coin ለመግዛት የሚከተሉትን መንገዶች ይጠቀሙ:</p>
-                <ul>
-                    <li>**በዌብሳይቱ በኩል:** በሻጭ ማዕከል ውስጥ ባለው 'DS Coin ይግዙ' በተን አማካኝነት (ለምሳሌ: በቴሌብር/CBE)።</li>
-                    <li>**በአካውንትዎ:** በቀጥታ ወደ ድርጅታችን የባንክ አካውንት በማስገባት እና የክፍያ ደረሰኝ በመላክ።</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                ያለፈ ማስታወቂያ እንደገና መለጠፍ (Repost) እችላለሁ?
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="accordion-content">
-                <p>አዎ! ጊዜያቸው ያለፈ ማስታወቂያዎች በ'ያበቁ ማስታወቂያዎቼ' ክፍል ውስጥ ይገኛሉ።</p>
-                <p>እቃው ገና ያልተሸጠ ከሆነ፣ ከማስታወቂያው ቀጥሎ ያለውን <i class="fas fa-sync-alt"></i> **'እንደገና ይለጥፉ (Repost)'** የሚለውን በተን በመጫን በድጋሚ በፍጥነት ለገበያ ማቅረብ ይችላሉ።</p>
-                <div class="tip-box">
-                    **ማስታወሻ:** እንደገና ማስታወቂያ ለመለጠፍ (Repost) አዲስ ማስታወቂያ እንደመለጠፍ ሁሉ ክፍያ (DS Coin) ይጠይቃል።
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    ወደ "መሸጫ" (Seller Dashboard) በመሄድ፣ የዕቃውን ስም፣ ምስልና ዋጋ ያስገቡ። እያንዳንዱ ማስታወቂያ ለመለጠፍ የተወሰነ የ DS Coin ክፍያ ይጠይቃል።
                 </div>
             </div>
         </div>
-        
-        <div style="text-align: center; padding: 30px 0; color: var(--accent-color);">
-            <i class="fas fa-hands-helping"></i> ተጨማሪ ጥያቄዎች ካሉዎት በስልክ ወይም በቴሌግራም ያግኙን።
+
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>3. ኮይን እንዴት ማግኘት እችላለሁ?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    "ኮይን ያግኙ" በሚለው ገጽ ላይ በመሄድ ቀላል የሂሳብ ጥያቄዎችን በመመለስ በነጻ ኮይኖችን ማጠራቀም ይችላሉ።
+                </div>
+            </div>
         </div>
 
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>4. ከሻጭ ጋር እንዴት እገናኛለሁ?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    ገዢው ገጽ ላይ የሚፈልጉትን ዕቃ ሲያገኙ፣ የሻጩን ስልክ ቁጥር በመጫን መደወል ወይም በቴሌግራም መልዕክት መላክ ይችላሉ።
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        /**
-         * የአኮርዲዮን ክፍሎችን መክፈትና መዝጋት የሚያስተናግድ ተግባር።
-         * @param {HTMLElement} header - የተጫነው የጥያቄ ራስጌ (Header) ኤለመንት።
-         */
-        function toggleAccordion(header) {
-            const content = header.nextElementSibling;
-            const allContents = document.querySelectorAll('.accordion-content');
-            const allHeaders = document.querySelectorAll('.accordion-header');
+    <!-- English Content -->
+    <div id="contentEn" class="content-container lang-content">
+        <h1><i class="fas fa-book-open"></i> How to Use</h1>
+        
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>1. How can I register?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    Go to the registration page, enter your name, phone number, and password. You will receive a 50 coin gift immediately upon sign-up.
+                </div>
+            </div>
+        </div>
 
-            // ሌሎች ክፍሎችን መዝጋት (አንድ ብቻ እንዲከፈት)
-            allContents.forEach(item => {
-                if (item !== content && item.classList.contains('show')) {
-                    item.classList.remove('show');
-                    item.style.maxHeight = null;
-                }
-            });
-            
-            // የሌሎቹን ራስጌዎች (Headers) ንቁነት (active class) ማስወገድ
-            allHeaders.forEach(item => {
-                if (item !== header && item.classList.contains('active')) {
-                    item.classList.remove('active');
-                }
-            });
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>2. How do I sell/list an item?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    Go to the "Seller Dashboard", enter the item name, upload an image, and set a price. Each listing costs a specific amount of DS Coins.
+                </div>
+            </div>
+        </div>
 
-            // አሁን የተጫነውን ክፍል መክፈት ወይም መዝጋት
-            if (content.classList.contains('show')) {
-                // መዝጋት
-                content.classList.remove('show');
-                header.classList.remove('active');
-                content.style.maxHeight = null; // ወደ 0 እንዲመለስ
-            } else {
-                // መክፈት
-                content.classList.add('show');
-                header.classList.add('active');
-                // ይዘቱ ሙሉ ለሙሉ እንዲታይ የሚያስችል ቁመት መስጠት
-                content.style.maxHeight = content.scrollHeight + "px";
-            }
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>3. How can I earn coins?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    Go to the "Earn Coins" page and solve simple math problems to collect free coins.
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-header" onclick="toggleFaq(this)">
+                <span>4. How do I contact a seller?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-body-content">
+                    When you find an item on the buyer's page, you can click the seller's phone number to call or send a message via Telegram.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <a href="about_us.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> <span id="backText">ወደ ቀደመው ገጽ</span>
+        </a>
+    </footer>
+</div>
+
+<script>
+    function toggleFaq(header) {
+        const body = header.nextElementSibling;
+        const isActive = header.classList.contains('active');
+        
+        // Close all others
+        document.querySelectorAll('.faq-header').forEach(h => {
+            h.classList.remove('active');
+            h.nextElementSibling.style.maxHeight = null;
+        });
+
+        if (!isActive) {
+            header.classList.add('active');
+            body.style.maxHeight = body.scrollHeight + "px";
         }
-    </script>
+    }
+
+    function switchLang(lang) {
+        const amContent = document.getElementById('contentAm');
+        const enContent = document.getElementById('contentEn');
+        const amBtn = document.getElementById('btnAm');
+        const enBtn = document.getElementById('btnEn');
+        const backText = document.getElementById('backText');
+
+        if (lang === 'am') {
+            amContent.classList.add('visible');
+            enContent.classList.remove('visible');
+            amBtn.classList.add('active');
+            enBtn.classList.remove('active');
+            backText.innerText = "ወደ ቀደመው ገጽ";
+        } else {
+            amContent.classList.remove('visible');
+            enContent.classList.add('visible');
+            enBtn.classList.add('active');
+            amBtn.classList.remove('active');
+            backText.innerText = "Back to Previous Page";
+        }
+    }
+</script>
+
 </body>
 </html>
