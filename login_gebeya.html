@@ -243,6 +243,45 @@
                 </li>
             </ul>
         </div>
+<!-- ይህንን ክፍል በ login_gebeya.html ውስጥ ከ 'መግቢያ' በተኑ በታች ወይም ከገጹ ግርጌ ላይ ጨምረው -->
+
+<style>
+    .policy-footer {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 0.75rem; /* ትንንሽ ጽሁፎችን ለመጠቀም */
+        color: #b0b0b0; /* --sub-text-color */
+        padding: 10px;
+    }
+
+    .policy-footer a {
+        color: #00bcd4; /* --accent-color */
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .policy-footer a:hover {
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+
+    .policy-divider {
+        margin: 0 5px;
+        color: #4a5568;
+    }
+</style>
+
+<div class="policy-footer">
+    በመግባትዎ በሐረር ገበያ 
+    <a href="privacy_policy.html">የግል መረጃ ጥበቃ (Privacy Policy)</a> 
+    እና 
+    <a href="how_to_use.html">መመሪያዎች</a> ተስማምተዋል።
+    <br>
+    <span style="display: inline-block; margin-top: 8px;">
+        <a href="about_us.html">ስለ እኛ</a>
+    </span>
+</div>
     </div>
 
     <!-- ጃቫ ስክሪፕት እና ፋየርቤዝ -->
@@ -369,7 +408,7 @@
                 
                 // 10. ✅ ቁልፍ ለውጥ፡ ወደ አዲሱ ገጽ መውሰድ
                 setTimeout(() => {
-                    window.location.href = "https://elanyas-info.web.app/seller_dashboard.html"; 
+                    window.location.href = "https://elanyas-info.web.app/buyer_marketplace.html"; 
                 }, 1000); // ተጠቃሚው መልዕክቱን እንዲያይ 1 ሰከንድ እንጠብቃለን
 
             } catch (error) {
