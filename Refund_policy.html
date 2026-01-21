@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy | ሐረር ገበያ</title>
-    <!-- Font Awesome for Icons -->
+    <title>Refund Policy | ሐረር ገበያ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <!-- Google Fonts for Ethiopic and Sans Serif -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
@@ -17,6 +15,7 @@
             --text-main: #f0f0f0;
             --text-dim: #b0b0b0;
             --border-color: #333333;
+            --warning-color: #ff9800;
         }
 
         * {
@@ -30,11 +29,11 @@
             font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.5;
+            line-height: 1.6;
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            font-size: 14px; /* ትንንሽ ጽሁፎችን ለመጠቀም */
+            font-size: 14px;
         }
 
         .policy-wrapper {
@@ -81,7 +80,6 @@
             cursor: pointer;
             border-radius: 15px;
             transition: 0.3s;
-            font-family: inherit;
         }
 
         .lang-btn.active {
@@ -91,7 +89,7 @@
         }
 
         /* Content Styles */
-        .policy-container {
+        .content-container {
             animation: fadeIn 0.4s ease;
         }
 
@@ -106,9 +104,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--text-main);
         }
 
-        .section {
+        .card {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 15px;
@@ -116,35 +115,33 @@
             border: 1px solid var(--border-color);
         }
 
-        .section h2 {
+        .card h2 {
             font-size: 0.95rem;
             color: var(--accent-color);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .section p, .section li {
+        .card p {
             font-size: 0.85rem;
             color: var(--text-dim);
-            list-style: none;
+            margin-bottom: 8px;
         }
 
-        .section ul {
-            margin-top: 5px;
+        .warning-box {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid var(--warning-color);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
         }
 
-        .section li {
-            margin-bottom: 5px;
-            display: flex;
-            align-items: flex-start;
-            gap: 5px;
-        }
-
-        .section li::before {
-            content: "•";
-            color: var(--accent-color);
+        .warning-box p {
+            color: var(--warning-color);
+            font-weight: 600;
+            margin-bottom: 0;
         }
 
         footer {
@@ -153,30 +150,15 @@
             padding-bottom: 20px;
         }
 
-        .back-link {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Hide logic */
-        .lang-content {
-            display: none;
-        }
-
-        .lang-content.visible {
-            display: block;
-        }
-
-.nav-link {
+        .nav-link {
             color: var(--accent-color);
             text-decoration: none;
             font-size: 0.8rem;
             margin: 0 10px;
         }
+
+        .lang-content { display: none; }
+        .lang-content.visible { display: block; }
     </style>
 </head>
 <body>
@@ -191,65 +173,63 @@
     </header>
 
     <!-- Amharic Content -->
-    <div id="contentAm" class="policy-container lang-content visible">
-        <h1><i class="fas fa-shield-halved"></i> የግል መረጃ ጥበቃ</h1>
+    <div id="contentAm" class="content-container lang-content visible">
+        <h1><i class="fas fa-hand-holding-usd"></i> የገንዘብ ተመላሽ ፖሊሲ</h1>
         
-        <div class="section">
-            <h2><i class="fas fa-info-circle"></i> 1. መግቢያ</h2>
-            <p>የሐረር ገበያ (Harar Gebeya) ተጠቃሚዎችን ግላዊነት የመጠበቅ ኃላፊነት አለበት። ይህ ፖሊሲ በአፑ ውስጥ የምንሰበስባቸውን መረጃዎች ይገልጻል።</p>
+        <div class="card">
+            <h2><i class="fas fa-store"></i> የገበያ ግብይቶች</h2>
+            <p>ሐረር ገበያ ገዢዎችንና ሻጮችን የሚያገናኝ መድረክ ነው። በተጠቃሚዎች መካከል በቀጥታ ለሚደረጉ የገንዘብ ክፍያዎች ወይም ለምርቶች ጥራት ሐላፊነት አንወስድም።</p>
+            <div class="warning-box">
+                <p><i class="fas fa-info-circle"></i> ገዢዎች ማንኛውንም ዕቃ ከመግዛታቸው በፊት በሚገባ እንዲፈትሹ እናሳስባለን።</p>
+            </div>
         </div>
 
-        <div class="section">
-            <h2><i class="fas fa-database"></i> 2. የምንሰበስባቸው መረጃዎች</h2>
-            <ul>
-                <li><strong>ስልክ ቁጥር:</strong> ተጠቃሚውን ለመለየት እና ለሽያጭ ግንኙነት።</li>
-                <li><strong>የዕቃ ምስሎች:</strong> ተጠቃሚው ለገበያ የሚያቀርባቸውን ምርቶች ለማሳየት።</li>
-                <li><strong>ባላንስ (DS Coins):</strong> የማስታወቂያ አገልግሎት ክፍያዎችን ለመቆጣጠር።</li>
-            </ul>
+        <div class="card">
+            <h2><i class="fas fa-coins"></i> ዲጂታል ሳንቲሞች (DS Coins)</h2>
+            <p>የDS Coins በነፃ በጨዋታ ወይም ማስታወቂያ በማየት የሚገኙ በመሆናቸው፣ ወደ ገንዘብ መቀየርም ሆነ ከመተግበሪያው ውጭ ማስተላለፍ አይቻልም።</p>
         </div>
 
-        <div class="section">
-            <h2><i class="fas fa-user-check"></i> 3. አጠቃቀም</h2>
-            <p>መረጃዎችዎ ለግብይት ምቾት እና ለደህንነት ብቻ ይውላሉ። መረጃዎ ለሶስተኛ ወገን አይሸጥም ወይም አይተላለፍም።</p>
+        <div class="card">
+            <h2><i class="fas fa-music"></i> የኦዲዮ ይዘቶች</h2>
+            <p>በመድረኩ ላይ የሚገኙ ወይም የሚገዙ ማናቸውም ዲጂታል የኦዲዮ ይዘቶች አንዴ ከተከፈቱ (Accessed) በኋላ ክፍያቸው ተመላሽ አይሆንም።</p>
         </div>
 
-        <div class="section">
-            <h2><i class="fas fa-trash-can"></i> 4. መረጃን መሰረዝ</h2>
-            <p>ማንኛውም ተጠቃሚ የራሱን መረጃ ወይም የለጠፈውን ማስታወቂያ በማንኛውም ጊዜ የመሰረዝ መብት አለው።</p>
+        <div class="card">
+            <h2><i class="fas fa-shield-alt"></i> ቅሬታ አፈታት</h2>
+            <p>የማጭበርበር ድርጊቶች ወይም አጠራጣሪ ነገሮች ካጋጠሙዎት፣ ወዲያውኑ ለድጋፍ ሰጪ ቡድናችን ሪፖርት ያድርጉ። ጉዳዩን መርምረን አስፈላጊውን እርምጃ እንወስዳለን።</p>
         </div>
     </div>
 
     <!-- English Content -->
-    <div id="contentEn" class="policy-container lang-content">
-        <h1><i class="fas fa-shield-halved"></i> Privacy Policy</h1>
+    <div id="contentEn" class="content-container lang-content">
+        <h1><i class="fas fa-hand-holding-usd"></i> Refund Policy</h1>
         
-        <div class="section">
-            <h2><i class="fas fa-info-circle"></i> 1. Introduction</h2>
-            <p>Harar Gebeya is committed to protecting user privacy. This policy describes how data is handled within the app.</p>
+        <div class="card">
+            <h2><i class="fas fa-store"></i> Marketplace Transactions</h2>
+            <p>Harar Gebeya is a platform that connects buyers and sellers. We are not responsible for the quality of physical goods or payments made directly between users.</p>
+            <div class="warning-box">
+                <p><i class="fas fa-info-circle"></i> Buyers are encouraged to inspect items thoroughly before purchase.</p>
+            </div>
         </div>
 
-        <div class="section">
-            <h2><i class="fas fa-database"></i> 2. Data Collection</h2>
-            <ul>
-                <li><strong>Phone Number:</strong> For user identification and trade communication.</li>
-                <li><strong>Images:</strong> To display products listed by the users.</li>
-                <li><strong>Balance (DS Coins):</strong> To manage advertising service payments.</li>
-            </ul>
+        <div class="card">
+            <h2><i class="fas fa-coins"></i> Virtual Rewards (DS Coins)</h2>
+            <p>Since DS Coins are earned for free via gameplay or viewing ads, they are non-refundable and non-transferable outside the app.</p>
         </div>
 
-        <div class="section">
-            <h2><i class="fas fa-user-check"></i> 3. Data Usage</h2>
-            <p>Your data is used solely for facilitating trade and security. We do not sell or share data with third parties.</p>
+        <div class="card">
+            <h2><i class="fas fa-music"></i> Audio Content</h2>
+            <p>Any digital audio content accessed or purchased through the platform is non-refundable once accessed.</p>
         </div>
 
-        <div class="section">
-            <h2><i class="fas fa-trash-can"></i> 4. Data Deletion</h2>
-            <p>Users have the right to delete their information or listings at any time.</p>
+        <div class="card">
+            <h2><i class="fas fa-shield-alt"></i> Dispute Resolution</h2>
+            <p>In case of scams or fraudulent listings, users should report the account to our support team for investigation immediately.</p>
         </div>
     </div>
 
     <footer>
-<a href="privacy_policy.html" class="nav-link" id="policyLink">privacy_policy</a>
+        <a href="privacy_policy.html" class="nav-link" id="policyLink">privacy_policy</a>
 <a href="about_us.html" class="nav-link" id="policyLink">about_us</a>
 
 <a href="Refund_policy.html" class="nav-link" id="policyLink">Refund_policy</a>
@@ -259,30 +239,28 @@
 </div>
 
 <script>
-    /**
-     * Switches the display language between Amharic and English
-     * @param {string} lang - 'am' or 'en'
-     */
     function switchLang(lang) {
-        // Elements
         const amContent = document.getElementById('contentAm');
         const enContent = document.getElementById('contentEn');
         const amBtn = document.getElementById('btnAm');
         const enBtn = document.getElementById('btnEn');
-        const backText = document.getElementById('backText');
+        const aboutLink = document.getElementById('aboutLink');
+        const homeLink = document.getElementById('homeLink');
 
         if (lang === 'am') {
             amContent.classList.add('visible');
             enContent.classList.remove('visible');
             amBtn.classList.add('active');
             enBtn.classList.remove('active');
-            backText.innerText = "ወደ ቀደመው ገጽ";
+            aboutLink.innerText = "ስለ እኛ";
+            homeLink.innerText = "ወደ ገበያው";
         } else {
             amContent.classList.remove('visible');
             enContent.classList.add('visible');
             enBtn.classList.add('active');
             amBtn.classList.remove('active');
-            backText.innerText = "Back to Previous Page";
+            aboutLink.innerText = "About Us";
+            homeLink.innerText = "Go to Market";
         }
     }
 </script>
