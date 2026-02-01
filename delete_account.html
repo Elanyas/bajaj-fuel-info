@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>አካውንት መሰረዝ | የድራይቨር ገበያ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-cyan: #00bcd4;
+            --dark-cyan: #0097a7;
+            --danger-red: #ff5252;
+            --bg-color: #f4f7f6;
+            --text-main: #2c3e50;
+        }
+
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .delete-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-container {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 82, 82, 0.1);
+            color: var(--danger-red);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 35px;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 82, 82, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); }
+        }
+
+        h2 {
+            color: var(--text-main);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .warning-box {
+            background: #fff9f9;
+            border-left: 4px solid var(--danger-red);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .warning-box p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+            text-align: right;
+            direction: rtl; /* ለአማርኛ አቀራረብ */
+        }
+
+        .input-group {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-cyan);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.1);
+        }
+
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .final-delete-btn {
+            background: var(--primary-cyan);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .final-delete-btn:hover {
+            background: var(--danger-red);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 82, 82, 0.3);
+        }
+
+        .cancel-btn {
+            background: transparent;
+            color: #95a5a6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 10px;
+            transition: color 0.3s;
+        }
+
+        .cancel-btn:hover {
+            color: var(--text-main);
+        }
+
+        #statusMsg {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="delete-card">
+        <div class="icon-container">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        
+        <h2>አካውንትዎን ማጥፋት ይፈልጋሉ?</h2>
+        
+        <div class="warning-box">
+            <p>አካውንትዎን ካጠፉ ማስታወቂያዎችዎ፣ ምስሎችዎ እና የኮይን ባላንስዎ በሙሉ በቋሚነት ይጠፋሉ። ይህ ድርጊት ሊመለስ አይችልም።</p>
+        </div>
+
+        <div class="input-group">
+            <label for="confirmPhone">ለማረጋገጥ ስልክ ቁጥርዎን ያስገቡ</label>
+            <input type="text" id="confirmPhone" placeholder="09........" autocomplete="off">
+        </div>
+
+        <div class="btn-stack">
+            <button id="executeDeleteBtn" class="final-delete-btn">
+                <i class="fas fa-trash-alt"></i> አካውንቴን በቋሚነት አጥፋ
+            </button>
+            <a href="seller_dashboard.html" class="cancel-btn">ሀሳቤን ቀይሬያለሁ (ተመለስ)</a>
+        </div>
+
+        <p id="statusMsg"></p>
+    </div>
+
+    <script type="module" src="delete_account.js"></script>
+</body>
+</html>

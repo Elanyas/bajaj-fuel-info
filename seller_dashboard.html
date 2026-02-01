@@ -24,6 +24,41 @@
     
     <header class="main-header">
         <h1><i class="fas fa-store"></i> የሻጭ ማዕከል</h1>
+       <div class="user-auth-controls">
+    <a href="delete_account.html" style="text-decoration: none;">
+        <button class="auth-control-btn delete-acc-btn" title="አካውንት በቋሚነት ሰርዝ">
+            <i class="fas fa-user-minus"></i> አካውንቱን አጥፋ
+        </button>
+    </a>
+</div>
+
+<style>
+    .user-auth-controls {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+    }
+
+    .delete-acc-btn {
+        background-color: #00bcd4; /* Cyan Color */
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: background 0.3s ease;
+        opacity: 0.9;
+    }
+
+    .delete-acc-btn:hover {
+        background-color: #0097a7; /* Darker Cyan on hover */
+        opacity: 1;
+    }
+</style>
         
         <div class="header-coin-display-v2">
             <div class="user-info-panel">
