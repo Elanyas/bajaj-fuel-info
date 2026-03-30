@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ሐረር ገበያ - የመደብሮች ቁጥጥር ማዕከል</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #00bcd4; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; --success: #10b981; --error: #ef4444; --warning: #fbbf24; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Noto Sans Ethiopic', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .container { width: 100%; max-width: 1100px; }
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 25px; }
+        h1 { color: var(--primary); text-align: center; font-size: 1.8rem; margin-top: 0; border-bottom: 2px solid var(--primary); padding-bottom: 10px; display: inline-block; width: 100%; }
+        
+        .store-item { background: #0f172a; border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 15px; transition: 0.3s; }
+        .store-item:hover { border-color: var(--primary); }
+        .store-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        .store-name { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
+        
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .pending { background: rgba(251, 191, 36, 0.1); color: var(--warning); border: 1px solid var(--warning); }
+        .verified { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success); }
+
+        .store-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .section-title { font-size: 0.85rem; color: var(--primary); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; border-left: 3px solid var(--primary); padding-left: 8px; }
+        .info-p { margin: 6px 0; font-size: 0.9rem; color: #94a3b8; line-height: 1.4; }
+        .info-p b { color: var(--text); min-width: 90px; display: inline-block; }
+
+        .owner-profile { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 10px; }
+        .owner-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
+
+        .image-previews { display: flex; gap: 10px; }
+        .image-previews div { flex: 1; text-align: center; }
+        .image-previews img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .image-previews img:hover { transform: scale(1.02); border-color: var(--primary); }
+        .img-label { font-size: 0.75rem; color: #64748b; margin-top: 5px; display: block; font-weight: 600; }
+
+        .actions { display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid #334155; padding-top: 15px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+        .btn-approve { background: var(--success); color: white; }
+        .btn-edit { background: rgba(0, 188, 212, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+        .btn-delete { background: var(--error); color: white; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        #editOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; overflow-y: auto; }
+        .modal-card { width: 100%; max-width: 650px; margin: auto; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .field { margin-bottom: 12px; }
+        .field.full { grid-column: span 2; }
+        label { display: block; margin-bottom: 5px; color: var(--primary); font-size: 0.85rem; font-weight: 600; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: white; outline: none; box-sizing: border-box; font-family: inherit; }
+        
+        #loadingOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 3000; flex-direction: column; }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 950px) { .store-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 650px) { .store-grid { grid-template-columns: 1fr; } .form-grid { grid-template-columns: 1fr; } .field.full { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 15px; font-weight: bold;">እባክዎ ይጠብቁ...</p>
+</div>
+
+<!-- Edit Store Modal -->
+<div id="editOverlay">
+    <div class="card modal-card">
+        <h1>የመደብር መረጃ ማስተካከያ</h1>
+        <form id="editForm">
+            <input type="hidden" id="editUid">
+            <div class="form-grid">
+                <div class="field"><label>የመደብር ስም</label><input type="text" id="eName" required></div>
+                <div class="field"><label>ዘርፍ (Category)</label><input type="text" id="eCat" required></div>
+                
+                <div class="field"><label>ከተማ</label>
+                    <select id="eCity">
+                        <option value="ሐረር">ሐረር</option>
+                        <option value="ድሬዳዋ">ድሬዳዋ</option>
+                    </select>
+                </div>
+                <div class="field"><label>ሰፈር (Location)</label><input type="text" id="eLoc" required></div>
+                <div class="field full"><label>ዝርዝር አድራሻ (Additional Location)</label><input type="text" id="eAddLoc"></div>
+
+                <div class="field"><label>ስልክ ቁጥር</label><input type="text" id="ePhone" required></div>
+                <div class="field"><label>ቴሌግራም (Username)</label><input type="text" id="eTelegram"></div>
+                <div class="field full"><label>ስለ መደብሩ (Description)</label><textarea id="eDesc" rows="3"></textarea></div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" class="btn btn-approve">ለውጦችን አዘምን</button>
+                <button type="button" class="btn btn-delete" onclick="closeEdit()">ተው (Cancel)</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h1>የመደብር ጥያቄዎች ቁጥጥር ማዕከል</h1>
+        <div id="storesList">መረጃ በመጫን ላይ...</div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getFirestore, collection, doc, getDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+    import { getStorage, ref, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+        authDomain: "elanyas-info.firebaseapp.com",
+        projectId: "elanyas-info",
+        storageBucket: "elanyas-info.firebasestorage.app",
+        messagingSenderId: "769306910360",
+        appId: "1:769306910360:web:70988eed5b1da8ffa0faed"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const showLoading = (show) => document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+
+    const q = query(collection(db, "HararGebeyaStores"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const container = document.getElementById('storesList');
+        container.innerHTML = snapshot.empty ? '<p style="text-align:center; color:#64748b; padding:20px;">ምንም የመደብር ጥያቄ አልተገኘም</p>' : '';
+        
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const id = docSnap.id;
+            const isVerified = data.verified === true;
+            
+            const div = document.createElement('div');
+            div.className = 'store-item';
+            div.innerHTML = `
+                <div class="store-header">
+                    <div>
+                        <span class="store-name">${data.storeName}</span>
+                        <div style="font-size: 0.8rem; color: #64748b;">ዘርፍ: ${data.category || "ያልተጠቀሰ"}</div>
+                    </div>
+                    <span class="status-pill ${isVerified ? 'verified' : 'pending'}">
+                        ${isVerified ? 'የጸደቀ' : 'ጥያቄ የቀረበ'}
+                    </span>
+                </div>
+                <div class="store-grid">
+                    <!-- የመደብር መረጃ -->
+                    <div class="store-info">
+                        <div class="section-title">የመደብር መረጃ</div>
+                        <p class="info-p"><b>ከተማ:</b> ${data.city || "---"}</p>
+                        <p class="info-p"><b>ሰፈር:</b> ${data.location || "---"}</p>
+                        <p class="info-p"><b>ዝርዝር አድራሻ:</b> ${data.additionalLocation || "---"}</p>
+                        <p class="info-p"><b>ስልክ:</b> ${data.phone || data.phoneNumber || "---"}</p>
+                        <p class="info-p"><b>ቴሌግራም:</b> @${data.telegram || "---"}</p>
+                    </div>
+
+                    <!-- የባለቤቱ መረጃ -->
+                    <div class="seller-info">
+                        <div class="section-title">የባለቤቱ መረጃ</div>
+                        <div class="owner-profile">
+                            <img src="${data.ownerProfileImage}" class="owner-img" onerror="this.src='https://ui-avatars.com/api/?name=${data.ownerFullName}&background=00bcd4&color=fff'">
+                            <div>
+                                <div style="font-weight: bold; font-size: 0.95rem;">${data.ownerFullName || "ስም የለም"}</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">ባለቤት</div>
+                            </div>
+                        </div>
+                        <p class="info-p"><b>ስልክ:</b> ${data.ownerPhoneNumber || "---"}</p>
+                        <p class="info-p"><b>ጾታ:</b> ${data.ownerSex || "---"}</p>
+                        <p class="info-p"><b>መገኛ:</b> ${data.ownerLocation || "---"}</p>
+                    </div>
+
+                    <!-- ምስሎች -->
+                    <div class="image-previews-container">
+                        <div class="section-title">ሰነዶች</div>
+                        <div class="image-previews">
+                            <div>
+                                <img src="${data.licenseImageUrl}" onclick="window.open(this.src)" onerror="this.src='https://via.placeholder.com/150?text=No+License'">
+                                <span class="img-label">ንግድ ፈቃድ</span>
+                            </div>
+                            <div>
+                                <img src="${data.storefrontImageUrl}" onclick="window.open(this.src)" onerror="this.src='https://via.placeholder.com/150?text=No+Store+Img'">
+                                <span class="img-label">መደብር ፎቶ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions">
+                    ${!isVerified ? `<button class="btn btn-approve" onclick="approveStore('${id}')">ፍቀድ (Approve)</button>` : ''}
+                    <button class="btn btn-edit" onclick="openEdit('${id}')">አስተካክል (Edit)</button>
+                    <button class="btn btn-delete" onclick="deleteFullStore('${id}')">ሰርዝ (Delete)</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    });
+
+    window.approveStore = async (uid) => {
+        if(!confirm("ይህንን መደብር ለማጽደቅ እርግጠኛ ነዎት?")) return;
+        try {
+            showLoading(true);
+            await updateDoc(doc(db, "HararGebeyaStores", uid), { verified: true });
+            await updateDoc(doc(db, "HararGebeyaUsers", uid), {
+                has_active_store: true,
+                has_pending_store: false
+            });
+            alert("መደብሩ በተሳካ ሁኔታ ጸድቋል!");
+        } catch (e) { alert("ስህተት: " + e.message); }
+        finally { showLoading(false); }
+    };
+
+    window.deleteFullStore = async (uid) => {
+        if(!confirm("ትኩረት! መደብሩ እና በውስጡ ያሉ ምስሎች በቋሚነት ይጠፋሉ። እርግጠኛ ነዎት?")) return;
+        try {
+            showLoading(true);
+            const snap = await getDoc(doc(db, "HararGebeyaStores", uid));
+            if (!snap.exists()) return;
+            const data = snap.data();
+            const deleteImg = async (url) => {
+                if (url && url.includes("firebasestorage")) {
+                    try { await deleteObject(ref(storage, url)); } catch (e) { }
+                }
+            };
+            await deleteImg(data.licenseImageUrl);
+            await deleteImg(data.storefrontImageUrl);
+            await deleteDoc(doc(db, "HararGebeyaStores", uid));
+            await updateDoc(doc(db, "HararGebeyaUsers", uid), { has_active_store: false, has_pending_store: false });
+            alert("መደብሩ ተደምስሷል!");
+        } catch (e) { alert("ስህተት: " + e.message); }
+        finally { showLoading(false); }
+    };
+
+    window.openEdit = async (uid) => {
+        const snap = await getDoc(doc(db, "HararGebeyaStores", uid));
+        if (snap.exists()) {
+            const d = snap.data();
+            document.getElementById('editUid').value = uid;
+            document.getElementById('eName').value = d.storeName || "";
+            document.getElementById('ePhone').value = d.phone || d.phoneNumber || "";
+            document.getElementById('eCat').value = d.category || "";
+            document.getElementById('eDesc').value = d.description || "";
+            document.getElementById('eCity').value = d.city || "ሐረር";
+            document.getElementById('eLoc').value = d.location || "";
+            document.getElementById('eAddLoc').value = d.additionalLocation || "";
+            document.getElementById('eTelegram').value = d.telegram || "";
+            document.getElementById('editOverlay').style.display = 'flex';
+        }
+    };
+
+    window.closeEdit = () => document.getElementById('editOverlay').style.display = 'none';
+
+    document.getElementById('editForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const uid = document.getElementById('editUid').value;
+        try {
+            showLoading(true);
+            await updateDoc(doc(db, "HararGebeyaStores", uid), {
+                storeName: document.getElementById('eName').value,
+                phone: document.getElementById('ePhone').value,
+                category: document.getElementById('eCat').value,
+                description: document.getElementById('eDesc').value,
+                city: document.getElementById('eCity').value,
+                location: document.getElementById('eLoc').value,
+                additionalLocation: document.getElementById('eAddLoc').value,
+                telegram: document.getElementById('eTelegram').value
+            });
+            closeEdit();
+            alert("መረጃው ተዘምኗል!");
+        } catch (e) { alert(e.message); }
+        finally { showLoading(false); }
+    };
+</script>
+</body>
+</html>

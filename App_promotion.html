@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ሐረር ገበያ - ፕሮፌሽናል ማስታወቂያ መጫኛ እና ማስተዳደሪያ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #00bcd4; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --border: #334155; }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Noto Sans Ethiopic', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .card { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 750px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px; }
+        h1 { color: var(--primary); margin-bottom: 5px; text-align: center; font-size: 1.8rem; }
+        p.subtitle { text-align: center; color: #94a3b8; margin-bottom: 30px; font-size: 0.9rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .field { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+        input, textarea, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: #0f172a; color: white; outline: none; box-sizing: border-box; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(0, 188, 212, 0.2); }
+        .hint { font-size: 0.75rem; color: #64748b; margin-top: 5px; display: block; }
+        .file-box { border: 2px dashed var(--border); padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.2); position: relative; }
+        .file-box:hover { border-color: var(--primary); background: rgba(0, 188, 212, 0.05); }
+        .preview-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: thin; min-height: 50px; }
+        .preview-img-wrapper { position: relative; flex: 0 0 100px; }
+        .preview-img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); }
+        .remove-img { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .btn { width: 100%; padding: 18px; background: var(--primary); color: #0f172a; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1.1rem; transition: 0.3s; margin-top: 20px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4); }
+        .btn:disabled { background: #4b5563; cursor: not-allowed; transform: none; }
+        
+        /* Management Card */
+        .manage-card { max-width: 900px; width: 100%; }
+        .promo-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .promo-item { background: #0f172a; padding: 15px; border-radius: 15px; border: 1px solid var(--border); display: flex; align-items: center; gap: 20px; transition: 0.3s; }
+        .promo-item:hover { border-color: var(--primary); }
+        .promo-item img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; }
+        .promo-details { flex: 1; }
+        .promo-details h3 { margin: 0; font-size: 1.1rem; color: var(--primary); }
+        .promo-details p { margin: 5px 0; font-size: 0.85rem; color: #94a3b8; }
+        .expiry-tag { font-size: 0.75rem; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 6px; color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .promo-actions { display: flex; gap: 10px; }
+        .action-btn { padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: bold; border: none; transition: 0.2s; }
+        .delete-btn { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .edit-btn { background: rgba(0, 188, 212, 0.1); color: var(--primary); border: 1px solid rgba(0, 188, 212, 0.2); }
+        .action-btn:hover { opacity: 0.8; transform: scale(1.05); }
+
+        #status { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; text-align: center; font-weight: 600; }
+        .success { background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981; }
+        .error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1 id="mainTitle">አዲስ ማስታወቂያ መጫኛ</h1>
+    <p class="subtitle">ፕሮፌሽናል ማስታወቂያዎችን እዚህ ይጫኑ</p>
+    
+    <form id="promoForm">
+        <input type="hidden" id="editDocId">
+        <div class="grid">
+            <div class="field">
+                <label>የርዕስ ስም (Title)</label>
+                <input type="text" id="title" required placeholder="ለምሳሌ፡ ልዩ የ 50% ቅናሽ">
+            </div>
+            <div class="field">
+                <label>የድርጅቱ ስም (Brand Name)</label>
+                <input type="text" id="brandName" placeholder="ለምሳሌ፡ ሐረር ቡና">
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="field">
+                <label>አጭር መግለጫ (Subtitle)</label>
+                <input type="text" id="subtitle" required placeholder="ለምሳሌ፡ በሁሉም የቤት እቃዎች ላይ">
+            </div>
+            <div class="field">
+                <label>ምልክት/ባጅ (Badge Text)</label>
+                <input type="text" id="badgeText" placeholder="ለምሳሌ፡ አዲስ ወይም -20%">
+            </div>
+        </div>
+
+        <div class="field">
+            <label>ሙሉ ዝርዝር መግለጫ (Full Description)</label>
+            <textarea id="description" rows="3" placeholder="ስለ አገልግሎቱ ወይም ምርቱ ሙሉ ዝርዝር መረጃ..."></textarea>
+        </div>
+
+        <div class="grid">
+            <div class="field">
+                <label>የድርጊት ዓይነት (Action Type)</label>
+                <select id="actionType">
+                    <option value="WEB">ሊንክ (ወደ ዌብሳይት)</option>
+                    <option value="CALL">ስልክ (ቀጥታ አስደውል)</option>
+                    <option value="TELEGRAM">ቴሌግራም (ወደ ቻናል)</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>የቆይታ ጊዜ (Duration)</label>
+                <select id="duration">
+                    <option value="7">7 ቀናት</option>
+                    <option value="15">15 ቀናት</option>
+                    <option value="30">30 ቀናት</option>
+                    <option value="90">3 ወራት</option>
+                    <option value="0">ያልተገደበ (Unlimited)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>የመድረሻ መረጃ (Value)</label>
+            <input type="text" id="actionValue" required placeholder="ሊንክ ወይም ስልክ ያስገቡ">
+        </div>
+
+        <div class="grid">
+            <div class="field">
+                <label>ዋናው ባነር ምስል</label>
+                <div class="file-box" onclick="document.getElementById('mainImage').click()">
+                    <span>ዋና ምስል ይምረጡ</span>
+                    <input type="file" id="mainImage" accept="image/*" hidden>
+                </div>
+                <div id="mainPreview" class="preview-scroll"></div>
+            </div>
+            <div class="field">
+                <label>የድርጅት አርማ (Logo)</label>
+                <div class="file-box" onclick="document.getElementById('logoImage').click()">
+                    <span>አርማ ይምረጡ</span>
+                    <input type="file" id="logoImage" accept="image/*" hidden>
+                </div>
+                <div id="logoPreview" class="preview-scroll"></div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label>ተጨማሪ የጋለሪ ምስሎች (Gallery)</label>
+            <div class="file-box" onclick="document.getElementById('galleryInput').click()">
+                <span>ምስሎችን ይጨምሩ</span>
+                <input type="file" id="galleryInput" accept="image/*" multiple hidden>
+            </div>
+            <div id="galleryPreview" class="preview-scroll"></div>
+            <span class="hint">የተመረጡ ምስሎች ብዛት: <span id="imgCount">0</span></span>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">ማስታወቂያውን በፕሮፌሽናል መልኩ ጫን</button>
+        <button type="button" id="cancelEdit" class="btn" style="display:none; background:#4b5563; margin-top: 10px;">ማስተካከሉን ሰርዝ</button>
+    </form>
+    <div id="status"></div>
+</div>
+
+<div class="card manage-card">
+    <h1>ማስታወቂያዎችን ማስተዳደሪያ</h1>
+    <div id="promoList" class="promo-list">መረጃ በመጫን ላይ...</div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, getDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA-ywRuhanxoEJgR83jwp_-nOkPY4jLOH4",
+        authDomain: "elanyas-info.firebaseapp.com",
+        projectId: "elanyas-info",
+        storageBucket: "elanyas-info.firebasestorage.app",
+        messagingSenderId: "769306910360",
+        appId: "1:769306910360:web:70988eed5b1da8ffa0faed"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    let galleryFiles = [];
+    let existingMainUrl = "";
+    let existingLogoUrl = "";
+    let existingGalleryUrls = [];
+
+    // --- Listing & Management ---
+    const q = query(collection(db, "app_promotions"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const container = document.getElementById('promoList');
+        container.innerHTML = '';
+        snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const expiry = data.expiryTimestamp && data.expiryTimestamp > 0 
+                ? new Date(data.expiryTimestamp).toLocaleDateString('am-ET') 
+                : 'ያልተገደበ';
+            
+            const div = document.createElement('div');
+            div.className = 'promo-item';
+            div.innerHTML = `
+                <img src="${data.imageUrl}" alt="promo">
+                <div class="promo-details">
+                    <h3>${data.title}</h3>
+                    <p>${data.subtitle}</p>
+                    <span class="expiry-tag">ያበቃል፡ ${expiry}</span>
+                </div>
+                <div class="promo-actions">
+                    <button class="action-btn edit-btn" onclick="editPromo('${docSnap.id}')">አስተካክል</button>
+                    <button class="action-btn delete-btn" onclick="deletePromo('${docSnap.id}')">አጥፋ</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    });
+
+    // --- ብልጥ የመሰረዝ ተግባር (Smart Delete) ---
+    window.deletePromo = async (id) => {
+        if(!confirm("ይህ ማስታወቂያ እና በውስጡ ያሉ ምስሎች በሙሉ ለዘላለም ይጥፉ? (ድራሻቸው ይጠፋል)")) return;
+        
+        try {
+            // 1. መጀመሪያ መረጃውን አምጣ (ምስሎቹን ለማወቅ)
+            const docRef = doc(db, "app_promotions", id);
+            const snap = await getDoc(docRef);
+            if (!snap.exists()) return;
+            const data = snap.data();
+
+            // Storage ፋይሎችን ደህንነቱ በተጠበቀ ሁኔታ ለማጥፋት
+            const deleteSafe = async (url) => {
+                if (!url || !url.includes("firebasestorage")) return;
+                try {
+                    const fileRef = ref(storage, url);
+                    await deleteObject(fileRef);
+                } catch (e) { console.warn("ምስሉ ቀድሞ የጠፋ ይመስላል ወይም ሊገኝ አልቻለም:", e); }
+            };
+
+            // 2. ዋናውን ምስል አጥፋ
+            await deleteSafe(data.imageUrl);
+
+            // 3. ሎጎውን አጥፋ
+            await deleteSafe(data.logoUrl);
+
+            // 4. በጋለሪ ውስጥ ያሉትን ምስሎች በሙሉ አጥፋ
+            if (data.galleryImages && Array.isArray(data.galleryImages)) {
+                for (const gUrl of data.galleryImages) {
+                    await deleteSafe(gUrl);
+                }
+            }
+
+            // 5. በመጨረሻም የዳታቤዝ መረጃውን አጥፋ
+            await deleteDoc(docRef);
+            alert("ማስታወቂያው እና ምስሎቹ በሙሉ ከነ ድራሻቸው ጠፍተዋል!");
+
+        } catch (err) {
+            alert("ስህተት፡ " + err.message);
+        }
+    };
+
+    window.editPromo = async (id) => {
+        const docRef = doc(db, "app_promotions", id);
+        const snap = await getDoc(docRef);
+        const data = snap.data();
+        
+        document.getElementById('editDocId').value = id;
+        document.getElementById('title').value = data.title;
+        document.getElementById('brandName').value = data.brandName || "";
+        document.getElementById('subtitle').value = data.subtitle;
+        document.getElementById('badgeText').value = data.badgeText || "";
+        document.getElementById('description').value = data.description || "";
+        document.getElementById('actionType').value = data.actionType;
+        document.getElementById('actionValue').value = data.actionValue;
+        
+        existingMainUrl = data.imageUrl;
+        existingLogoUrl = data.logoUrl;
+        existingGalleryUrls = data.galleryImages || [];
+        
+        document.getElementById('mainTitle').innerText = "ማስታወቂያውን ማስተካከያ";
+        document.getElementById('submitBtn').innerText = "ለውጦችን አስቀምጥ";
+        document.getElementById('cancelEdit').style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    document.getElementById('cancelEdit').onclick = () => {
+        document.getElementById('promoForm').reset();
+        document.getElementById('editDocId').value = "";
+        document.getElementById('mainTitle').innerText = "አዲስ ማስታወቂያ መጫኛ";
+        document.getElementById('submitBtn').innerText = "ማስታወቂያውን በፕሮፌሽናል መልኩ ጫን";
+        document.getElementById('cancelEdit').style.display = "none";
+        document.getElementById('mainPreview').innerHTML = '';
+        document.getElementById('logoPreview').innerHTML = '';
+        document.getElementById('galleryPreview').innerHTML = '';
+        document.getElementById('imgCount').innerText = '0';
+        galleryFiles = [];
+    };
+
+    // --- Gallery & Preview Handlers ---
+    document.getElementById('galleryInput').addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        galleryFiles = [...galleryFiles, ...files]; 
+        updateGalleryPreview();
+        e.target.value = '';
+    });
+
+    function updateGalleryPreview() {
+        const container = document.getElementById('galleryPreview');
+        container.innerHTML = '';
+        document.getElementById('imgCount').innerText = galleryFiles.length;
+        galleryFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const div = document.createElement('div');
+                div.className = 'preview-img-wrapper';
+                div.innerHTML = `<img src="${ev.target.result}" class="preview-img"><div class="remove-img" onclick="removeImage(${index})">×</div>`;
+                container.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    window.removeImage = (index) => {
+        galleryFiles.splice(index, 1);
+        updateGalleryPreview();
+    };
+
+    const setupSinglePreview = (inputId, previewId) => {
+        document.getElementById(inputId).addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const container = document.getElementById(previewId);
+            container.innerHTML = '';
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    container.innerHTML = `<div class="preview-img-wrapper"><img src="${ev.target.result}" class="preview-img"></div>`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    };
+    setupSinglePreview('mainImage', 'mainPreview');
+    setupSinglePreview('logoImage', 'logoPreview');
+
+    const uploadFile = async (file) => {
+        if (!file) return null;
+        const storageRef = ref(storage, `promotions/${Date.now()}_${file.name}`);
+        await uploadBytes(storageRef, file);
+        return await getDownloadURL(storageRef);
+    };
+
+    // --- Submit Handler ---
+    document.getElementById('promoForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('status');
+        const editId = document.getElementById('editDocId').value;
+        
+        btn.disabled = true;
+        btn.innerText = "በመጫን ላይ...";
+        status.style.display = "none";
+        
+        try {
+            const mainFile = document.getElementById('mainImage').files[0];
+            const logoFile = document.getElementById('logoImage').files[0];
+            
+            const mainUrl = mainFile ? await uploadFile(mainFile) : (editId ? existingMainUrl : "");
+            const logoUrl = logoFile ? await uploadFile(logoFile) : (editId ? existingLogoUrl : "");
+            
+            const newGalleryUrls = [];
+            for (let i = 0; i < galleryFiles.length; i++) {
+                const url = await uploadFile(galleryFiles[i]);
+                newGalleryUrls.push(url);
+            }
+            const finalGalleryUrls = editId ? [...existingGalleryUrls, ...newGalleryUrls] : newGalleryUrls;
+
+            const durationDays = parseInt(document.getElementById('duration').value);
+            const expiryTimestamp = durationDays > 0 ? Date.now() + (durationDays * 24 * 60 * 60 * 1000) : 0;
+
+            const promoData = {
+                title: document.getElementById('title').value,
+                brandName: document.getElementById('brandName').value,
+                subtitle: document.getElementById('subtitle').value,
+                badgeText: document.getElementById('badgeText').value,
+                description: document.getElementById('description').value,
+                actionType: document.getElementById('actionType').value,
+                actionValue: document.getElementById('actionValue').value,
+                imageUrl: mainUrl,
+                logoUrl: logoUrl,
+                galleryImages: finalGalleryUrls,
+                expiryTimestamp: expiryTimestamp,
+                updatedAt: serverTimestamp()
+            };
+
+            if (editId) {
+                await updateDoc(doc(db, "app_promotions", editId), promoData);
+                status.innerText = "ማስታወቂያው ተስተካክሏል!";
+            } else {
+                promoData.createdAt = serverTimestamp();
+                await addDoc(collection(db, "app_promotions"), promoData);
+                status.innerText = "ማስታወቂያው በተሳካ ሁኔታ ተጭኗል!";
+            }
+
+            status.className = "success";
+            status.style.display = "block";
+            document.getElementById('promoForm').reset();
+            galleryFiles = [];
+            document.getElementById('editDocId').value = "";
+            document.getElementById('mainTitle').innerText = "አዲስ ማስታወቂያ መጫኛ";
+            btn.innerText = "ማስታወቂያውን በፕሮፌሽናል መልኩ ጫን";
+            btn.disabled = false;
+        } catch (err) {
+            status.innerText = "ስህተት፡ " + err.message;
+            status.className = "error";
+            status.style.display = "block";
+            btn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
