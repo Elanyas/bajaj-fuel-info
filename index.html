@@ -3,156 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harar Gebeya - Official Portal</title>
+    <title>ሐረር ገበያ | Harar Gebeya</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --accent-color: #e67e22;
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-            --card-bg: #ffffff;
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --accent-color: #00bcd4;
+            --text-main: #f0f0f0;
+            --text-dim: #b0b0b0;
+            --border-color: #333333;
+            --gradient-accent: linear-gradient(135deg, #00bcd4, #008ba3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif;
+            font-family: 'Noto Sans Ethiopic', 'Inter', sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
+            color: var(--text-main);
+            line-height: 1.6;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
-            padding: 20px;
+            max-width: 450px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .main-card {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 35px 25px;
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
             text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             position: relative;
-            overflow: hidden;
         }
 
         /* Language Switcher */
-        .lang-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        .lang-header {
             display: flex;
-            gap: 10px;
+            justify-content: flex-end;
+            margin-bottom: 25px;
+        }
+
+        .lang-switch {
+            display: flex;
+            background: #262626;
+            border-radius: 20px;
+            padding: 3px;
+            border: 1px solid var(--border-color);
         }
 
         .lang-btn {
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 6px 14px;
-            border-radius: 20px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            padding: 6px 15px;
+            font-size: 0.75rem;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            border-radius: 15px;
+            transition: 0.3s;
             font-family: inherit;
         }
 
         .lang-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: 700;
         }
 
         .logo-area {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            display: block;
         }
 
         .logo-text {
-            font-size: 42px;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--secondary-color);
+            color: var(--text-main);
             margin: 0;
-            letter-spacing: -1px;
+            letter-spacing: 0.5px;
         }
 
         .tagline {
-            color: var(--primary-color);
-            font-size: 18px;
-            margin-bottom: 30px;
+            color: var(--accent-color);
+            font-size: 0.95rem;
+            margin-top: 5px;
             font-weight: 500;
         }
 
         .description {
-            font-size: 15px;
-            line-height: 1.6;
-            color: #666;
+            font-size: 0.9rem;
+            color: var(--text-dim);
             margin-bottom: 35px;
+            padding: 0 10px;
         }
 
         .action-links {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 12px;
-        }
-
-        @media (min-width: 480px) {
-            .action-links {
-                grid-template-columns: 1fr 1fr;
-            }
-            .full-width {
-                grid-column: span 2;
-            }
         }
 
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
             padding: 14px 20px;
             text-decoration: none;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        .btn-google {
-            background-color: var(--secondary-color);
-            color: white;
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: #000;
         }
 
-        .btn-google:hover {
-            background-color: #1a252f;
+        .btn-primary:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3);
         }
 
         .btn-outline {
-            border: 2px solid #edf2f7;
-            color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            background: rgba(255,255,255,0.03);
         }
 
         .btn-outline:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            background: #f0f7ff;
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(0, 188, 212, 0.05);
         }
 
         .footer {
-            margin-top: 40px;
-            font-size: 12px;
-            color: #bdc3c7;
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #555;
         }
 
         .footer a {
-            color: #bdc3c7;
+            color: #777;
             text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer a:hover {
+            color: var(--accent-color);
         }
 
         /* Language visibility logic */
@@ -166,13 +195,15 @@
     <div class="container">
         <div class="main-card">
 
-            <!-- Language Switcher -->
-            <div class="lang-switch">
-                <button id="btn-am" class="lang-btn active" onclick="setLanguage('am')">አማርኛ</button>
-                <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">English</button>
+            <div class="lang-header">
+                <div class="lang-switch">
+                    <button id="btn-am" class="lang-btn active" onclick="setLanguage('am')">አማርኛ</button>
+                    <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">English</button>
+                </div>
             </div>
 
             <div class="logo-area">
+                <i class="fas fa-store logo-icon"></i>
                 <h1 class="logo-text">
                     <span class="am-text">ሐረር ገበያ</span>
                     <span class="en-text">Harar Gebeya</span>
@@ -184,27 +215,31 @@
             </div>
 
             <div class="description">
-                <span class="am-text">እንኳን ወደ ሐረር ገበያ ይፋዊ የድረ-ገጽ መግቢያ በሰላም መጡ። ይህ መድረክ በሐረር እና በዙሪያዋ ያሉ ነጋዴዎችን እና ደንበኞችን የሚያገናኝ ዘመናዊ የንግድ መተግበሪያ ነው።</span>
+                <span class="am-text">እንኳን ወደ ሐረር ገበያ ይፋዊ የመግቢያ ገጽ በሰላም መጡ። ይህ መድረክ በሐረር እና በዙሪያዋ ያሉ ነጋዴዎችን እና ደንበኞችን የሚያገናኝ ዘመናዊ የንግድ መተግበሪያ ነው።</span>
                 <span class="en-text">Welcome to the official portal of Harar Gebeya. Our platform is a modern marketplace connecting traders and customers in and around Harar.</span>
             </div>
 
             <div class="action-links">
-                <a href="https://play.google.com/store/apps/details?id=com.elanyas.harargebbia" class="btn btn-google full-width">
-                    <span class="am-text">መተግበሪያውን አውርድ</span>
+                <a href="https://play.google.com/store/apps/details?id=com.elanyas.harargebbia" class="btn btn-primary">
+                    <i class="fab fa-google-play"></i>
+                    <span class="am-text">መተግበሪያውን ያውርዱ</span>
                     <span class="en-text">Download the App</span>
                 </a>
 
                 <a href="https://elanyas-info.web.app/privacy_policy.html" class="btn btn-outline">
+                    <i class="fas fa-user-shield"></i>
                     <span class="am-text">የግል መረጃ ጥበቃ</span>
                     <span class="en-text">Privacy Policy</span>
                 </a>
 
                 <a href="https://elanyas-info.web.app/Terms_of_service.html" class="btn btn-outline">
+                    <i class="fas fa-file-contract"></i>
                     <span class="am-text">የአጠቃቀም ደንብ</span>
                     <span class="en-text">Terms of Service</span>
                 </a>
 
-                <a href="https://elanyas-info.web.app/Refund_policy.html" class="btn btn-outline full-width">
+                <a href="https://elanyas-info.web.app/Refund_policy.html" class="btn btn-outline">
+                    <i class="fas fa-undo"></i>
                     <span class="am-text">የገንዘብ ተመላሽ ፖሊሲ</span>
                     <span class="en-text">Refund Policy</span>
                 </a>
@@ -212,8 +247,9 @@
 
             <div class="footer">
                 <div>&copy; 2024 Elanyas Info. All rights reserved.</div>
-                <div style="margin-top: 10px;">
-                    <a href="https://elanyas-info.web.app/app-ads.txt">AdMob Verification (app-ads.txt)</a>
+                <div style="margin-top: 10px; display: flex; justify-content: center; gap: 15px;">
+                    <a href="https://elanyas-info.web.app/app-ads.txt">app-ads.txt</a>
+                    <a href="https://elanyas-info.web.app/about_us.html">About Us</a>
                 </div>
             </div>
         </div>
@@ -222,8 +258,6 @@
     <script>
         function setLanguage(lang) {
             document.body.setAttribute('lang', lang);
-
-            // Toggle active class on buttons
             document.getElementById('btn-am').classList.toggle('active', lang === 'am');
             document.getElementById('btn-en').classList.toggle('active', lang === 'en');
         }

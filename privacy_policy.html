@@ -34,7 +34,7 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
-            font-size: 14px; /* ትንንሽ ጽሁፎችን ለመጠቀም */
+            font-size: 14px;
         }
 
         .policy-wrapper {
@@ -44,7 +44,6 @@
             margin-bottom: 50px;
         }
 
-        /* Language Toggle Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -90,7 +89,6 @@
             font-weight: 700;
         }
 
-        /* Content Styles */
         .policy-container {
             animation: fadeIn 0.4s ease;
         }
@@ -153,29 +151,19 @@
             padding-bottom: 20px;
         }
 
-        .back-link {
+        .nav-link {
             color: var(--accent-color);
             text-decoration: none;
             font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            margin: 0 10px;
         }
 
-        /* Hide logic */
         .lang-content {
             display: none;
         }
 
         .lang-content.visible {
             display: block;
-        }
-
-.nav-link {
-            color: var(--accent-color);
-            text-decoration: none;
-            font-size: 0.8rem;
-            margin: 0 10px;
         }
     </style>
 </head>
@@ -196,26 +184,35 @@
         
         <div class="section">
             <h2><i class="fas fa-info-circle"></i> 1. መግቢያ</h2>
-            <p>የሐረር ገበያ (Harar Gebeya) ተጠቃሚዎችን ግላዊነት የመጠበቅ ኃላፊነት አለበት። ይህ ፖሊሲ በአፑ ውስጥ የምንሰበስባቸውን መረጃዎች ይገልጻል።</p>
+            <p>የሐረር ገበያ (Harar Gebeya) ተጠቃሚዎችን ግላዊነት የመጠበቅ ኃላፊነት አለበት። ይህ ፖሊሲ በአፑ ውስጥ የምንሰበስባቸውን መረጃዎች እና እንዴት እንደምንጠቀምባቸው ይገልጻል።</p>
         </div>
 
         <div class="section">
             <h2><i class="fas fa-database"></i> 2. የምንሰበስባቸው መረጃዎች</h2>
             <ul>
-                <li><strong>ስልክ ቁጥር:</strong> ተጠቃሚውን ለመለየት እና ለሽያጭ ግንኙነት።</li>
-                <li><strong>የዕቃ ምስሎች:</strong> ተጠቃሚው ለገበያ የሚያቀርባቸውን ምርቶች ለማሳየት።</li>
-                <li><strong>ባላንስ (DS Coins):</strong> የማስታወቂያ አገልግሎት ክፍያዎችን ለመቆጣጠር።</li>
+                <li><strong>መሰረታዊ መረጃ:</strong> ስም፣ ኢሜይል፣ ስልክ ቁጥር እና የጾታ መረጃ።</li>
+                <li><strong>የፕሮፋይል እና ምርት ምስሎች:</strong> ተጠቃሚው ለራሱ መለያ ወይም ለገበያ ለሚያቀርባቸው ምርቶች የሚጠቀምባቸው ምስሎች።</li>
+                <li><strong>መገኛ (Location):</strong> ተጠቃሚው ምርቱን የት እንደሚገኝ ለመግለጽ የሚሰጠው መረጃ።</li>
+                <li><strong>የመሣሪያ መለያ (FCM Token):</strong> ፈጣን ማሳወቂያዎችን (Notifications) ለመላክ።</li>
+                <li><strong>የሂሳብ መረጃ (Van Assets):</strong> በአፑ ውስጥ የሚደረጉ የማስታወቂያ አገልግሎት ክፍያዎችን ለመቆጣጠር።</li>
             </ul>
         </div>
 
         <div class="section">
             <h2><i class="fas fa-user-check"></i> 3. አጠቃቀም</h2>
-            <p>መረጃዎችዎ ለግብይት ምቾት እና ለደህንነት ብቻ ይውላሉ። መረጃዎ ለሶስተኛ ወገን አይሸጥም ወይም አይተላለፍም።</p>
+            <p>መረጃዎችዎ ለሚከተሉት ዓላማዎች ብቻ ይውላሉ፦</p>
+            <ul>
+                <li>ተጠቃሚዎችን ለመለየት እና ደህንነቱ የተጠበቀ የንግድ መድረክ ለመፍጠር።</li>
+                <li>በገዢ እና በሻጭ መካከል ቀጥተኛ ግንኙነት እንዲኖር ለማመቻቸት።</li>
+                <li>ጠቃሚ ማሳወቂያዎችን እና የግዢ/ሽያጭ መረጃዎችን ለማድረስ።</li>
+                <li>የአገልግሎታችንን ጥራት ለማሻሻል እና ችግሮችን ለመፍታት።</li>
+            </ul>
+            <p>መረጃዎ ለሶስተኛ ወገን በጭራሽ አይሸጥም ወይም አይተላለፍም።</p>
         </div>
 
         <div class="section">
             <h2><i class="fas fa-trash-can"></i> 4. መረጃን መሰረዝ</h2>
-            <p>ማንኛውም ተጠቃሚ የራሱን መረጃ ወይም የለጠፈውን ማስታወቂያ በማንኛውም ጊዜ የመሰረዝ መብት አለው።</p>
+            <p>ተጠቃሚዎች የራሳቸውን መረጃ፣ የለጠፉትን ማስታወቂያ ወይም ሙሉ አካውንታቸውን በማንኛውም ጊዜ የመሰረዝ መብት አላቸው። አካውንትን በቋሚነት ለመሰረዝ በሴቲንግ ውስጥ "Delete Account" የሚለውን አማራጭ መጠቀም ይቻላል።</p>
         </div>
     </div>
 
@@ -225,64 +222,62 @@
         
         <div class="section">
             <h2><i class="fas fa-info-circle"></i> 1. Introduction</h2>
-            <p>Harar Gebeya is committed to protecting user privacy. This policy describes how data is handled within the app.</p>
+            <p>Harar Gebeya is committed to protecting user privacy. This policy describes how we collect, use, and handle your data within the app.</p>
         </div>
 
         <div class="section">
             <h2><i class="fas fa-database"></i> 2. Data Collection</h2>
             <ul>
-                <li><strong>Phone Number:</strong> For user identification and trade communication.</li>
-                <li><strong>Images:</strong> To display products listed by the users.</li>
-                <li><strong>Balance (DS Coins):</strong> To manage advertising service payments.</li>
+                <li><strong>Basic Information:</strong> Name, Email, Phone Number, and Gender.</li>
+                <li><strong>Profile & Product Images:</strong> Images uploaded for user profile or product listings.</li>
+                <li><strong>Location:</strong> Information provided by the user to specify product availability.</li>
+                <li><strong>Device Identifier (FCM Token):</strong> Used for sending push notifications.</li>
+                <li><strong>Account Balance (Van Assets):</strong> To manage advertising service payments.</li>
             </ul>
         </div>
 
         <div class="section">
             <h2><i class="fas fa-user-check"></i> 3. Data Usage</h2>
-            <p>Your data is used solely for facilitating trade and security. We do not sell or share data with third parties.</p>
+            <p>Your data is used solely for the following purposes:</p>
+            <ul>
+                <li>To identify users and maintain a secure trading environment.</li>
+                <li>To facilitate direct communication between buyers and sellers.</li>
+                <li>To deliver important notifications and trade updates.</li>
+                <li>To improve service quality and resolve technical issues.</li>
+            </ul>
+            <p>We do not sell or share your personal data with third parties.</p>
         </div>
 
         <div class="section">
             <h2><i class="fas fa-trash-can"></i> 4. Data Deletion</h2>
-            <p>Users have the right to delete their information or listings at any time.</p>
+            <p>Users have the right to delete their listings or their entire account at any time. To permanently delete your account, use the "Delete Account" option in settings.</p>
         </div>
     </div>
 
     <footer>
-<a href="privacy_policy.html" class="nav-link" id="policyLink">privacy_policy</a>
-<a href="about_us.html" class="nav-link" id="policyLink">about_us</a>
-
-<a href="Refund_policy.html" class="nav-link" id="policyLink">Refund_policy</a>
-
-<a href="Terms_of_service.html" class="nav-link" id="policyLink">Terms_of_service</a>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="privacy_policy.html" class="nav-link">Privacy Policy</a>
+        <a href="Terms_of_service.html" class="nav-link">Terms</a>
     </footer>
 </div>
 
 <script>
-    /**
-     * Switches the display language between Amharic and English
-     * @param {string} lang - 'am' or 'en'
-     */
     function switchLang(lang) {
-        // Elements
         const amContent = document.getElementById('contentAm');
         const enContent = document.getElementById('contentEn');
         const amBtn = document.getElementById('btnAm');
         const enBtn = document.getElementById('btnEn');
-        const backText = document.getElementById('backText');
 
         if (lang === 'am') {
             amContent.classList.add('visible');
             enContent.classList.remove('visible');
             amBtn.classList.add('active');
             enBtn.classList.remove('active');
-            backText.innerText = "ወደ ቀደመው ገጽ";
         } else {
             amContent.classList.remove('visible');
             enContent.classList.add('visible');
             enBtn.classList.add('active');
             amBtn.classList.remove('active');
-            backText.innerText = "Back to Previous Page";
         }
     }
 </script>
