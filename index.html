@@ -3,211 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ድራይቨር ሲስተም - በመጫን ላይ...</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-
+    <title>Harar Gebeya - Official Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* አፕሊኬሽኑ እንደተለመደው እንዲጫን የሚያደርገው የእርስዎ ነባር ስታይል ይቆያል */
-        
-        /* የማሻሻያ ሞዳል (Update Modal) ቅንብሮች */
-        .modal {
-            display: none; /* መጀመሪያ ላይ ይደበቃል */
-            position: fixed;
-            z-index: 9999; /* ከሁሉም በላይ እንዲታይ */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.8); /* ጥቁር ግልጽ ዳራ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans Ethiopic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
         }
 
-        .modal-content {
-            background-color: #1e1e1e; /* ከ style.css ጋር የሚስማማ ዳራ */
-            margin: 15% auto; 
-            padding: 30px;
-            border: 1px solid #00bcd4; /* የአክሰንት ቀለም */
-            width: 85%; 
-            max-width: 400px;
-            border-radius: 10px;
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
-            color: #e0e0e0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .modal-content h2 {
-            color: #00bcd4;
-            margin-top: 0;
+        /* Language Switcher */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
         }
 
-        .modal-content p {
-            margin-bottom: 25px;
-        }
-        
-        /* አዝራር ስታይል */
-        .modal-btn {
-            display: block;
-            width: 80%;
-            margin: 10px auto;
-            padding: 12px 25px;
-            background-color: #00bcd4;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+        .lang-btn {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 6px 14px;
+            border-radius: 20px;
             cursor: pointer;
-            border: none;
-            font-size: 1em;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        .modal-btn:hover {
-            background-color: #008c99;
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
-        .dismiss-btn {
-            background-color: #555555;
+        .logo-area {
+            margin-bottom: 20px;
         }
 
-        .dismiss-btn:hover {
-            background-color: #333333;
+        .logo-text {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 0;
+            letter-spacing: -1px;
         }
+
+        .tagline {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .description {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 35px;
+        }
+
+        .action-links {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 480px) {
+            .action-links {
+                grid-template-columns: 1fr 1fr;
+            }
+            .full-width {
+                grid-column: span 2;
+            }
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-google {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-google:hover {
+            background-color: #1a252f;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid #edf2f7;
+            color: var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #bdc3c7;
+        }
+
+        .footer a {
+            color: #bdc3c7;
+            text-decoration: none;
+        }
+
+        /* Language visibility logic */
+        body[lang="am"] .en-text { display: none !important; }
+        body[lang="en"] .am-text { display: none !important; }
+
     </style>
 </head>
-<body>
-    <div class="redirect-container">
-        <div class="loader"></div>
-        <h1>ድራይቨር ሲስተም</h1>
-        <p>እንኳን ደህና መጡ! እየተጫነ ነው። እባክዎ ትንሽ ይጠብቁ...</p>
-        <p class="small-text">በአንዳንድ ብሮውዘር ላይ በራስ-ሰር ካልሄደ፣ <a href="login.html" class="redirect-link">እዚህ ይጫኑ</a>።</p>
-    </div>
+<body lang="am">
 
-    <div id="updateModal" class="modal">
-        <div class="modal-content">
-            <h2>ማስጠንቀቂያ: የአፕሊኬሽን ማሻሻያ!</h2>
-            <p id="updateMessage">አዲስ ማሻሻያ ወጥቷል! አፑን ለማሻሻል እባክዎ በተኑን ይጫኑ።</p>
-            <a id="updateButton" href="#" target="_blank" class="modal-btn">አሁን አውርድ</a>
-            <button id="dismissButton" class="modal-btn dismiss-btn">አሁን አያስፈልገኝም</button>
+    <div class="container">
+        <div class="main-card">
+
+            <!-- Language Switcher -->
+            <div class="lang-switch">
+                <button id="btn-am" class="lang-btn active" onclick="setLanguage('am')">አማርኛ</button>
+                <button id="btn-en" class="lang-btn" onclick="setLanguage('en')">English</button>
+            </div>
+
+            <div class="logo-area">
+                <h1 class="logo-text">
+                    <span class="am-text">ሐረር ገበያ</span>
+                    <span class="en-text">Harar Gebeya</span>
+                </h1>
+                <div class="tagline">
+                    <span class="am-text">የንግድዎ ምርጥ ምርጫ!</span>
+                    <span class="en-text">The Best Choice for Your Business!</span>
+                </div>
+            </div>
+
+            <div class="description">
+                <span class="am-text">እንኳን ወደ ሐረር ገበያ ይፋዊ የድረ-ገጽ መግቢያ በሰላም መጡ። ይህ መድረክ በሐረር እና በዙሪያዋ ያሉ ነጋዴዎችን እና ደንበኞችን የሚያገናኝ ዘመናዊ የንግድ መተግበሪያ ነው።</span>
+                <span class="en-text">Welcome to the official portal of Harar Gebeya. Our platform is a modern marketplace connecting traders and customers in and around Harar.</span>
+            </div>
+
+            <div class="action-links">
+                <a href="https://play.google.com/store/apps/details?id=com.elanyas.harargebbia" class="btn btn-google full-width">
+                    <span class="am-text">መተግበሪያውን አውርድ</span>
+                    <span class="en-text">Download the App</span>
+                </a>
+
+                <a href="https://elanyas-info.web.app/privacy_policy.html" class="btn btn-outline">
+                    <span class="am-text">የግል መረጃ ጥበቃ</span>
+                    <span class="en-text">Privacy Policy</span>
+                </a>
+
+                <a href="https://elanyas-info.web.app/Terms_of_service.html" class="btn btn-outline">
+                    <span class="am-text">የአጠቃቀም ደንብ</span>
+                    <span class="en-text">Terms of Service</span>
+                </a>
+
+                <a href="https://elanyas-info.web.app/Refund_policy.html" class="btn btn-outline full-width">
+                    <span class="am-text">የገንዘብ ተመላሽ ፖሊሲ</span>
+                    <span class="en-text">Refund Policy</span>
+                </a>
+            </div>
+
+            <div class="footer">
+                <div>&copy; 2024 Elanyas Info. All rights reserved.</div>
+                <div style="margin-top: 10px;">
+                    <a href="https://elanyas-info.web.app/app-ads.txt">AdMob Verification (app-ads.txt)</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // *** ይህንን በሞባይል አፑ ውስጥ ካለው ቨርዥን ኮድ ጋር ያስተካክሉ!!! ***
-        const CURRENT_APP_VERSION_CODE = 1; 
+        function setLanguage(lang) {
+            document.body.setAttribute('lang', lang);
 
-        // የቨርዥን መረጃ የሚገኝበት የJSON ፋይል መንገድ
-        const VERSION_CHECK_URL ='version_check.json'; 
-        //  !!!ማስጠንቀቂያ!!!: ይህንን ሊንክ ወደ ትክክለኛው የፋይልዎ ቦታ ይቀይሩት!
-
-        // ወደሚፈለገው ገጽ የሚዞረው ተግባር
-        const REDIRECT_TARGET = 'stations_fuel_data.html';
-        const REDIRECT_DELAY = 3000; // 3000 ሚሊሰከንድ = 3 ሰከንድ
-
-        /**
-         * የተወሰነ ጊዜ ከተጠበቀ በኋላ ወደ ዋናው አፕሊኬሽን ገጽ ይዞራል።
-         * @param {number} delay - የመጠበቂያ ጊዜ በ ሚሊሰከንድ። ነባሪው REDIRECT_DELAY ነው።
-         */
-        function startAppRedirect(delay = REDIRECT_DELAY) {
-            setTimeout(function() {
-                window.location.href = REDIRECT_TARGET;
-            }, delay);
+            // Toggle active class on buttons
+            document.getElementById('btn-am').classList.toggle('active', lang === 'am');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
         }
-
-        /**
-         * አዲስ ማሻሻያ መኖሩን ከVERSION_CHECK_URL ያጣራል።
-         * @returns {Promise<boolean>} አስገዳጅ ማሻሻያ (true) ካለ ወይም ምንም ችግር (false) ከሌለ ይገልፃል።
-         */
-        async function checkForUpdate() {
-            try {
-                const response = await fetch(VERSION_CHECK_URL);
-                if (!response.ok) {
-                    console.error('የቨርዥን መረጃ ፋይሉ አልተገኘም:', response.status);
-                    return false; // ፍተሻው አልተሳካም - ወደ አፑ ለመቀጠል ይፈቀዳል
-                }
-                const updateInfo = await response.json();
-
-                const latestCode = updateInfo.latest_version_code;
-                const forceUpdate = updateInfo.force_update === true; 
-                const message = updateInfo.update_message || 'አዲስ ማሻሻያ ወጥቷል!';
-                const link = updateInfo.telegram_link;
-
-                // 1. የቨርዥን ንፅፅር
-                if (latestCode > CURRENT_APP_VERSION_CODE) {
-                    // ማሻሻያ አለ
-                    showUpdateModal(message, link, forceUpdate);
-                    // አስገዳጅ ከሆነ ወደ ቀጣዩ ፔጅ መሄዱን ይከላከላል
-                    return forceUpdate; 
-                }
-                
-                // 2. ማሻሻያ የለም (ትክክለኛው ቨርዥን ነው)
-                return false; 
-
-            } catch (error) {
-                console.error('የማሻሻያ ማጣሪያ ላይ ችግር ተፈጠረ:', error);
-                return false; // ችግር ቢፈጠርም አፑ እንዲቀጥል ይፈቅዳል
-            }
-        }
-
-        /**
-         * የማሻሻያ ሞዳልን ያሳያል እና አዝራሮችን ያስተካክላል።
-         */
-        function showUpdateModal(message, link, isForced) {
-            const modal = document.getElementById('updateModal');
-            const updateMessage = document.getElementById('updateMessage');
-            const updateButton = document.getElementById('updateButton');
-            const dismissButton = document.getElementById('dismissButton');
-
-            updateMessage.textContent = message;
-            updateButton.href = link;
-            
-            // ሞዳሉን ያሳያል
-            modal.style.display = 'flex'; 
-
-            if (isForced) {
-                // አስገዳጅ ማሻሻያ: የማለፊያ በተን ይደበቃል
-                dismissButton.style.display = 'none'; 
-            } else {
-                // አማራጭ ማሻሻያ: የማለፊያ በተን ይታያል
-                dismissButton.style.display = 'block'; 
-                
-                // የማለፊያ በተን ከተጫነ ወደ ዋናው አፕሊኬሽን እንዲሄድ ያደርጋል
-                dismissButton.onclick = () => {
-                    modal.style.display = 'none';
-                    // ወዲያውኑ ያስገባል (3 ሰከንድ ሳይጠብቅ)
-                    startAppRedirect(0); 
-                };
-            }
-        }
-        
-        // ዋናውን ሂደት የሚጀምር ተግባር
-        document.addEventListener('DOMContentLoaded', async () => {
-            const isForceUpdateRequired = await checkForUpdate();
-            
-            // 1. አስገዳጅ ማሻሻያ ከሌለ (false ሲመለስ)
-            // ይህም የሚሆነው:
-            //   - ትክክለኛውን ቨርዥን ሲጠቀም
-            //   - ፍተሻው ችግር ሲገጥመው
-            //   - አማራጭ ማሻሻያ ሲኖር (እና ሞዳሉ ቀርቦ ስለሚጠብቅ) - እዚህ ላይ ማስተካከያ አድርገናል።
-            
-            // የድሮው ኮድ አማራጭ ማሻሻያ ሲኖር በራስ-ሰር 3 ሰከንድ ጠብቆ ይዞር ነበር።
-            // አሁን: አስገዳጅ ማሻሻያ ከሌለ (isForceUpdateRequired=false) እና ማሻሻያ ሞዳሉ ካልታየ ብቻ ወደ ቀጣዩ ገጽ እንዞራለን።
-            
-            // ትክክለኛውን ቨርዥን እየተጠቀመ ከሆነ ወይም ፍተሻው ካልተሳካ ሞዳል አይታይም።
-            if (!isForceUpdateRequired && document.getElementById('updateModal').style.display !== 'flex') {
-                startAppRedirect();
-            }
-            
-            // አማራጭ ማሻሻያ ሲኖር: 
-            // - isForceUpdateRequired false ይመልሳል።
-            // - ሞዳሉ ይታያል ('flex' ይሆናል።)
-            // - ስለዚህ `startAppRedirect()` አይጠራም። 
-            // - ተጠቃሚው 'አሁን አያስፈልገኝም' የሚለውን ሲጫን ብቻ ነው ወደ ቀጣዩ የሚሄደው።
-        });
-
     </script>
 </body>
 </html>
