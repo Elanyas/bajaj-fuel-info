@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAlarm Pro Payment</title>
+    <style>
+        :root {
+            --primary: #7C4DFF;
+            --bg: #0F0C29;
+            --card-bg: #1A1A1A;
+            --text: #FFFFFF;
+            --secondary: #E91E63;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0F0C29, #302B63, #24243E);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #7C4DFF, #1BFFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: #BDBDBD;
+            font-size: 14px;
+        }
+
+        .price-tag {
+            font-size: 48px;
+            font-weight: 900;
+            margin: 25px 0;
+            color: var(--text);
+        }
+
+        .price-tag span {
+            font-size: 18px;
+            color: #7C4DFF;
+        }
+
+        .method-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .method-card h3 {
+            margin-top: 0;
+            color: #4FC3F7;
+            font-size: 18px;
+        }
+
+        .steps {
+            text-align: left;
+            font-size: 13px;
+            color: #E0E0E0;
+            line-height: 1.6;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .step-num {
+            background: var(--primary);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .ussd-box {
+            background: #000;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: monospace;
+            color: #7C4DFF;
+            font-size: 16px;
+            margin: 15px 0;
+            border: 1px dashed #7C4DFF;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ussd-box:hover {
+            background: #111;
+            transform: scale(1.02);
+        }
+
+        .btn-pay {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(124, 77, 255, 0.3);
+        }
+
+        .btn-pay:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(124, 77, 255, 0.4);
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        /* Input field for TXN ID */
+        .txn-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 12px;
+            color: white;
+            margin-top: 15px;
+            box-sizing: border-box;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .secure-badge {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            color: #4CAF50;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NexAlarm Pro</h1>
+            <p>Unlock the ultimate alarm experience</p>
+        </div>
+
+        <div class="price-tag">
+            5<span> ETB</span>
+        </div>
+
+        <div class="method-card">
+            <h3>E-Birr Transfer</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <span>Dial the USSD code below</span>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <span>Confirm the 5 Birr payment</span>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <span>Copy the Transaction ID from SMS</span>
+                </div>
+            </div>
+
+            <div class="ussd-box" onclick="dialCode()">
+                *681*0989750238*5#
+            </div>
+
+            <input type="text" class="txn-input" placeholder="Enter Transaction ID here" id="txnId">
+        </div>
+
+        <button class="btn-pay" onclick="submitPayment()">Activate Lifetime Pro</button>
+
+        <div class="secure-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            Secure 256-bit Encryption
+        </div>
+
+        <div class="footer-note">
+            Your support helps us keep NexAlarm free of intrusive ads and developing new features.
+        </div>
+    </div>
+
+    <script>
+        function dialCode() {
+            window.location.href = "tel:" + encodeURIComponent("*681*0989750238*5#");
+        }
+
+        function submitPayment() {
+            const txnId = document.getElementById('txnId').value;
+            if (txnId.length < 5) {
+                alert("Please enter a valid Transaction ID from your E-Birr SMS.");
+                return;
+            }
+            // In a real app, this would send to a server.
+            // For now, we'll notify the Android app via Javascript Interface if available
+            if (window.Android) {
+                window.Android.onPaymentSubmitted(txnId);
+            } else {
+                alert("Payment ID Submitted: " + txnId + "\nOur team will verify it shortly.");
+            }
+        }
+    </script>
+</body>
+</html>
