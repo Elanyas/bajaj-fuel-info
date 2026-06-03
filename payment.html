@@ -11,11 +11,12 @@
             --card-bg: #1A1A1A;
             --text: #FFFFFF;
             --secondary: #E91E63;
+            --accent: #1BFFFF;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0F0C29, #302B63, #24243E);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #0F0C29 0%, #302B63 50%, #24243E 100%);
             color: var(--text);
             margin: 0;
             display: flex;
@@ -27,147 +28,200 @@
 
         .container {
             width: 90%;
-            max-width: 450px;
-            background: rgba(26, 26, 26, 0.95);
-            padding: 30px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-width: 420px;
+            background: rgba(26, 26, 26, 0.85);
+            padding: 40px 30px;
+            border-radius: 40px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
             border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .header h1 {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #7C4DFF, #1BFFFF);
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            background: linear-gradient(to right, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
         }
 
         .header p {
-            color: #BDBDBD;
-            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            font-size: 15px;
+            margin-bottom: 30px;
         }
 
         .price-tag {
-            font-size: 48px;
-            font-weight: 900;
-            margin: 25px 0;
-            color: var(--text);
+            background: rgba(124, 77, 255, 0.1);
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(124, 77, 255, 0.3);
+            margin-bottom: 30px;
         }
 
-        .price-tag span {
+        .price-tag .amount {
+            font-size: 42px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .price-tag .currency {
             font-size: 18px;
-            color: #7C4DFF;
+            color: var(--primary);
+            font-weight: bold;
+            margin-left: 5px;
         }
 
         .method-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: left;
         }
 
         .method-card h3 {
-            margin-top: 0;
-            color: #4FC3F7;
+            margin: 0 0 20px 0;
+            color: var(--accent);
             font-size: 18px;
-        }
-
-        .steps {
-            text-align: left;
-            font-size: 13px;
-            color: #E0E0E0;
-            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .step {
             display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 12px;
         }
 
         .step-num {
             background: var(--primary);
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 10px;
-            margin-right: 10px;
+            font-size: 12px;
+            font-weight: bold;
             flex-shrink: 0;
+            margin-top: 2px;
         }
 
-        .ussd-box {
+        .step-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.4;
+        }
+
+        .ussd-action-box {
             background: #000;
-            padding: 12px;
-            border-radius: 12px;
-            font-family: monospace;
-            color: #7C4DFF;
-            font-size: 16px;
-            margin: 15px 0;
-            border: 1px dashed #7C4DFF;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .ussd-box:hover {
-            background: #111;
-            transform: scale(1.02);
-        }
-
-        .btn-pay {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 15px;
-            font-size: 18px;
+            padding: 18px;
+            border-radius: 18px;
+            font-family: 'Courier New', monospace;
+            color: var(--primary);
+            font-size: 20px;
             font-weight: bold;
+            margin: 20px 0;
+            border: 2px dashed rgba(124, 77, 255, 0.4);
             cursor: pointer;
-            width: 100%;
-            transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(124, 77, 255, 0.3);
-        }
-
-        .btn-pay:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(124, 77, 255, 0.4);
-        }
-
-        .footer-note {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #666;
-        }
-
-        /* Input field for TXN ID */
-        .txn-input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 12px;
-            border-radius: 12px;
-            color: white;
-            margin-top: 15px;
-            box-sizing: border-box;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .secure-badge {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ussd-action-box:active {
+            transform: scale(0.95);
+        }
+
+        .ussd-action-box::after {
+            content: 'TAP TO DIAL';
+            position: absolute;
+            bottom: 2px;
+            font-size: 9px;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+
+        .txn-input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+            margin-top: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .txn-input:focus {
+            border-color: var(--primary);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .btn-activate {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(124, 77, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-activate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(124, 77, 255, 0.5);
+        }
+
+        .secure-footer {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: #4CAF50;
-            font-size: 12px;
-            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .footer-note {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            max-width: 80%;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -175,66 +229,71 @@
     <div class="container">
         <div class="header">
             <h1>NexAlarm Pro</h1>
-            <p>Unlock the ultimate alarm experience</p>
+            <p>Experience the most advanced alarm system</p>
         </div>
 
         <div class="price-tag">
-            5<span> ETB</span>
+            <span class="amount">5</span><span class="currency">ETB</span>
         </div>
 
         <div class="method-card">
-            <h3>E-Birr Transfer</h3>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <span>Dial the USSD code below</span>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <span>Confirm the 5 Birr payment</span>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <span>Copy the Transaction ID from SMS</span>
-                </div>
+            <h3>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                E-Birr Secure Transfer
+            </h3>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-text">Tap the black box below to dial the 5 ETB payment code.</div>
             </div>
 
-            <div class="ussd-box" onclick="dialCode()">
+            <div class="ussd-action-box" onclick="dialUSSD()">
                 *681*0989750238*5#
             </div>
 
-            <input type="text" class="txn-input" placeholder="Enter Transaction ID here" id="txnId">
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-text">After confirming payment, copy the <b>Transaction ID</b> from the SMS you received.</div>
+            </div>
+
+            <input type="text" class="txn-input" placeholder="Paste Transaction ID here" id="txnId">
         </div>
 
-        <button class="btn-pay" onclick="submitPayment()">Activate Lifetime Pro</button>
+        <button class="btn-activate" onclick="submitActivation()">Activate Lifetime Pro</button>
 
-        <div class="secure-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-            Secure 256-bit Encryption
-        </div>
-
-        <div class="footer-note">
-            Your support helps us keep NexAlarm free of intrusive ads and developing new features.
+        <div class="secure-footer">
+            <div class="badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                Automated In-App Activation
+            </div>
+            <div class="footer-note">
+                Your payment is secure. Lifetime access includes all future updates and premium missions.
+            </div>
         </div>
     </div>
 
     <script>
-        function dialCode() {
-            window.location.href = "tel:" + encodeURIComponent("*681*0989750238*5#");
+        function dialUSSD() {
+            const code = "*681*0989750238*5#";
+            if (window.Android && window.Android.makeCall) {
+                // Professional way: call native Android bridge
+                window.Android.makeCall(code);
+            } else {
+                // Browser fallback
+                window.location.href = "tel:" + encodeURIComponent(code);
+            }
         }
 
-        function submitPayment() {
-            const txnId = document.getElementById('txnId').value;
+        function submitActivation() {
+            const txnId = document.getElementById('txnId').value.trim();
             if (txnId.length < 5) {
-                alert("Please enter a valid Transaction ID from your E-Birr SMS.");
+                alert("Please enter a valid Transaction ID from your SMS.");
                 return;
             }
-            // In a real app, this would send to a server.
-            // For now, we'll notify the Android app via Javascript Interface if available
-            if (window.Android) {
+            if (window.Android && window.Android.onPaymentSubmitted) {
+                // Send to Android app for processing
                 window.Android.onPaymentSubmitted(txnId);
             } else {
-                alert("Payment ID Submitted: " + txnId + "\nOur team will verify it shortly.");
+                alert("Transaction ID: " + txnId + "\nPlease complete this inside the NexAlarm app.");
             }
         }
     </script>
