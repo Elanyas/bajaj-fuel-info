@@ -1,43 +1,220 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - NexAlarm</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; color: #333; padding: 20px; }
-        h1 { color: #1A0F3D; }
-        h2 { color: #1A0F3D; margin-top: 25px; }
-        p { margin-bottom: 15px; }
+        :root {
+            --bg-color: #000000;
+            --surface-color: rgba(255, 255, 255, 0.05);
+            --primary-color: #7C4DFF;
+            --text-main: #FFFFFF;
+            --text-dim: rgba(255, 255, 255, 0.7);
+            --accent-glow: rgba(124, 77, 255, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 24px;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--surface-color);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 900;
+            margin: 0;
+            background: linear-gradient(to right, #7C4DFF, #1BFFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .last-updated {
+            color: var(--text-dim);
+            font-size: 13px;
+            margin-top: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .intro {
+            font-size: 17px;
+            color: var(--text-dim);
+            margin-bottom: 32px;
+        }
+
+        .section {
+            background: var(--surface-color);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--primary-color);
+            margin-right: 12px;
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        p {
+            margin: 0 0 16px 0;
+            color: var(--text-dim);
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 12px;
+            color: var(--text-dim);
+        }
+
+        li strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: rgba(124, 77, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 10px;
+        }
+
+        .contact-box {
+            background: linear-gradient(135deg, var(--primary-color), #302B63);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .contact-box p {
+            color: white;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .email {
+            font-family: monospace;
+            font-size: 16px;
+            color: #1BFFFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
-    <h1>Privacy Policy</h1>
-    <p>Last updated: January 2026</p>
-    <p>NexAlarm (referred to as "the App" or "the Developer") is committed to protecting your privacy. This Privacy Policy explains how information is handled when you use the NexAlarm mobile application.</p>
+    <div class="container">
+        <div class="header">
+            <h1>Privacy Policy</h1>
+            <div class="last-updated">Updated October 2024</div>
+        </div>
 
-    <h2>1. Information Collection and Use</h2>
-    <p>NexAlarm is designed to respect your privacy. The App <strong>does not collect, store, or transmit any personal identification information</strong>. All your alarm settings and data are stored locally on your device.</p>
+        <p class="intro">At NexAlarm, your privacy is our foundation. We are committed to protecting your personal data and being transparent about how it is used.</p>
 
-    <h2>2. Permissions</h2>
-    <p>To provide its core functionality, NexAlarm requires the following permissions:</p>
-    <ul>
-        <li><strong>Exact Alarm:</strong> Used to trigger alarms at the precise time you set.</li>
-        <li><strong>Accessibility Service:</strong> This is an optional feature used as a "Protection Guard" to prevent accidental dismissal of alarms by users who struggle to wake up. No data is collected or shared through this service.</li>
-        <li><strong>Device Administrator:</strong> Used to prevent the app from being uninstalled while an alarm is active.</li>
-        <li><strong>Notifications:</strong> Used to show alarm alerts and reminders.</li>
-    </ul>
+        <div class="section">
+            <h2>1. Information Collection</h2>
+            <p>NexAlarm collects personal information when you sign in via Google. This includes:</p>
+            <ul>
+                <li><strong>Account Details:</strong> Name, email address, and profile picture.</li>
+                <li><strong>Usage Data:</strong> We use this information to synchronize your alarm settings, vision board goals, and VAN asset balance across multiple devices securely.</li>
+            </ul>
+        </div>
 
-    <h2>3. Data Security</h2>
-    <p>Since all data remains on your device, the security of your data depends on your device's security settings.</p>
+        <div class="section">
+            <h2>2. App Permissions</h2>
+            <p>To provide its core functionality, NexAlarm requires the following permissions:</p>
+            <ul>
+                <li><strong>Exact Alarm:</strong> Crucial for ensuring your alarms trigger at the exact millisecond scheduled.</li>
+                <li><strong>Protection Guard (Accessibility Service):</strong> An optional advanced feature used strictly to prevent the app from being force-closed or uninstalled while an alarm is active. No personal activity is monitored or collected.</li>
+                <li><strong>Device Administrator:</strong> Used to provide basic uninstall protection.</li>
+                <li><strong>Storage/Media:</strong> Used to allow you to select and display custom images and sounds for your Vision Board and alarms.</li>
+            </ul>
+        </div>
 
-    <h2>4. Third-Party Services</h2>
-    <p>NexAlarm does not use any third-party analytics or advertising services that track your behavior.</p>
+        <div class="section">
+            <h2>3. Third-Party Services</h2>
+            <p>We integrate reliable third-party services to enhance your experience:</p>
+            <ul>
+                <li><strong>Google AdMob:</strong> For displaying rewarded advertisements to earn VAN assets.</li>
+                <li><strong>Google Play Billing:</strong> For secure processing of in-app purchases.</li>
+            </ul>
+            <p>These services may collect device-specific identifiers in accordance with their own privacy policies.</p>
+        </div>
 
-    <h2>5. Changes to This Policy</h2>
-    <p>The Developer may update this Privacy Policy from time to time. You are advised to review this page periodically for any changes.</p>
+        <div class="section">
+            <h2>4. Data Deletion & Your Rights</h2>
+            <p>You have full control over your data. You can access, update, or request the deletion of your personal information at any time.</p>
+            <div class="highlight-box">
+                <p><strong>Account Deletion:</strong> If you wish to permanently delete your account and all associated data, you can do so by navigating to <strong>Settings &gt; Delete Account</strong> (located at the bottom of the page). This action will immediately and permanently wipe all your records from our database.</p>
+            </div>
+        </div>
 
-    <h2>6. Contact Us</h2>
-    <p>If you have any questions about this Privacy Policy, please contact the developer at <strong>eliyassultan13@gmail.com</strong>.</p>
+        <div class="section">
+            <h2>5. Security</h2>
+            <p>We implement robust security measures to protect your data during transmission and while stored. All account synchronization is encrypted using industry-standard protocols.</p>
+        </div>
+
+        <div class="contact-box">
+            <p>For any privacy-related questions, contact us at:</p>
+            <a href="mailto:eliyassultan13@gmail.com" class="email">eliyassultan13@gmail.com</a>
+        </div>
+
+        <footer>
+            &copy; 2024 NexAlarm. All rights reserved.
+        </footer>
+    </div>
 </body>
 </html>
