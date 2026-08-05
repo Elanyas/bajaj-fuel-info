@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAlarm Support - የክፍያ ማዕከል</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        body { background-color: #0F0C29; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(to right, #7C4DFF, #1BFFFF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .purple-btn { background: #7C4DFF; box-shadow: 0 4px 20px rgba(124, 77, 255, 0.4); transition: all 0.2s; }
+        .purple-btn:active { transform: scale(0.95); }
+        .ebirr-green { color: #00E676; }
+        input:focus { border-color: #7C4DFF; outline: none; box-shadow: 0 0 10px rgba(124, 77, 255, 0.3); }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-md mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-black tracking-tighter gradient-text">NEXALARM SUPPORT</h1>
+            <p class="text-gray-400 text-sm mt-2 font-bold uppercase tracking-widest">የድጋፍ እና የክፍያ ፖርታል</p>
+        </header>
+
+        <!-- Phone Number Input Section -->
+        <section class="mb-8">
+            <div class="glass p-6 rounded-[2rem] border-dashed border-[#7C4DFF]/50">
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">የኢ-ብር (eBirr) ስልክ ቁጥር</label>
+                <input type="tel" id="phoneNumber" placeholder="09xxxxxxxx"
+                       class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-lg font-bold text-white placeholder-white/20">
+                <p class="text-[10px] text-gray-500 mt-2 italic">* ክፍያ የሚፈጽሙበትን ስልክ ቁጥር በትክክል ያስገቡ።</p>
+            </div>
+        </section>
+
+        <!-- VAN Coin Packages -->
+        <section class="mb-10 text-left">
+            <h2 class="text-lg font-bold text-gray-400 mb-4 border-b border-white/10 pb-2 italic">የVAN Coins ጥቅሎች</h2>
+            <div class="space-y-4">
+                <div class="glass p-5 rounded-[2rem] flex justify-between items-center group">
+                    <div class="text-left">
+                        <h3 class="font-bold text-white text-lg">30 VAN Coins</h3>
+                        <p class="ebirr-green font-black text-sm">ዋጋ: 10 ብር (eBirr)</p>
+                    </div>
+                    <button onclick="initiatePayment('van_30', 10)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs">ግዛ</button>
+                </div>
+
+                <div class="glass p-5 rounded-[2rem] flex justify-between items-center group">
+                    <div class="text-left">
+                        <h3 class="font-bold text-white text-lg">90 VAN Coins</h3>
+                        <p class="ebirr-green font-black text-sm">ዋጋ: 30 ብር (eBirr)</p>
+                    </div>
+                    <button onclick="initiatePayment('van_90', 30)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs">ግዛ</button>
+                </div>
+
+                <div class="glass p-5 rounded-[2rem] flex justify-between items-center group">
+                    <div class="text-left">
+                        <h3 class="font-bold text-white text-lg">150 VAN Coins</h3>
+                        <p class="ebirr-green font-black text-sm">ዋጋ: 50 ብር (eBirr)</p>
+                    </div>
+                    <button onclick="initiatePayment('van_150', 50)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs">ግዛ</button>
+                </div>
+
+                <div class="glass p-5 rounded-[2rem] flex justify-between items-center group">
+                    <div class="text-left">
+                        <h3 class="font-bold text-white text-lg">300 VAN Coins</h3>
+                        <p class="ebirr-green font-black text-sm">ዋጋ: 100 ብር (eBirr)</p>
+                    </div>
+                    <button onclick="initiatePayment('van_300', 100)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs">ግዛ</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Premium Subscription -->
+        <section class="mb-10 text-left">
+            <h2 class="text-lg font-bold text-gray-400 mb-4 border-b border-white/10 pb-2 italic">የPremium አባልነት</h2>
+            <div class="space-y-4">
+                <div class="glass p-5 rounded-[2rem] flex justify-between items-center border-[#7C4DFF]/30 border shadow-[0_0_20px_rgba(124,77,255,0.05)]">
+                    <div class="text-left">
+                        <h3 class="font-bold text-white text-lg">የአንድ ወር (Monthly)</h3>
+                        <p class="ebirr-green font-black text-sm">ዋጋ: 50 ብር (eBirr)</p>
+                    </div>
+                    <button onclick="initiatePayment('prem_monthly', 50)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs">አግብር</button>
+                </div>
+
+                <div class="glass p-5 rounded-[2rem] flex justify-between items-center border-[#1BFFFF]/30 border shadow-[0_0_20px_rgba(27,255,255,0.03)]">
+                    <div class="text-left">
+                        <h3 class="font-bold text-white text-lg">የአንድ ዓመት (Yearly)</h3>
+                        <p class="ebirr-green font-black text-sm">ዋጋ: 400 ብር (eBirr)</p>
+                    </div>
+                    <button onclick="initiatePayment('prem_yearly', 400)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs">አግብር</button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center bg-white/5 p-6 rounded-[2rem] border border-white/5">
+            <p class="text-xs text-gray-300 leading-relaxed text-left">
+                <span class="font-bold text-[#7C4DFF] block mb-2 uppercase tracking-widest text-[10px]">ጠቃሚ መረጃ</span>
+                ክፍያውን በኢ-ብር (eBirr) ከፈጸሙ በኋላ በ5 ደቂቃ ውስጥ አገልግሎቱ ይንቀሳቀሳል። ማንኛውም ችግር ካጋጠመዎት የቴክኒክ ድጋፍ ክፍሉን ያነጋግሩ።
+            </p>
+        </footer>
+    </div>
+
+    <!-- External Logic File -->
+    <script src="support_portal.js"></script>
+</body>
+</html>
