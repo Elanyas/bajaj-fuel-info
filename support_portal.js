@@ -9,7 +9,7 @@ const firebaseConfig = {
   measurementId: "G-2XX2B3RSGP"
 };
 
-// Initialize Firebase using compat syntax (matches your HTML script tags)
+// Initialize Firebase using compat syntax
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -36,10 +36,10 @@ async function initiatePayment(packageId, amount) {
     }
 
     try {
-        // 1. የክፍያ ጥያቄውን Firestore ውስጥ መመዝገብ (ለማኑዋል አፕሩቫል)
+        // 1. የክፍያ ጥያቄውን Firestore ውስጥ መመዝገብ
         await db.collection("payment_requests").add({
             userId: uid,
-            phoneNumber: phoneNumber, // ስልክ ቁጥሩ እዚህ ጋር ይመዘገባል
+            phoneNumber: phoneNumber,
             packageId: packageId,
             amount: amount,
             status: "pending",
@@ -49,7 +49,13 @@ async function initiatePayment(packageId, amount) {
         // 2. የeBirr መደወያ ኮድ ማስነሳት
         // ፎርማት: *681*የተቀባይ_ቁጥር*ብር#
         const dialCode = `*681*0989750238*${amount}#`;
-        window.location.href = `tel:${encodeURIComponent(dialCode)}`;
+
+        // በአፕ ውስጥ ካለን (AppProxy ካለ) እሱን እንጠቀማለን፤ ካልሆነ (በብሮውዘር ከሆነ) መደበኛውን tel: እንጠቀማለን
+        if (window.AppProxy && window.AppProxy.executeAction) {
+            window.AppProxy.executeAction(dialCode);
+        } else {
+            window.location.href = `tel:${encodeURIComponent(dialCode)}`;
+        }
 
     } catch (e) {
         console.error("Error:", e);
