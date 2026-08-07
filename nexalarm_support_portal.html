@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexAlarm Support Portal</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #0F0C29, #1A0F3D, #000000);
+            color: white;
+            line-height: 1.6;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0 30px 0;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin: 0;
+            background: linear-gradient(to right, #7C4DFF, #1BFFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .faq-container {
+            margin-top: 10px;
+        }
+        .faq-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .faq-question {
+            padding: 18px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .faq-question:active {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        .faq-item.active {
+            border-color: rgba(124, 77, 255, 0.4);
+            background: rgba(124, 77, 255, 0.05);
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px; /* Large enough to fit content */
+            padding: 0 24px 20px 24px;
+        }
+        .faq-item.active .icon {
+            transform: rotate(180deg);
+            fill: #7C4DFF;
+        }
+        .icon {
+            transition: transform 0.3s ease;
+            width: 20px;
+            height: 20px;
+            fill: rgba(255, 255, 255, 0.3);
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 30px 30px 0 0;
+            margin-left: -20px;
+            margin-right: -20px;
+        }
+        .support-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #7C4DFF 0%, #5E35B1 100%);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 10px 20px rgba(124, 77, 255, 0.2);
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        .support-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 5px 10px rgba(124, 77, 255, 0.2);
+        }
+        .contact-label {
+            display: block;
+            margin-bottom: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        .app-version {
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SUPPORT PORTAL</h1>
+        <p>Expert assistance for your NexAlarm experience</p>
+    </div>
+
+    <div class="faq-container">
+        <!-- FAQ 1: Alarm Reliability -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                How do I ensure my alarms ring on time?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Navigate to <b>'Alarm Optimization'</b> in Settings. It is crucial to disable system battery optimization for NexAlarm to ensure the Android system doesn't suspend the app's background tasks.
+            </div>
+        </div>
+
+        <!-- FAQ 2: Alarm Customization -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                Can I customize sound and vibration?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Yes. Open <b>'Alarm Setting'</b> to choose from a variety of sounds, adjust vibration patterns, and enable <b>'Gentle Wake-up'</b> which gradually increases volume for a peaceful start.
+            </div>
+        </div>
+
+        <!-- FAQ 3: Missions -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                What are Dismiss Missions?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Missions are mental or physical challenges (like Math, Memory, or Barcode scans) required to stop the alarm. Configure them in <b>'Dismiss Alarm/Mission'</b> to prevent oversleeping.
+            </div>
+        </div>
+
+        <!-- FAQ 4: Life Goals -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                How do I set my Life Goals?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Go to <b>'Life Goal Setting'</b> to personalize your morning vision board. Your top goals and quotes will appear immediately after you wake up to provide instant motivation.
+            </div>
+        </div>
+
+        <!-- FAQ 5: Premium -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                What does Premium Membership offer?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Premium status removes all advertisements, unlocks advanced security modules, and provides access to exclusive morning themes and advanced mission types.
+            </div>
+        </div>
+
+        <!-- FAQ 6: VAN Assets -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                How can I earn free VAN assets?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                You can earn VAN by watching rewarded ads in the <b>'Get VAN'</b> screen. VAN assets can be used to unlock premium features without a subscription.
+            </div>
+        </div>
+
+        <!-- FAQ 7: Themes -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                Does the app support custom themes?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Absolutely. While NexAlarm features a signature dark theme, you can explore further visual customizations under <b>'General' -> 'Theme Selection'</b>.
+            </div>
+        </div>
+
+        <!-- FAQ 8: Backup -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                How can I back up my settings?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Cloud backup and local export options are available in <b>'General Settings'</b>. This ensures your alarms and life goals are safe if you change devices.
+            </div>
+        </div>
+
+        <!-- FAQ 9: Privacy -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                Is my data private?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                Yes. We prioritize your privacy. Only essential data is stored locally or securely synced. View our full <b>'Privacy Policy'</b> in the Settings menu for details.
+            </div>
+        </div>
+
+        <!-- FAQ 10: Deletion -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                How do I delete my account?
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+            </div>
+            <div class="faq-answer">
+                If you wish to remove your account and all associated data permanently, select <b>'Delete Account'</b> at the bottom of the Settings page. This action is irreversible.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span class="contact-label">Technical Support Line</span>
+        <a href="tel:0989750238" class="support-btn">
+            CALL 0989750238
+        </a>
+        <div class="app-version">
+            NEXALARM  • © 2026 ELANYAS TECH
+        </div>
+    </div>
+
+    <script>
+        function toggleFaq(element) {
+            const isActive = element.classList.contains('active');
+
+            // Close all other items for a clean look
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Toggle current item
+            if (!isActive) {
+                element.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
