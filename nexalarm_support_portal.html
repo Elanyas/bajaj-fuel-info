@@ -1,40 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexAlarm Support Portal</title>
+    <title>NexAlarm Support & Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
+        /* Base Styles from NexAlarm Support Design */
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(to bottom, #0F0C29, #1A0F3D, #000000);
             color: white;
             line-height: 1.6;
             -webkit-user-select: none;
             user-select: none;
+            min-height: 100vh;
         }
-        .header {
+
+        /* Navigation Bar */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 12, 41, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-group {
+            display: flex;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
-            padding: 40px 0 30px 0;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .header h1 {
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            margin: 0;
+        .tab-btn.active {
+            background: #7C4DFF;
+            color: white;
+            box-shadow: 0 4px 20px rgba(124, 77, 255, 0.4);
+            border-color: #7C4DFF;
+        }
+
+        /* Support Content Styles */
+        .header { text-align: center; padding: 40px 0 30px 0; }
+        .gradient-text {
             background: linear-gradient(to right, #7C4DFF, #1BFFFF);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-        .header p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        .faq-container {
-            margin-top: 10px;
         }
         .faq-item {
             background: rgba(255, 255, 255, 0.04);
@@ -53,9 +83,7 @@
             font-weight: 600;
             font-size: 15px;
             color: rgba(255, 255, 255, 0.9);
-        }
-        .faq-question:active {
-            background: rgba(255, 255, 255, 0.08);
+            text-align: left;
         }
         .faq-answer {
             max-height: 0;
@@ -64,35 +92,20 @@
             background: rgba(0, 0, 0, 0.2);
             color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
+            text-align: left;
         }
         .faq-item.active {
             border-color: rgba(124, 77, 255, 0.4);
             background: rgba(124, 77, 255, 0.05);
         }
         .faq-item.active .faq-answer {
-            max-height: 300px; /* Large enough to fit content */
+            max-height: 300px;
             padding: 0 24px 20px 24px;
         }
-        .faq-item.active .icon {
-            transform: rotate(180deg);
-            fill: #7C4DFF;
-        }
-        .icon {
-            transition: transform 0.3s ease;
-            width: 20px;
-            height: 20px;
-            fill: rgba(255, 255, 255, 0.3);
-        }
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 30px 30px 0 0;
-            margin-left: -20px;
-            margin-right: -20px;
-        }
-        .support-btn {
+        .icon { transition: transform 0.3s ease; width: 20px; height: 20px; fill: rgba(255, 255, 255, 0.3); }
+        .faq-item.active .icon { transform: rotate(180deg); fill: #7C4DFF; }
+
+        .support-call-btn {
             display: inline-flex;
             align-items: center;
             background: linear-gradient(135deg, #7C4DFF 0%, #5E35B1 100%);
@@ -106,161 +119,205 @@
             transition: all 0.2s ease;
             margin-top: 10px;
         }
-        .support-btn:active {
-            transform: scale(0.96);
-            box-shadow: 0 5px 10px rgba(124, 77, 255, 0.2);
+        .footer-section {
+            margin-top: 40px;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 30px 30px 0 0;
         }
-        .contact-label {
-            display: block;
-            margin-bottom: 12px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: bold;
-        }
-        .app-version {
-            margin-top: 25px;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 10px;
-            letter-spacing: 1px;
-        }
+
+        /* E-Birr Content Styles */
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .ebirr-green { color: #00E676; }
+        .purple-btn { background: #7C4DFF; box-shadow: 0 4px 20px rgba(124, 77, 255, 0.4); transition: all 0.2s; }
+        .purple-btn:active { transform: scale(0.95); }
+        input:focus { border-color: #7C4DFF; outline: none; box-shadow: 0 0 10px rgba(124, 77, 255, 0.3); }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>SUPPORT PORTAL</h1>
-        <p>Expert assistance for your NexAlarm experience</p>
+    <!-- Tab Navigation -->
+    <div class="nav-container">
+        <div class="tab-group">
+            <div id="btn-support" onclick="switchTab('support')" class="tab-btn active">Support</div>
+            <div id="btn-ebirr" onclick="switchTab('ebirr')" class="tab-btn">E-Birr</div>
+        </div>
     </div>
 
-    <div class="faq-container">
-        <!-- FAQ 1: Alarm Reliability -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                How do I ensure my alarms ring on time?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Navigate to <b>'Alarm Optimization'</b> in Settings. It is crucial to disable system battery optimization for NexAlarm to ensure the Android system doesn't suspend the app's background tasks.
-            </div>
-        </div>
+    <!-- SUPPORT PORTAL CONTENT (Default Visible) -->
+    <div id="section-support" class="px-6 pb-6">
+        <header class="header">
+            <h1 class="text-3xl font-black tracking-widest gradient-text">SUPPORT PORTAL</h1>
+            <p class="text-white/50 text-sm mt-2">Expert assistance for your NexAlarm experience</p>
+        </header>
 
-        <!-- FAQ 2: Alarm Customization -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                Can I customize sound and vibration?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+        <div class="max-w-md mx-auto space-y-3">
+            <!-- FAQ Section -->
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">How do I ensure my alarms ring on time? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Navigate to <b>'Alarm Optimization'</b> in Settings. It is crucial to disable system battery optimization for NexAlarm to ensure the Android system doesn't suspend the app's background tasks.</div>
             </div>
-            <div class="faq-answer">
-                Yes. Open <b>'Alarm Setting'</b> to choose from a variety of sounds, adjust vibration patterns, and enable <b>'Gentle Wake-up'</b> which gradually increases volume for a peaceful start.
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">Can I customize sound and vibration? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Yes. Open <b>'Alarm Setting'</b> to choose from a variety of sounds, adjust vibration patterns, and enable <b>'Gentle Wake-up'</b> which gradually increases volume for a peaceful start.</div>
             </div>
-        </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">What are Dismiss Missions? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Missions are mental or physical challenges (like Math, Memory, or Barcode scans) required to stop the alarm. Configure them in <b>'Dismiss Alarm/Mission'</b> to prevent oversleeping.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">How do I set my Life Goals? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Go to <b>'Life Goal Setting'</b> to personalize your morning vision board. Your top goals and quotes will appear immediately after you wake up to provide instant motivation.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">What does Premium Membership offer? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Premium status removes all advertisements, unlocks advanced security modules, and provides access to exclusive morning themes and advanced mission types.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">How can I earn free VAN assets? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">You can earn VAN by watching rewarded ads in the <b>'Get VAN'</b> screen. VAN assets can be used to unlock premium features without a subscription.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">Does the app support custom themes? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Absolutely. While NexAlarm features a signature dark theme, you can explore further visual customizations under <b>'General' -> 'Theme Selection'</b>.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">How can I back up my settings? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Cloud backup and local export options are available in <b>'General Settings'</b>. This ensures your alarms and life goals are safe if you change devices.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">Is my data private? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">Yes. We prioritize your privacy. Only essential data is stored locally or securely synced. View our full <b>'Privacy Policy'</b> in the Settings menu for details.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-question">How do I delete my account? <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></div>
+                <div class="faq-answer">If you wish to remove your account and all associated data permanently, select <b>'Delete Account'</b> at the bottom of the Settings page. This action is irreversible.</div>
+            </div>
 
-        <!-- FAQ 3: Missions -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                What are Dismiss Missions?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Missions are mental or physical challenges (like Math, Memory, or Barcode scans) required to stop the alarm. Configure them in <b>'Dismiss Alarm/Mission'</b> to prevent oversleeping.
-            </div>
-        </div>
-
-        <!-- FAQ 4: Life Goals -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                How do I set my Life Goals?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Go to <b>'Life Goal Setting'</b> to personalize your morning vision board. Your top goals and quotes will appear immediately after you wake up to provide instant motivation.
-            </div>
-        </div>
-
-        <!-- FAQ 5: Premium -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                What does Premium Membership offer?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Premium status removes all advertisements, unlocks advanced security modules, and provides access to exclusive morning themes and advanced mission types.
-            </div>
-        </div>
-
-        <!-- FAQ 6: VAN Assets -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                How can I earn free VAN assets?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                You can earn VAN by watching rewarded ads in the <b>'Get VAN'</b> screen. VAN assets can be used to unlock premium features without a subscription.
-            </div>
-        </div>
-
-        <!-- FAQ 7: Themes -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                Does the app support custom themes?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Absolutely. While NexAlarm features a signature dark theme, you can explore further visual customizations under <b>'General' -> 'Theme Selection'</b>.
-            </div>
-        </div>
-
-        <!-- FAQ 8: Backup -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                How can I back up my settings?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Cloud backup and local export options are available in <b>'General Settings'</b>. This ensures your alarms and life goals are safe if you change devices.
-            </div>
-        </div>
-
-        <!-- FAQ 9: Privacy -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                Is my data private?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                Yes. We prioritize your privacy. Only essential data is stored locally or securely synced. View our full <b>'Privacy Policy'</b> in the Settings menu for details.
-            </div>
-        </div>
-
-        <!-- FAQ 10: Deletion -->
-        <div class="faq-item" onclick="toggleFaq(this)">
-            <div class="faq-question">
-                How do I delete my account?
-                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </div>
-            <div class="faq-answer">
-                If you wish to remove your account and all associated data permanently, select <b>'Delete Account'</b> at the bottom of the Settings page. This action is irreversible.
+            <!-- Support Footer Call -->
+            <div class="footer-section mx-[-24px]">
+                <span class="block mb-3 text-white/40 text-[11px] uppercase tracking-[2px] font-bold">Technical Support Line</span>
+                <a href="tel:0989750238" class="support-call-btn">CALL 0989750238</a>
+                <div class="mt-6 text-[10px] text-white/20 tracking-widest uppercase">NEXALARM • © 2026 ELANYAS TECH</div>
             </div>
         </div>
     </div>
 
-    <div class="footer">
-        <span class="contact-label">Technical Support Line</span>
-        <a href="tel:0989750238" class="support-btn">
-            CALL 0989750238
-        </a>
-        <div class="app-version">
-            NEXALARM  • © 2026 ELANYAS TECH
+    <!-- E-BIRR PAYMENT CONTENT (Hidden by Default) -->
+    <div id="section-ebirr" class="px-6 pb-6 hidden">
+        <header class="header">
+            <h1 class="text-3xl font-black tracking-widest gradient-text">PAYMENT PORTAL</h1>
+            <p class="text-white/50 text-sm mt-2 font-bold uppercase tracking-[3px]">የድጋፍ እና የክፍያ ማዕከል</p>
+        </header>
+
+        <div class="max-w-md mx-auto">
+            <!-- Phone Number Input Section -->
+            <section class="mb-8">
+                <div class="glass p-6 rounded-[2rem] border-dashed border-[#7C4DFF]/50 text-left">
+                    <label class="block text-xs font-bold text-white/40 uppercase tracking-widest mb-3">የኢ-ብር (eBirr) ስልክ ቁጥር</label>
+                    <input type="tel" id="phoneNumber" placeholder="09xxxxxxxx"
+                           class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-lg font-bold text-white placeholder-white/20">
+                    <p class="text-[10px] text-white/30 mt-2 italic">* ክፍያ የሚፈጽሙበትን ስልክ ቁጥር በትክክል ያስገቡ።</p>
+                </div>
+            </section>
+
+            <!-- Packages -->
+            <section class="mb-8 text-left">
+                <h2 class="text-sm font-bold text-white/40 mb-4 border-b border-white/10 pb-2 uppercase tracking-widest">የVAN Coins ጥቅሎች</h2>
+                <div class="space-y-4">
+                    <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">30 VAN Coins</h3>
+                            <p class="ebirr-green font-black text-sm">ዋጋ: 10 ብር (eBirr)</p>
+                        </div>
+                        <button onclick="initiatePayment('van_30', 10)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs uppercase">ግዛ</button>
+                    </div>
+                    <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">90 VAN Coins</h3>
+                            <p class="ebirr-green font-black text-sm">ዋጋ: 30 ብር (eBirr)</p>
+                        </div>
+                        <button onclick="initiatePayment('van_90', 30)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs uppercase">ግዛ</button>
+                    </div>
+                    <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">150 VAN Coins</h3>
+                            <p class="ebirr-green font-black text-sm">ዋጋ: 50 ብር (eBirr)</p>
+                        </div>
+                        <button onclick="initiatePayment('van_150', 50)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs uppercase">ግዛ</button>
+                    </div>
+                    <div class="glass p-5 rounded-[2rem] flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">300 VAN Coins</h3>
+                            <p class="ebirr-green font-black text-sm">ዋጋ: 100 ብር (eBirr)</p>
+                        </div>
+                        <button onclick="initiatePayment('van_300', 100)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs uppercase">ግዛ</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Subscription -->
+            <section class="mb-10 text-left">
+                <h2 class="text-sm font-bold text-white/40 mb-4 border-b border-white/10 pb-2 uppercase tracking-widest">የPremium አባልነት</h2>
+                <div class="space-y-4">
+                    <div class="glass p-5 rounded-[2rem] flex justify-between items-center border-[#7C4DFF]/30 border shadow-[0_0_20px_rgba(124,77,255,0.05)]">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">የአንድ ወር (Monthly)</h3>
+                            <p class="ebirr-green font-black text-sm">ዋጋ: 50 ብር (eBirr)</p>
+                        </div>
+                        <button onclick="initiatePayment('prem_monthly', 50)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs uppercase">አግብር</button>
+                    </div>
+                    <div class="glass p-5 rounded-[2rem] flex justify-between items-center border-[#1BFFFF]/30 border shadow-[0_0_20px_rgba(27,255,255,0.03)]">
+                        <div>
+                            <h3 class="font-bold text-white text-lg">የአንድ ዓመት (Yearly)</h3>
+                            <p class="ebirr-green font-black text-sm">ዋጋ: 400 ብር (eBirr)</p>
+                        </div>
+                        <button onclick="initiatePayment('prem_yearly', 400)" class="purple-btn px-8 py-3 rounded-2xl font-black text-xs uppercase">አግብር</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Important Info -->
+            <div class="bg-white/5 p-6 rounded-[2rem] border border-white/5 mb-10 text-left">
+                <p class="text-xs text-white/60 leading-relaxed">
+                    <span class="font-bold text-[#7C4DFF] block mb-2 uppercase tracking-widest text-[10px]">ጠቃሚ መረጃ</span>
+                    ክፍያውን በኢ-ብር (eBirr) ከፈጸሙ በኋላ በ5 ደቂቃ ውስጥ አገልግሎቱ ይንቀሳቀሳል። ማንኛውም ችግር ካጋጠመዎት የቴክኒክ ድጋፍ ክፍሉን ያነጋግሩ።
+                </p>
+            </div>
         </div>
     </div>
 
+    <!-- JavaScript Functions -->
     <script>
+        // Switch between tabs
+        function switchTab(tabName) {
+            const supportSection = document.getElementById('section-support');
+            const ebirrSection = document.getElementById('section-ebirr');
+            const supportBtn = document.getElementById('btn-support');
+            const ebirrBtn = document.getElementById('btn-ebirr');
+
+            if (tabName === 'support') {
+                supportSection.classList.remove('hidden');
+                ebirrSection.classList.add('hidden');
+                supportBtn.classList.add('active');
+                ebirrBtn.classList.remove('active');
+            } else {
+                supportSection.classList.add('hidden');
+                ebirrSection.classList.remove('hidden');
+                supportBtn.classList.remove('active');
+                ebirrBtn.classList.add('active');
+            }
+            window.scrollTo(0, 0); // Reset scroll position
+        }
+
+        // Toggle FAQ answers
         function toggleFaq(element) {
             const isActive = element.classList.contains('active');
 
-            // Close all other items for a clean look
+            // Close all other items
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -271,5 +328,8 @@
             }
         }
     </script>
+
+    <!-- External Script for Payment Logic -->
+    <script src="../../../../../../Desktop/support_portal.js"></script>
 </body>
 </html>
